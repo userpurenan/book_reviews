@@ -1,0 +1,35 @@
+@charset "utf-8";
+
+.Book__list{
+    list-style-type: none; /* リストスタイルを無効にする */
+    margin-left: 30%;
+    
+    &--link{
+        border: solid;
+        width: 80%;
+        height: 100px;
+        font-size: 30px;
+        border-radius: 5px;
+        display: block;
+        text-decoration: none;
+        color: #000000;
+    }    
+}
+
+
+.pagenation{
+    margin-left: 40%;
+
+    &__button{
+        height: 50px;
+        width: 100px;
+    }
+    
+    &__currentPage{
+        height: 45px;
+        width: 50px;
+        pointer-events: none;
+        text-align: right;
+    }
+    
+}

@@ -1,0 +1,69 @@
+@charset "utf-8";
+
+.header {
+  width: 100%;
+  height: 100px;
+  background-color: darkseagreen;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+}
+
+.userContainer{
+  text-align: right;
+  margin-right: 50px;
+}
+
+.Navigate-button {
+  color: #ffffff;
+  text-decoration: none;
+  &:hover{
+    color: gray;
+    cursor : pointer;
+  }
+}
+
+.Navigate-Login{
+  color: #ffffff;
+  text-decoration: none;
+  margin: auto 70px auto auto;
+  &:hover{
+    color: gray;
+    cursor : pointer;
+  }
+}
+
+.userName{
+  color: black;
+  font-weight: bold;
+}
+
+.userIcon{
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+  object-fit:cover;
+	border-radius:50%;
+}
+
+@media screen and (max-width:375px) {
+
+  .header {
+    width: 375px;
+    height: 80px;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+@media screen and (min-width:768px) and (max-width:865px) {
+
+  .header {
+    width: 768px;
+    height: 80px;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+  }
+}

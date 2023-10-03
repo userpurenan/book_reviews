@@ -1,0 +1,33 @@
+@charset "utf-8";
+
+.EditBook{
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+
+    &__button{
+        background-color: #242f9b;
+        color: #ffffff;
+        width: 100px;
+        height: 40px;
+        border-radius: 5px;
+        margin-left: 20%;
+        cursor : pointer;    
+    }
+
+}
+
+.error-massage{
+    color: #ff3333;
+}
+
+.delete-button{
+    background-color: #ff3333;
+    color: #ffffff;
+    width: 100px;
+    height: 40px;
+    margin-left: 23%;
+    margin-bottom: 30px;
+    border-radius: 5px;
+    cursor : pointer;    
+}
