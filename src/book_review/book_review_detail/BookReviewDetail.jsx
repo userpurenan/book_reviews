@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { url } from "../const";
+import { url } from "../../const";
 import { useParams, Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
-import { Header } from "./header/Header";
+import { Header } from "../header/Header";
 import './BookReviewDetail.scss';
-import Loading from "./Loding";
+import Loading from "../Loding";
 
 
 export const BookReviewDetail = () => {

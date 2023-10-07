@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import Compressor from 'compressorjs'; 
 import { useForm } from 'react-hook-form'; //個人的に「Formik」よりも「react-hook-form」の方がバリデーションの設定が少なくて良いと思う。
 import './EditProfile.scss';
-import { Header } from "./header/Header";
+import { Header } from "../header/Header";
 import axios from "axios";
-import { url } from "../const";
+import { url } from "../../const";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";

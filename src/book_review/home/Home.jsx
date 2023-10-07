@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Header } from "./header/Header";
+import { Header } from "../header/Header";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { url } from "../const";
+import { url } from "../../const";
 import './Home.scss';
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { beforePagenation, nextPagenation } from '../pagenationSlice';
+import { beforePagenation, nextPagenation } from '../../pagenationSlice';
 
 
 export const Home = () => {

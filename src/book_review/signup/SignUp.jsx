@@ -5,9 +5,9 @@ import { useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form'; //個人的に「Formik」よりも「react-hook-form」の方がバリデーションの設定が少なくて良いと思う。
-import { signIn } from '../authSlice';
-import { Header } from './header/Header';
-import { url } from '../const';
+import { signIn } from '../../authSlice';
+import { Header } from '../header/Header';
+import { url } from '../../const';
 import './signUp.scss';
 
 export const SignUp = () => {

@@ -2,11 +2,11 @@ import {React, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { useNavigate, Link } from 'react-router-dom';
-import { Header } from './header/Header';
+import { Header } from '../header/Header';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { signIn } from '../authSlice';
-import { url } from '../const';
+import { signIn } from '../../authSlice';
+import { url } from '../../const';
 import './Login.scss';
 
 export const Login = () => {
