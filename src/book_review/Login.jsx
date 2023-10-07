@@ -24,7 +24,7 @@ export const Login = () => {
     axios
       .post(`${url}/signin`, { email: email, password: password })
       .then((res) => {
-        setCookie('token', res.data.token);
+        setCookie('token', res.data.token, { maxAge : 86400 }); //「86400」は「cookie」が有効な時間（秒数）。ちなみに「86400」は一日の秒数
         dispatch(signIn());
         navigate('/');
       })
