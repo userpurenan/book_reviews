@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use back_end\app\Models\User;
+use back_end\app\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +18,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::group(['middleware' => ['api', 'cors']], function (){
+    Route::post('/users', [UserController::class, 'signIn']);
 });
