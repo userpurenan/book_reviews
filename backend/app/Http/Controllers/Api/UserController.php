@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use back_end\app\Models\User;
 
 class UserController extends Controller
 {
-    public function signIn(){
+    public function signIn(Request $request){
         $name = $request->input('name');
         $email = $request->input('email');
         $password = $request->input('password');
@@ -18,6 +19,6 @@ class UserController extends Controller
             "password" => $password
         ]);
         
-        return response()->header('Access-Control-Allow-Origin', 'http://localhost:3000')->json([ 'token' => $access_token ], 200);
+        return response()->json([ 'token' => $access_token ], 200);
     }
 }
