@@ -22,7 +22,7 @@ export const Login = () => {
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const onSignIn = () => {
     axios
-      .post(`${url}/signin`, { email: email, password: password })
+      .post('http://127.0.0.1:8000/api/login', { email: email, password: password })
       .then((res) => {
         setCookie('token', res.data.token, { maxAge : 86400 }); //「86400」は「cookie」が有効な時間（秒数）。ちなみに「86400」は一日の秒数
         dispatch(signIn());

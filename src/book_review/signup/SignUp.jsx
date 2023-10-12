@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Compressor from 'compressorjs'; 
-import { useCookies } from 'react-cookie';
+import { Cookies, useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form'; //個人的に「Formik」よりも「react-hook-form」の方がバリデーションの設定が少なくて良いと思う。
@@ -35,6 +35,7 @@ export const SignUp = () => {
 
     try {
       const res = await axios.post('http://127.0.0.1:8000/api/users', data);
+      console.log(res.data);
       const token = res.data.token;
       setCookie('token', token, { maxAge : 86400 });//「86400」は「cookie」が有効な時間（秒数）。ちなみに「86400」は一日の秒数
 
@@ -54,7 +55,7 @@ export const SignUp = () => {
     }
   }
 
-    const handleIconUrlChange = (e) => { //画像が!MBより大きかったらリサイズする関数
+    const handleIconUrlChange = (e) => { //画像が1MBより大きかったらリサイズする関数
         const file = e.target.files[0];
         const url = URL.createObjectURL(file);
         setImgUrl(url); // imgタグをusestateにセット　「usestateにurlをセットする」

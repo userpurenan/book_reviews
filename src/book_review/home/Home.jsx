@@ -28,10 +28,6 @@ export const Home = () => {
             setBooks(res.data); 
           })
 
-          axios.get(`${url}/users`, { headers })
-          .then((res) => {
-             setUsers(res.data); 
-          })  
         return
       }
 
