@@ -37,12 +37,12 @@ export const SignUp = () => {
       const res = await axios.post('http://127.0.0.1:8000/api/users', data);
       console.log(res.data);
       const token = res.data.token;
-      setCookie('token', token, { maxAge : 86400 });//「86400」は「cookie」が有効な時間（秒数）。ちなみに「86400」は一日の秒数
+      setCookie('token', token, { maxAge : 60 });//「86400」は「cookie」が有効な時間（秒数）。ちなみに「86400」は一日の秒数
 
       const formdata = new FormData();
       formdata.append('icon', ImgFile, ImgFile.name); // フィールド名を「icon」に指定しないと400エラーが起きる。（swaggerの仕様ではフィールド名を「icon」にしていたため）
  
-      await axios.post(`${url}/uploads`, formdata, {
+      await axios.post('http://127.0.0.1:8000/api/uploads', formdata, {
          headers: {
           authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'

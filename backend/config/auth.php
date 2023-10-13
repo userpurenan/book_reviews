@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'api',
         'passwords' => 'users',
     ],
 
@@ -42,7 +42,7 @@ return [
         ],
             //以下を追加
         'api' => [
-                'driver' => 'token',
+                'driver' => 'jwt',
                 'provider' => 'users',
         ],
     ],
