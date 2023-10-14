@@ -22,7 +22,7 @@ export const Login = () => {
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const onSignIn = () => {
     axios
-      .post('http://127.0.0.1:8000/api/login', { email: email, password: password })
+      .post(`${url}/login`, { email: email, password: password })
       .then((res) => {
         setCookie('token', res.data.token);
         dispatch(signIn());

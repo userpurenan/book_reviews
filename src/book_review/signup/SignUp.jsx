@@ -34,7 +34,7 @@ export const SignUp = () => {
     }
 
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/users', data);
+      const res = await axios.post(`${url}/users`, data);
       console.log(res.data);
       const token = res.data.token;
       setCookie('token', token);
@@ -42,7 +42,7 @@ export const SignUp = () => {
       const formdata = new FormData();
       formdata.append('icon', ImgFile, ImgFile.name); // フィールド名を「icon」に指定しないと400エラーが起きる。（swaggerの仕様ではフィールド名を「icon」にしていたため）
  
-      await axios.post('http://127.0.0.1:8000/api/uploads', formdata, {
+      await axios.post(`${url}/uploads`, formdata, {
          headers: {
           authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
