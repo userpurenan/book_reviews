@@ -16,7 +16,7 @@ return new class () extends Migration {
             $table->text('url');
             $table->text('detail');
             $table->text('review');
-            $table->text('reviwer');
+            $table->text('reviewer');
             $table->timestamps();
         });
     }
