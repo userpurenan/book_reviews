@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,7 @@ use App\Http\Controllers\UserController;
 //     return $request->user();
 // });
 
-Route::get('unauthorized', function() {
+Route::get('unauthorized', function () {
     return response()->json([
         'status' => 'error',
         'message' => 'Unauthorized'
@@ -28,11 +29,13 @@ Route::get('unauthorized', function() {
 
 Route::post('/users', [UserController::class, 'signUp']);
 Route::post('/login', [UserController::class, 'login']);
-Route::post('/logout', [UserController::class, 'logout']);
 
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/uploads', [UserController::class, 'imgUpdate']);
     Route::get('/users', [UserController::class, 'getUser']);
     Route::put('/users', [UserController::class, 'editUser']);
+    Route::get('/books', [BookController::class, 'getBooks']);
+    Route::post('/books', [BookController::class, 'createBooks']);
+    Route::get('/books/{id}', [BookController::class, 'getBookDatail']);  
 });
