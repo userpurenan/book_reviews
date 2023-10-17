@@ -43,4 +43,16 @@ class BookController extends Controller
             return response()->json(['errormessage' => $e ]);
         }
     }
+
+    public function getBookDatail($id){
+        $bookDatail = Book::where('id', $id)->first();
+
+        return response()->json([
+            'title' => $bookDatail->title,
+            'url' => $bookDatail->url,
+            'detail' => $bookDatail->detail,
+            'review' => $bookDatail->review,
+            'reviewer' => $bookDatail->reviewer
+        ],200, [], JSON_UNESCAPED_UNICODE);;
+    }
 }
