@@ -11,7 +11,8 @@ class BookController extends Controller
 {
     public function getBooks(Request $request)
     {
-        $books = Book::all();
+        $number = $request->query('offset');
+        $books = Book::skip($number - 1)->take(10)->get();;
         return response()->json($books, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -45,7 +46,7 @@ class BookController extends Controller
     }
 
     public function getBookDatail($id){
-        $bookDatail = Book::where('id', $id)->first();
+        $bookDatail = Book::find($id);
 
         return response()->json([
             'title' => $bookDatail->title,
