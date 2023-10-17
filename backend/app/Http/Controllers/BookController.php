@@ -11,24 +11,28 @@ class BookController extends Controller
 {
     public function getBooks(Request $request)
     {
-        $user_info = User::where('token', $request->headers->get('Authorization'))->first();
         $books = Book::all();
-        $bookList = [];
 
-        foreach($books as $book) {
-            $book_array = array(
-                            'id' => $book->id,
-                            'title' => $book->title,
-                            'url' => $book->url,
-                            'detail' => $book->detail,
-                            'review' => $book->review,
-                            'reviewer' => $book->reviewer
-                          );
+        return response()->json($books, 200, [], JSON_UNESCAPED_UNICODE);
+    }
 
-            $book_json = json_encode($book_array, JSON_UNESCAPED_UNICODE);
-            $bookList[] = $book_json;
+    public function createBooks(Request $request)
+    {
+        $user_info = User::where('token', $request->headers->get('Authorization'))->first();
+        DB::beginTransaction();
+
+        try {
+            Book::insert([
+                'title' => $request->input('title'),
+                'url' => $request->input('url'),
+                'detail' => $request->input('detail'),
+                'review' => $request->input('review'),
+                'reviewer' => $user_info->name
+            ]);
+            return '書籍が投稿されました！';
+        } catch(\Exception $e) {
+            DB::rollBack();
+            return response()->json(['errormessage' => $e ]);
         }
-
-        return $bookList;
     }
 }
