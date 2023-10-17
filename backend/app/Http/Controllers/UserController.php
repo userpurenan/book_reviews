@@ -57,7 +57,7 @@ class UserController extends Controller
                     'token' => $token,
                     'token_type' => 'bearer',
                     'expires_in' => auth("api")->factory()->getTTL() * 60
-                ]);
+            ]);
         } catch(\Exception $e) {
             return response()->json(['error' => $e], 500);
         }
@@ -80,7 +80,7 @@ class UserController extends Controller
         return response()->json([
                     'name' => $user_info->name,
                     'imgPath' => $user_info->imgPath,
-                ]);
+                ],200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function editUser(Request $request)
