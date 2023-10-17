@@ -10,8 +10,7 @@ import { url } from '../../const';
 export const Header = () => {
   const auth = useSelector((state) => state.auth.isSignIn);
   const dispatch = useDispatch();
-  const [ , , removeCookie] = useCookies();
-  const [cookies] = useCookies();
+  const [ cookies, , removeCookie] = useCookies();
   const [user, setUsers] = useState('');
 
   const handleSignOut = () => {
@@ -46,7 +45,7 @@ export const Header = () => {
           <br />
           <p className='userName' >
             ユーザー名：{user.name}
-            <img src={user.iconUrl} alt="ユーザーのアイコン画像" className='userIcon' />
+            <img src={user.imgPath} alt="ユーザーのアイコン画像" className='userIcon' />
           </p>
         </div>
       ) : (

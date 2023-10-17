@@ -19,7 +19,6 @@ export const BookReviewInput = (props) => {
     const handleDetailChange = (e) => props.setBookDetail(e.target.value);
     const handleReviewChange = (e) => props.setBookReview(e.target.value);
 
-    console.log(props);
     return(
         <div>
             <form onSubmit={handleSubmit(props.BookOperations)} className="EditBook">
