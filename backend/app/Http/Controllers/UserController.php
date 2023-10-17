@@ -11,10 +11,11 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-    public function signUp(Request $request){
+    public function signUp(Request $request)
+    {
         DB::beginTransaction();
 
-        try{
+        try {
             User::insert([
                 "name" => $request->input('name'),
                 "email" => $request->input('email'),
@@ -22,67 +23,70 @@ class UserController extends Controller
             ]);
 
             $credentials = $request->only(['email', 'password']);
-            if(! $token = auth()->attempt($credentials)) throw new \Exception('トークンの取得に失敗しました。') ;
+            if(! $token = auth()->attempt($credentials)) {
+                throw new \Exception('トークンの取得に失敗しました。') ;
+            }
 
-            User::where('email', $request->input('email'))->update(['token' => 'Bearer '.$token]);
+            User::where('email', $request->input('email'))->update(['token' => 'Bearer ' . $token]);
 
             DB::commit();
-            
-            return response()->json([ 
+
+            return response()->json([
                     'token' => $token,
                     'token_type' => 'bearer',
                     'expires_in' => auth("api")->factory()->getTTL() * 60
-                ], 200);    
-        }catch(\Exception $e){
+                ]);
+        } catch(\Exception $e) {
             DB::rollBack();
             return response()->json(['errormessage' => $e ]);
         }
     }
 
-    public function login(Request $request){
-        try{
+    public function login(Request $request)
+    {
+        try {
             $credentials = $request->only('email', 'password');
 
-            if (! $token = auth()->attempt($credentials)) throw new \Exception('パスワード又はメールアドレスが間違っています');
+            if (! $token = auth()->attempt($credentials)) {
+                throw new \Exception('パスワード又はメールアドレスが間違っています');
+            }
 
-            return response()->json([ 
+            User::where('email', $request->input('email'))->update(['token' => 'Bearer ' . $token]);
+
+            return response()->json([
                     'token' => $token,
                     'token_type' => 'bearer',
                     'expires_in' => auth("api")->factory()->getTTL() * 60
-                ], 200);
-        }catch(\Exception $e){
-            return response()->json(['error' => $e], 500);        
+                ]);
+        } catch(\Exception $e) {
+            return response()->json(['error' => $e], 500);
         }
     }
 
-    public function logout(Request $request)
+    public function imgUpdate(Request $request)
     {
-        auth()->logout();
-
-        return response()->json(['message' => $request->input('success')]);
-    }
-
-    public function imgUpdate(Request $request){
         $imgPath = $request->file('icon')->store('public/img');
 
         User::where('token', $request->headers->get('Authorization'))
-                ->update(['imgPath' => 'backend/storage/app/'.$imgPath]);
-        
-        return response()->json(['imgPath' => "backend/storage/app/".$imgPath]);
+                ->update(['imgPath' => 'backend/storage/app/' . $imgPath]);
+
+        return response()->json(['imgPath' => "backend/storage/app/" . $imgPath]);
     }
 
-    public function getUser(Request $request){
-        $user = User::where('token', $request->headers->get('Authorization'))->first();
+    public function getUser(Request $request)
+    {
+        $user_info = User::where('token', $request->headers->get('Authorization'))->first();
 
-        return response()->json([ 
-                    'name' => $user->name,
-                    'imgPath' => $user->imgPath,
-                ], 200);
+        return response()->json([
+                    'name' => $user_info->name,
+                    'imgPath' => $user_info->imgPath,
+                ]);
     }
 
-    public function editUser(Request $request){
+    public function editUser(Request $request)
+    {
         User::where('token', $request->headers->get('Authorization'))
-                ->update(['name' => $request->input('name')]);
+              ->update(['name' => $request->input('name')]);
     }
 
 }
