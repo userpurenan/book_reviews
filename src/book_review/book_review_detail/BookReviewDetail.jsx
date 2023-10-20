@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { url } from "../../const";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 import { Header } from "../header/Header";
@@ -11,6 +11,7 @@ import Loading from "../Loding";
 export const BookReviewDetail = () => {
     const { BookId } = useParams(); //クエリパラメータを取得するには[]ではなく{}で囲わなければならない
     const [cookies] = useCookies();
+    const navigate = useNavigate();
     const [isLoading, setIsLoading ] = useState(false);
     const [bookData, setBookData] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -21,6 +22,9 @@ export const BookReviewDetail = () => {
 
     useEffect(() => {
         setIsLoading(true);
+
+        if(! cookies.token) navigate('/login');
+
         axios.get(`${url}/books/${BookId}`, { headers })
         .then((res) => {
             const bookData = res.data;
