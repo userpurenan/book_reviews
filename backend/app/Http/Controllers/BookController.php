@@ -12,7 +12,7 @@ class BookController extends Controller
     public function getBooks(Request $request)
     {
         $number = $request->query('offset');
-        $books = Book::skip($number - 1)->take(10)->get();;
+        $books = Book::orderBy('id', 'desc')->skip($number)->take(10)->get();
         return response()->json($books, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -38,14 +38,16 @@ class BookController extends Controller
                 'detail' => $request->input('detail'),
                 'review' => $request->input('review'),
                 'reviewer' => $user_info->name
-            ],200, [], JSON_UNESCAPED_UNICODE);;
+            ], 200, [], JSON_UNESCAPED_UNICODE);
+            ;
         } catch(\Exception $e) {
             DB::rollBack();
             return response()->json(['errormessage' => $e ]);
         }
     }
 
-    public function getBookDatail($id){
+    public function getBookDatail($id)
+    {
         $bookDatail = Book::find($id);
 
         return response()->json([
@@ -54,6 +56,7 @@ class BookController extends Controller
             'detail' => $bookDatail->detail,
             'review' => $bookDatail->review,
             'reviewer' => $bookDatail->reviewer
-        ],200, [], JSON_UNESCAPED_UNICODE);;
+        ], 200, [], JSON_UNESCAPED_UNICODE);
+        ;
     }
 }
