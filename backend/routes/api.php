@@ -29,7 +29,7 @@ Route::get('unauthorized', function () {
 
 Route::post('/users', [UserController::class, 'signUp']);
 Route::post('/login', [UserController::class, 'login']);
-
+Route::get('/public/books', [BookController::class, 'getBooks']);
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/uploads', [UserController::class, 'imgUpdate']);
