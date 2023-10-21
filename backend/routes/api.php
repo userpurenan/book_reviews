@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\Book;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookController;
 
@@ -39,5 +40,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/books', [BookController::class, 'createBooks']);
     Route::get('/books/{id}', [BookController::class, 'getBookDatail']); 
     Route::put('/books/{id}', [BookController::class, 'updateBook']); 
+    Route::delete('/books/{id}', function ($id) {
+        Book::findOrFail($id)->delete();
 
+        return 'delete success!!';
+    });
 });
