@@ -62,7 +62,7 @@ class BookController extends Controller
 
     public function getBookDatail(Request $request, $id)
     {
-        $bookDatail = Book::find($id);
+        $bookDatail = Book::findOrFail($id);
         $isMine = false;
 
         if($bookDatail->token === $request->headers->get('Authorization')) $isMine = true;
@@ -75,6 +75,33 @@ class BookController extends Controller
             'reviewer' => $bookDatail->reviewer,
             'isMine' => $isMine
         ], 200, [], JSON_UNESCAPED_UNICODE);
-        ;
+    }
+
+    public function updateBook(Request $request, $id){
+        $book = Book::findOrFail($id);
+        DB::beginTransaction();
+
+        try {
+            $book->update([
+                        'title' => $request->input('title'),
+                        'url' => $request->input('url'),
+                        'detail' => $request->input('detail'),
+                        'review' => $request->input('review'),
+                    ]);
+
+            DB::commit();
+
+            return response()->json([
+                'id' => $book->id,
+                'title' => $book->title,
+                'url' => $book->url,
+                'detail' => $book->detail,
+                'review' => $book->review,
+                'reviewer' => $book->reviewer
+            ], 200, [], JSON_UNESCAPED_UNICODE);
+        }catch(\Exception $e){
+            DB::rollBack();
+            return response()->json(['errormessage' => $e ]);
+        }
     }
 }
