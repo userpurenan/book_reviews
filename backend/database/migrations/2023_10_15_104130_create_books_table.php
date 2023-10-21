@@ -17,6 +17,7 @@ return new class () extends Migration {
             $table->text('detail');
             $table->text('review');
             $table->string('reviewer');
+            $table->text('token');
             $table->timestamps();
         });
     }
