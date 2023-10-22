@@ -45,4 +45,5 @@ Route::middleware('auth:api')->group(function () {
 
         return 'delete success!!';
     });
+    Route::post('/logs', [BookController::class, 'setlog']);
 });

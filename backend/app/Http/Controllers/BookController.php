@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use App\Models\Book;
 use App\Models\User;
+use App\Models\Log;
 
 class BookController extends Controller
 {
@@ -77,12 +80,13 @@ class BookController extends Controller
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public function updateBook(Request $request, $id){
-        $book = Book::findOrFail($id);
+    public function updateBook(Request $request, $id)
+    {
+        $bookDatail = Book::findOrFail($id);
         DB::beginTransaction();
 
         try {
-            $book->update([
+            $bookDatail->update([
                         'title' => $request->input('title'),
                         'url' => $request->input('url'),
                         'detail' => $request->input('detail'),
@@ -92,16 +96,27 @@ class BookController extends Controller
             DB::commit();
 
             return response()->json([
-                'id' => $book->id,
-                'title' => $book->title,
-                'url' => $book->url,
-                'detail' => $book->detail,
-                'review' => $book->review,
-                'reviewer' => $book->reviewer
+                'id' => $bookDatail->id,
+                'title' => $bookDatail->title,
+                'url' => $bookDatail->url,
+                'detail' => $bookDatail->detail,
+                'review' => $bookDatail->review,
+                'reviewer' => $bookDatail->reviewer
             ], 200, [], JSON_UNESCAPED_UNICODE);
         }catch(\Exception $e){
             DB::rollBack();
             return response()->json(['errormessage' => $e ]);
         }
+    }
+
+    public function setlog(Request $request)
+    {
+        $user_info = User::where('token', $request->headers->get('Authorization'))->first();
+
+        Log::insert([
+            'user_name' => $user_info->name,
+            'user_email' => $user_info->email,
+            'access_log' => 'http://127.0.0.1:3000/detail/'.$request->input('selectBookId')
+        ]);
     }
 }
