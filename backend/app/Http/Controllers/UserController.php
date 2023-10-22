@@ -21,9 +21,7 @@ class UserController extends Controller
             ]);
 
             $credentials = $request->only(['email', 'password']);
-            if(! $token = auth()->attempt($credentials)) {
-                throw new \Exception('トークンの取得に失敗しました。') ;
-            }
+            if(! $token = auth()->attempt($credentials)) throw new \Exception('トークンの取得に失敗しました。') ;
 
             User::where('email', $request->input('email'))->update(['token' => 'Bearer ' . $token]);
 
@@ -45,9 +43,7 @@ class UserController extends Controller
         try {
             $credentials = $request->only('email', 'password');
 
-            if (! $token = auth()->attempt($credentials)) {
-                throw new \Exception('パスワード又はメールアドレスが間違っています');
-            }
+            if (! $token = auth()->attempt($credentials)) throw new \Exception('パスワード又はメールアドレスが間違っています');
 
             User::where('email', $request->input('email'))->update(['token' => 'Bearer ' . $token]);
 
