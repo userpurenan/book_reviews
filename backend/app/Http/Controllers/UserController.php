@@ -34,7 +34,7 @@ class UserController extends Controller
                 ]);
         } catch(\Exception $e) {
             DB::rollBack();
-            return response()->json(['errormessage' => $e ]);
+            return response()->json(['errormessage' => $e->getMessage() ]);
         }
     }
 
@@ -53,7 +53,7 @@ class UserController extends Controller
                     'expires_in' => auth("api")->factory()->getTTL() * 60
             ]);
         } catch(\Exception $e) {
-            return response()->json(['error' => $e], 500);
+            return response()->json(['error' => $e->getMessage()]);
         }
     }
 

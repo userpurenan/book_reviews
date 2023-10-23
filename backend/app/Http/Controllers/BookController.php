@@ -59,7 +59,7 @@ class BookController extends Controller
             ;
         } catch(\Exception $e) {
             DB::rollBack();
-            return response()->json(['errormessage' => $e ]);
+            return response()->json(['errormessage' => $e->getMessage() ]);
         }
     }
 
@@ -105,7 +105,7 @@ class BookController extends Controller
             ], 200, [], JSON_UNESCAPED_UNICODE);
         }catch(\Exception $e){
             DB::rollBack();
-            return response()->json(['errormessage' => $e ]);
+            return response()->json(['errormessage' => $e->getMessage() ]);
         }
     }
 
@@ -113,10 +113,20 @@ class BookController extends Controller
     {
         $user_info = User::where('token', $request->headers->get('Authorization'))->first();
 
-        Log::insert([
-            'user_name' => $user_info->name,
-            'user_email' => $user_info->email,
-            'access_log' => 'http://127.0.0.1:3000/detail/'.$request->input('selectBookId')
-        ]);
+        DB::beginTransaction();
+
+        try{
+            Log::insert([
+                'user_name' => $user_info->name,
+                'user_email' => $user_info->email,
+                'access_log' => 'http://127.0.0.1:3000/detail/'.$request->input('selectBookId')
+            ]);
+
+            DB::commit();
+
+        }catch(\Exception $e){
+            DB::rollBack();
+            return response()->json(['errormessage' => $e->getMessage() ]);
+        }
     }
 }
