@@ -33,7 +33,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::get('/public/books', [BookController::class, 'getBooks']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('/uploads', [UserController::class, 'imgUpdate']);
+    Route::post('/uploads', [UserController::class, 'imageUploads']);
     Route::get('/users', [UserController::class, 'getUser']);
     Route::put('/users', [UserController::class, 'editUser']);
     Route::get('/books', [BookController::class, 'getBooks']);
