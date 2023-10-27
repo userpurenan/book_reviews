@@ -34,7 +34,7 @@ class LoginRequest extends FormRequest
     {
         $response  = $validator->errors()->toArray();
     
-        throw new HttpResponseException(response()->json([ 'error' => 'バリデーションエラー',
-                                                           'detail' => $response], 422));        
+        throw new HttpResponseException(response()->json([ 'message' => 'バリデーションエラー',
+                                                           'error' => $response], 422));   
     }
 }
