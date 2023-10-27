@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class SignUpRequest extends FormRequest
 {
@@ -26,5 +28,13 @@ class SignUpRequest extends FormRequest
             'email' => ['required'],
             'password' => ['required','min:5', 'max:15','zxcvbn:1,username,email'],
         ];
+    }
+    
+    protected function failedValidation(Validator $validator)
+    {
+        $response  = $validator->errors()->toArray();
+    
+        throw new HttpResponseException(response()->json([ 'error' => 'バリデーションエラー',
+                                                           'detail' => $response], 422));        
     }
 }
