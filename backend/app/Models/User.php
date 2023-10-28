@@ -20,10 +20,11 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array<int, string>
      */
-    protected $fillable = [
+    protected $fillable = [ //データベースを操作するときに使うカラム名（新しいレコードを作成するとき）
         'name',
         'email',
         'password',
+        'token',
     ];
 
      /**
