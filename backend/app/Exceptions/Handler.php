@@ -4,6 +4,10 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Http\Request;
+
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -18,6 +22,11 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
+    // public function render($request, Throwable $exception)
+    // {
+    //     return parent::render($request, $exception);
+    // }
+
     /**
      * Register the exception handling callbacks for the application.
      */
@@ -26,5 +35,22 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+        // $this->renderable(function (NotFoundHttpException $exception, Request $request) {
+        //     if ($request->is('api/*')) {
+        //         return response()->json([
+        //             'message' => $exception->getMessage()
+        //         ], 404, [], JSON_UNESCAPED_UNICODE);
+        //     }
+        // });
+
+        // $this->renderable(function (BadRequestHttpException $exception, Request $request) {
+        //     if ($request->is('api/*')) {
+        //         return response()->json([
+        //             'message' => $exception->getMessage()
+        //         ], 400, [], JSON_UNESCAPED_UNICODE);
+        //     }
+        // });
     }
+
 }
