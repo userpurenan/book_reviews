@@ -29,7 +29,7 @@ export const Login = () => {
         navigate('/');
       })
       .catch((err) => {
-        setErrorMessage(`サインインに失敗しました。${err}`);
+        setErrorMessage(`ログインに失敗しました。${err.response.data.message}`);
       });
   };
 

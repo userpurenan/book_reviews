@@ -45,7 +45,7 @@ export const Header = () => {
           <br />
           <p className='userName' >
             ユーザー名：{user.name}
-            <img src={user.imgPath} alt="ユーザーのアイコン画像" className='userIcon' />
+            <img src={user.imagePath} alt="ユーザーのアイコン画像" className='userIcon' />
           </p>
         </div>
       ) : (

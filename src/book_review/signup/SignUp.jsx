@@ -35,7 +35,6 @@ export const SignUp = () => {
 
     try {
       const res = await axios.post(`${url}/users`, data);
-      console.log(res.data);
       const token = res.data.token;
       setCookie('token', token);
 
@@ -45,7 +44,7 @@ export const SignUp = () => {
       await axios.post(`${url}/uploads`, formdata, {
          headers: {
           authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
+          'content-Type': 'multipart/form-data'
         }
       });
       dispatch(signIn());
