@@ -18,12 +18,12 @@ class BookFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => "テスト",
-            'url' => "test@test.com",
-            'detail' => "テストです",
-            'review' => "テスト",
-            'reviewer' => "きよみや",
-            'token' => "Bearer ".Str::random(220)
+            'title' => $this->faker->realText($maxNbChars = 15),
+            'url' => $this->faker->email,
+            'detail' => $this->faker->realText($maxNbChars = 15),
+            'review' => $this->faker->realText($maxNbChars = 35),
+            'reviewer' => $this->faker->name(),
+            'token' => Str::random(220)
         ];
     }
 }
