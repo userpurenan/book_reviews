@@ -12,9 +12,10 @@ class Log extends Model
     protected $table = "logs";
 
     protected $fillable = [
-        'user_name',
-        'user_email',
+        'user_id',
         'access_log'
     ];
+
+    protected $guarded = ['created_at', 'updated_at'];
 
 }
