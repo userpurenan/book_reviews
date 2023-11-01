@@ -1,86 +1,104 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
+
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Http\Request;
+use App\Http\Requests\SignUpRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
+use App\Models\Token;
 
 class UserController extends Controller
 {
-    public function signUp(Request $request)
+    public function signUp(SignUpRequest $request)
     {
         DB::beginTransaction();
 
         try {
-            User::insert([
-                "name" => $request->input('name'),
-                "email" => $request->input('email'),
-                "password" => Hash::make($request->input('password')),
-            ]);
+            $user = User::create([
+                        "name" => $request->input('name'),
+                        "email" => $request->input('email'),
+                        "password" => Hash::make($request->input('password')),
+                    ]);
 
             $credentials = $request->only(['email', 'password']);
             if(! $token = auth()->attempt($credentials)) throw new \Exception('トークンの取得に失敗しました。') ;
 
-            User::where('email', $request->input('email'))->update(['token' => 'Bearer ' . $token]);
+            Token::create(['user_id' => $user->id,
+                           'token' => $token]);
 
             DB::commit();
 
-            return response()->json([
-                    'token' => $token,
-                    'token_type' => 'bearer',
-                    'expires_in' => auth("api")->factory()->getTTL() * 60
-                ]);
+            return response()->json([ 'name' => $user->name, 'token' => $token ],200, [], JSON_UNESCAPED_UNICODE)->header('Authorization', 'Bearer '.$token);
         } catch(\Exception $e) {
+            // Log::info('tesut');
+            Log::critical($e->getTraceAsString());
             DB::rollBack();
-            return response()->json(['errormessage' => $e->getMessage() ]);
+            return response()->json(['errormessage' => $e->getMessage() ]); //この行いらないのでは？？？
         }
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        try {
             $credentials = $request->only('email', 'password');
 
-            if (! $token = auth()->attempt($credentials)) throw new \Exception('パスワード又はメールアドレスが間違っています');
+            if (! $token = auth()->attempt($credentials)) {
+                throw new BadRequestHttpException('パスワード又はメールアドレスが間違っています');
+            }
 
-            User::where('email', $request->input('email'))->update(['token' => 'Bearer ' . $token]);
+            $user = User::where('email', $request->input('email'))->first();
 
-            return response()->json([
-                    'token' => $token,
-                    'token_type' => 'bearer',
-                    'expires_in' => auth("api")->factory()->getTTL() * 60
-            ]);
-        } catch(\Exception $e) {
-            return response()->json(['error' => $e->getMessage()]);
-        }
+            Token::create(['user_id' => $user->id,
+                           'token' => $token]);
+
+            return response()->json([ 'message' => 'auth success', 'token' => $token ], 200)->header('Authorization', 'Bearer '.$token);
     }
 
-    public function imgUpdate(Request $request)
+    public function imageUploads(Request $request)
     {
-        $imgPath = $request->file('icon')->store('public/img');
+        $imagePath = $request->file('icon')->store('public/img');
+        $token = $request->bearerToken();
+        $user = Token::where('token', $token)->first()->user;
 
-        User::where('token', $request->headers->get('Authorization'))
-                ->update(['imgPath' => 'backend/storage/app/' . $imgPath]);
+        if(is_null($user)){
+            throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
+        }
 
-        return response()->json(['imgPath' => "backend/storage/app/" . $imgPath]);
+        $user->update(['imagePath' => '../../../backend/storage/app/' . $imagePath]);
+
+        return response()->json(['imagePath' => "backend/storage/app/" . $imagePath]);
     }
 
     public function getUser(Request $request)
     {
-        $user_info = User::where('token', $request->headers->get('Authorization'))->first();
+        $user = Token::where('token', $request->bearerToken())->first()->user;
+
+        // $user = auth()->user();
+
+        if(is_null($user)) {
+            throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
+        }
 
         return response()->json([
-                    'name' => $user_info->name,
-                    'imgPath' => $user_info->imgPath,
-                ],200, [], JSON_UNESCAPED_UNICODE);
+                    'name' => $user->name,
+                    'imagePath' => $user->imagePath,
+                ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function editUser(Request $request)
     {
-        User::where('token', $request->headers->get('Authorization'))
-              ->update(['name' => $request->input('name')]);
+        $user = Token::where('token', $request->bearerToken())->first()->user;
+              
+        $user->update(['name' => $request->input('name')]);
     }
 
 }
