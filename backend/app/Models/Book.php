@@ -19,4 +19,6 @@ class Book extends Model
         'reviewer',
     ];
 
+    protected $guarded = ['created_at', 'updated_at'];
+
 }
