@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->text('user_name');
-            $table->text('user_email');
+            // $table->text('user_name');
+            // $table->text('user_email');
+            $table->unsignedBigInteger('user_id');
             $table->text('access_log');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

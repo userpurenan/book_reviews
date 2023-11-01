@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -34,11 +36,11 @@ class BookController extends Controller
 
     public function createBooks(Request $request)
     {
-        $user_info = User::where('token', $request->headers->get('Authorization'))->first();
+        $user_info = User::where('token', $request->bearerToken())->first();
         DB::beginTransaction();
 
         try {
-            Book::insert([
+            Book::create([
                 'title' => $request->input('title'),
                 'url' => $request->input('url'),
                 'detail' => $request->input('detail'),
@@ -68,7 +70,7 @@ class BookController extends Controller
         $bookDatail = Book::findOrFail($id);
         $isMine = false;
 
-        if($bookDatail->token === $request->headers->get('Authorization')) $isMine = true;
+        if($bookDatail->token === $request->bearerToken()) $isMine = true;
 
         return response()->json([
             'title' => $bookDatail->title,
@@ -82,10 +84,10 @@ class BookController extends Controller
 
     public function updateBook(Request $request, $id)
     {
-        $bookDatail = Book::findOrFail($id);
         DB::beginTransaction();
 
         try {
+            $bookDatail = Book::findOrFail($id);
             $bookDatail->update([
                         'title' => $request->input('title'),
                         'url' => $request->input('url'),
@@ -111,19 +113,18 @@ class BookController extends Controller
 
     public function setlog(Request $request)
     {
-        $user_info = User::where('token', $request->headers->get('Authorization'))->first();
-
+        $user_id = auth()->user()->id;
         DB::beginTransaction();
 
         try{
-            Log::insert([
-                'user_name' => $user_info->name,
-                'user_email' => $user_info->email,
-                'access_log' => 'http://127.0.0.1:3000/detail/'.$request->input('selectBookId')
-            ]);
+            $log = Log::create([
+                        'user_id' => $user_id,
+                        'access_log' => 'http://127.0.0.1:3000/detail/'.$request->input('selectBookId')
+                    ]);
 
             DB::commit();
 
+            return response()->json(['log' => $log->access_log ]);
         }catch(\Exception $e){
             DB::rollBack();
             return response()->json(['errormessage' => $e->getMessage() ]);
