@@ -6,9 +6,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
-use App\Models\User;
 use App\Models\Log;
+use App\Models\Token;
 
 class BookController extends Controller
 {
@@ -34,17 +35,17 @@ class BookController extends Controller
 
     public function createBooks(Request $request)
     {
-        $user_info = User::where('token', $request->bearerToken())->first();
+        $user_token = Token::where('token', $request->bearerToken())->first();
         DB::beginTransaction();
 
         try {
             Book::create([
                 'title' => $request->input('title'),
+                'user_id' => $user_token->user->id,
                 'url' => $request->input('url'),
                 'detail' => $request->input('detail'),
                 'review' => $request->input('review'),
-                'reviewer' => $user_info->name,
-                'token' => $user_info->token
+                'reviewer' => $user_token->user->name,
             ]);
 
             DB::commit();
@@ -54,21 +55,21 @@ class BookController extends Controller
                 'url' => $request->input('url'),
                 'detail' => $request->input('detail'),
                 'review' => $request->input('review'),
-                'reviewer' => $user_info->name
+                'reviewer' => $user_token->user->name,
+                'message' => $request
             ], 200, [], JSON_UNESCAPED_UNICODE);
-            ;
         } catch(\Exception $e) {
             DB::rollBack();
             return response()->json(['errormessage' => $e->getMessage() ]);
         }
     }
 
-    public function getBookDatail(Request $request, $id)
+    public function getBookDatail($id)
     {
         $bookDatail = Book::findOrFail($id);
         $isMine = false;
 
-        if($bookDatail->token === $request->bearerToken()) $isMine = true;
+        if($bookDatail->user_id === Auth::id()) $isMine = true;
 
         return response()->json([
             'title' => $bookDatail->title,
@@ -76,7 +77,7 @@ class BookController extends Controller
             'detail' => $bookDatail->detail,
             'review' => $bookDatail->review,
             'reviewer' => $bookDatail->reviewer,
-            'isMine' => $isMine
+            'isMine' => $isMine,
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
