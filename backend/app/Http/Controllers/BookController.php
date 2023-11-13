@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
 use App\Models\Log;
-use App\Models\Token;
 
 class BookController extends Controller
 {
@@ -35,17 +34,18 @@ class BookController extends Controller
 
     public function createBooks(Request $request)
     {
-        $user_token = Token::where('token', $request->bearerToken())->first();
         DB::beginTransaction();
 
+        $user_id = Auth::id();
+        $user_name = Auth::user()->name;
         try {
             Book::create([
                 'title' => $request->input('title'),
-                'user_id' => $user_token->user->id,
+                'user_id' => $user_id,
                 'url' => $request->input('url'),
                 'detail' => $request->input('detail'),
                 'review' => $request->input('review'),
-                'reviewer' => $user_token->user->name,
+                'reviewer' => $user_name
             ]);
 
             DB::commit();
@@ -55,8 +55,7 @@ class BookController extends Controller
                 'url' => $request->input('url'),
                 'detail' => $request->input('detail'),
                 'review' => $request->input('review'),
-                'reviewer' => $user_token->user->name,
-                'message' => $request
+                'reviewer' => $user_name,
             ], 200, [], JSON_UNESCAPED_UNICODE);
         } catch(\Exception $e) {
             DB::rollBack();
@@ -112,7 +111,7 @@ class BookController extends Controller
 
     public function setlog(Request $request)
     {
-        $user_id = auth()->user()->id;
+        $user_id = Auth::id();
         DB::beginTransaction();
 
         try{

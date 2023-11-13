@@ -79,11 +79,9 @@ class UserController extends Controller
         return response()->json(['imagePath' => "backend/storage/app/" . $imagePath]);
     }
 
-    public function getUser(Request $request)
+    public function getUser()
     {
-        $user = Token::where('token', $request->bearerToken())->first()->user;
-
-        // $user = auth()->user();
+        $user = Auth::user();
 
         if(is_null($user)) {
             throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
