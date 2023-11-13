@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Book;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 /**
@@ -19,11 +21,11 @@ class BookFactory extends Factory
     {
         return [
             'title' => $this->faker->realText($maxNbChars = 15),
+            'user_id' => 1,
             'url' => $this->faker->email,
             'detail' => $this->faker->realText($maxNbChars = 15),
             'review' => $this->faker->realText($maxNbChars = 35),
-            'reviewer' => $this->faker->name(),
-            'token' => Str::random(220)
+            'reviewer' => User::findOrFail(1)->name
         ];
     }
 }
