@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Log;
 use App\Models\Token;
+use App\Models\Book;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -56,5 +57,9 @@ class User extends Authenticatable implements JWTSubject
 
     public function token(){
         return $this->hasmany(Token::class);
+    }
+
+    public function book(){
+        return $this->hasmany(Book::class);
     }
 }

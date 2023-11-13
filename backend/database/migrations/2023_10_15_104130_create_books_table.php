@@ -12,12 +12,15 @@ return new class () extends Migration {
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+
             $table->string('title');
             $table->text('url');
             $table->text('detail');
             $table->text('review');
             $table->string('reviewer');
-            $table->text('token');
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
