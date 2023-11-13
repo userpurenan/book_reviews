@@ -10,12 +10,14 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\SignUpRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use App\Models\Token;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class UserController extends Controller
 {
@@ -31,7 +33,7 @@ class UserController extends Controller
                     ]);
 
             $credentials = $request->only(['email', 'password']);
-            if(! $token = auth()->attempt($credentials)) throw new \Exception('トークンの取得に失敗しました。') ;
+            if(! $token = Auth::attempt($credentials)) throw new \Exception('トークンの取得に失敗しました。') ;
 
             Token::create(['user_id' => $user->id,
                            'token' => $token]);
@@ -40,27 +42,26 @@ class UserController extends Controller
 
             return response()->json([ 'name' => $user->name, 'token' => $token ],200, [], JSON_UNESCAPED_UNICODE)->header('Authorization', 'Bearer '.$token);
         } catch(\Exception $e) {
-            // Log::info('tesut');
             Log::critical($e->getTraceAsString());
             DB::rollBack();
-            return response()->json(['errormessage' => $e->getMessage() ]); //この行いらないのでは？？？
+            return response()->json(['errormessage' => $e->getMessage() ]);
         }
     }
 
     public function login(LoginRequest $request)
     {
-            $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email', 'password');
 
-            if (! $token = auth()->attempt($credentials)) {
-                throw new BadRequestHttpException('パスワード又はメールアドレスが間違っています');
-            }
+        if(! $token = Auth::attempt($credentials)) {
+            throw new BadRequestHttpException('パスワード又はメールアドレスが間違っています');
+        }
 
-            $user = User::where('email', $request->input('email'))->first();
+        $user = User::where('email', $request->input('email'))->first();
 
-            Token::create(['user_id' => $user->id,
-                           'token' => $token]);
+        Token::create(['user_id' => $user->id,
+                       'token' => $token]);
 
-            return response()->json([ 'message' => 'auth success', 'token' => $token ], 200)->header('Authorization', 'Bearer '.$token);
+        return response()->json([ 'message' => 'auth success', 'token' => $token ], 200)->header('Authorization', 'Bearer '.$token);
     }
 
     public function imageUploads(Request $request)
@@ -100,5 +101,4 @@ class UserController extends Controller
               
         $user->update(['name' => $request->input('name')]);
     }
-
 }
