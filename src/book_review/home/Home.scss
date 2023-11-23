@@ -1,5 +1,17 @@
 @charset "utf-8";
 
+.search{
+    margin-left: 35%;
+    height: 50px;
+    width: 400px;
+}
+
+.button{
+    margin-left: 20px;
+    height: 55px;
+    width: 55px;
+}
+
 .Book__list{
     list-style-type: none; /* リストスタイルを無効にする */
     margin-left: 30%;

@@ -32,13 +32,20 @@ class BookController extends Controller
         return response()->json($bookData, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
+    public function bookSearch(Request $request){
+        $book_keyword = $request->query('title_keyword');
+
+        $search_result = Book::where("title", "LIKE", "%{$book_keyword}%")->orderBy('id', 'desc')->take(10)->get();
+
+        return response()->json($search_result, 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
     public function createBooks(Request $request)
     {
-        DB::beginTransaction();
-
         $user_id = Auth::id();
         $user_name = Auth::user()->name;
-        try {
+        $retryTimes = 3;
+        DB::transaction(function () use ($user_name, $user_id, $request) {
             Book::create([
                 'title' => $request->input('title'),
                 'user_id' => $user_id,
@@ -47,20 +54,15 @@ class BookController extends Controller
                 'review' => $request->input('review'),
                 'reviewer' => $user_name
             ]);
+        }, $retryTimes);
 
-            DB::commit();
-
-            return response()->json([
-                'title' => $request->input('title'),
-                'url' => $request->input('url'),
-                'detail' => $request->input('detail'),
-                'review' => $request->input('review'),
-                'reviewer' => $user_name,
-            ], 200, [], JSON_UNESCAPED_UNICODE);
-        } catch(\Exception $e) {
-            DB::rollBack();
-            return response()->json(['errormessage' => $e->getMessage() ]);
-        }
+        return response()->json([
+            'title' => $request->input('title'),
+            'url' => $request->input('url'),
+            'detail' => $request->input('detail'),
+            'review' => $request->input('review'),
+            'reviewer' => $user_name,
+        ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function getBookDatail($id)
@@ -82,31 +84,24 @@ class BookController extends Controller
 
     public function updateBook(Request $request, $id)
     {
-        DB::beginTransaction();
-
-        try {
-            $bookDatail = Book::findOrFail($id);
+        $bookDatail = Book::findOrFail($id);
+        DB::transaction(function () use ($bookDatail, $request) {
             $bookDatail->update([
-                        'title' => $request->input('title'),
-                        'url' => $request->input('url'),
-                        'detail' => $request->input('detail'),
-                        'review' => $request->input('review'),
-                    ]);
+                          'title' => $request->input('title'),
+                          'url' => $request->input('url'),
+                          'detail' => $request->input('detail'),
+                          'review' => $request->input('review'),
+                      ]);
+        });
 
-            DB::commit();
-
-            return response()->json([
-                'id' => $bookDatail->id,
-                'title' => $bookDatail->title,
-                'url' => $bookDatail->url,
-                'detail' => $bookDatail->detail,
-                'review' => $bookDatail->review,
-                'reviewer' => $bookDatail->reviewer
-            ], 200, [], JSON_UNESCAPED_UNICODE);
-        }catch(\Exception $e){
-            DB::rollBack();
-            return response()->json(['errormessage' => $e->getMessage() ]);
-        }
+        return response()->json([
+              'id' => $bookDatail->id,
+              'title' => $bookDatail->title,
+              'url' => $bookDatail->url,
+              'detail' => $bookDatail->detail,
+              'review' => $bookDatail->review,
+              'reviewer' => $bookDatail->reviewer
+          ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function setlog(Request $request)
