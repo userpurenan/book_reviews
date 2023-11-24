@@ -1,20 +1,32 @@
 @charset "utf-8";
 
+.page{
+    background-color: rgb(223, 235, 235);
+}
+
+.float_page{
+    background-color: aliceblue;
+    border-radius: 3%;
+    margin-left: 400px;
+    margin-right: 200px;
+}
+
 .search{
-    margin-left: 35%;
-    height: 50px;
-    width: 400px;
+    margin-left: 15%;
+    height: 40px;
+    width: 500px;
 }
 
 .button{
-    margin-left: 20px;
-    height: 55px;
-    width: 55px;
+    margin-top: 10px;
+    height: 45px;
+    width: 45px;
+    background-color: burlywood;
 }
 
 .Book__list{
     list-style-type: none; /* リストスタイルを無効にする */
-    margin-left: 30%;
+    margin-left: 10%;
     
     &--link{
         border: solid;

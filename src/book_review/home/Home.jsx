@@ -69,27 +69,30 @@ export const Home = () => {
 		};
 
    return(
-        <div>
+        <div className="page">
             <Header />
             <h1>書籍レビュー一覧</h1>
-            <form onSubmit={handleSearch} >
-                <input className="search" type="text" name="title_keyword"  placeholder="書籍のタイトルを入力" />
-                <IconContext.Provider value={{ size: '20px' }}>
-                	<button type="submit" className="button"><AiOutlineSearch /></button>
-                </IconContext.Provider>
-            </form>
-            <ul className="Book">
-            {Books.map((BookList, key) => (
-              <li key={key} className="Book__list" value={BookList.id}>
-                <Link to={`/detail/${BookList.id}`} className="Book__list--link" >{BookList.title}</Link>
-              </li>
-            ))}
-            </ul>
-            <Pagination 
-                currentPage={currentPage} 
-                Pagenation={handlePagenation}
-                Books={Books}
-            />
+            <div className="float_page">
+              <form onSubmit={handleSearch} >
+                  <input className="search" type="text" name="title_keyword" defaultValue={title}  placeholder="書籍のタイトルを入力" />
+                  <IconContext.Provider value={{ size: '15px' }}>
+                    <button type="submit" className="button"><AiOutlineSearch /></button>
+                  </IconContext.Provider>
+              </form>
+              <ul className="Book">
+              {Books.map((BookList, key) => (
+                <li key={key} className="Book__list" value={BookList.id}>
+                  
+                  <Link to={`/detail/${BookList.id}`} className="Book__list--link" >{BookList.title}</Link>
+                </li>
+              ))}
+              </ul>
+              <Pagination 
+                  currentPage={currentPage} 
+                  Pagenation={handlePagenation}
+                  Books={Books}
+              />
+            </div>
         </div>
     )
 }
