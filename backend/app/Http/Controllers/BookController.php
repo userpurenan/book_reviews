@@ -15,9 +15,13 @@ class BookController extends Controller
     public function getBooks(Request $request)
     {
         $number = $request->query('offset');
-        $books = Book::orderBy('id', 'desc')->skip($number)->take(10)->get(); //テーブルを10件ずつ取得する。
-        $bookData = [];
+        if($book_keyword = $request->query('title_keyword')){
+            $books = Book::where("title", "LIKE", "$book_keyword%")->skip($number)->orderBy('id', 'desc')->take(10)->get();
+        }else{
+            $books = Book::orderBy('id', 'desc')->skip($number)->take(10)->get(); //テーブルを10件ずつ取得する。
+        }
 
+        $bookData = [];
         foreach ($books as $book) {
             $bookData[] = [
                 'id' => $book->id,
@@ -30,14 +34,6 @@ class BookController extends Controller
         }
     
         return response()->json($bookData, 200, [], JSON_UNESCAPED_UNICODE);
-    }
-
-    public function bookSearch(Request $request){
-        $book_keyword = $request->query('title_keyword');
-
-        $search_result = Book::where("title", "LIKE", "%{$book_keyword}%")->orderBy('id', 'desc')->take(10)->get();
-
-        return response()->json($search_result, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function createBooks(Request $request)
@@ -54,15 +50,15 @@ class BookController extends Controller
                 'review' => $request->input('review'),
                 'reviewer' => $user_name
             ]);
-        }, $retryTimes);
 
-        return response()->json([
-            'title' => $request->input('title'),
-            'url' => $request->input('url'),
-            'detail' => $request->input('detail'),
-            'review' => $request->input('review'),
-            'reviewer' => $user_name,
-        ], 200, [], JSON_UNESCAPED_UNICODE);
+            return response()->json([
+                'title' => $request->input('title'),
+                'url' => $request->input('url'),
+                'detail' => $request->input('detail'),
+                'review' => $request->input('review'),
+                'reviewer' => $user_name,
+            ], 200, [], JSON_UNESCAPED_UNICODE);    
+        }, $retryTimes);
     }
 
     public function getBookDatail($id)

@@ -28,7 +28,7 @@ export const Home = () => {
 
     useEffect(() => {
 	  if(title){
-		axios.get(`${url}/search/books?title_keyword=${title}`)
+		axios.get(`${url}/public/books?title_keyword=${title}`)
 			.then((res)=> {
 				setBooks(res.data);
 			});
