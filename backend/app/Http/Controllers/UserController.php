@@ -22,29 +22,21 @@ class UserController extends Controller
 {
     public function signUp(SignUpRequest $request)
     {
-        DB::beginTransaction();
-
-        try {
+        DB::transaction(function () use ($request, &$user, &$token){
             $user = User::create([
-                        "name" => $request->input('name'),
-                        "email" => $request->input('email'),
-                        "password" => Hash::make($request->input('password')),
-                    ]);
+                "name" => $request->input('name'),
+                "email" => $request->input('email'),
+                "password" => Hash::make($request->input('password')),
+            ]);
 
-            $credentials = $request->only(['email', 'password']);
-            if(! $token = Auth::attempt($credentials)) throw new \Exception('トークンの取得に失敗しました。') ;
+            // $credentials = $request->only(['email', 'password']);
+            // if(! $token = Auth::attempt($credentials)) throw new \Exception('トークンの取得に失敗しました。') ;
+    
+            // Token::create(['user_id' => $user->id,
+            //                    'token' => $token]);    
+        });
 
-            Token::create(['user_id' => $user->id,
-                           'token' => $token]);
-
-            DB::commit();
-
-            return response()->json([ 'name' => $user->name, 'token' => $token ],200, [], JSON_UNESCAPED_UNICODE)->header('Authorization', 'Bearer '.$token);
-        } catch(\Exception $e) {
-            Log::critical($e->getTraceAsString());
-            DB::rollBack();
-            return response()->json(['errormessage' => $e->getMessage() ]);
-        }
+        return response()->json([ 'name' => $user->name, 'token' => $token ],200, [], JSON_UNESCAPED_UNICODE)->header('Authorization', 'Bearer '.$token);
     }
 
     public function login(LoginRequest $request)
