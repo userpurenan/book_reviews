@@ -42,7 +42,7 @@ return [
         ],
             //以下を追加
         'api' => [
-                'driver' => 'jwt',
+                'driver' => 'passport',
                 'provider' => 'users',
         ],
     ],
