@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Header } from "../header/Header";
 import axios from "axios";
 import { useCookies } from "react-cookie";
-import { url } from "../../const";
 import { AiOutlineSearch } from "react-icons/ai";
 import { IconContext } from 'react-icons'
 import './Home.scss';
@@ -10,14 +9,17 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { beforePagenation, nextPagenation } from '../../pagenationSlice';
 import { useLocation } from "react-router-dom";
+import { useUrl } from "../../useUrl";
 
 
 export const Home = () => {
     const [Books, setBooks] = useState([]);
-	const search = useLocation().search;
-	const query = new URLSearchParams(search);
-	const title = query.get('title_keyword')
     const [cookies] = useCookies();
+    const search = useLocation().search;
+    const query = new URLSearchParams(search);
+    const title_keyword = query.get('title_keyword');
+    const get_public_books_url = useUrl("get_public_books");   //書籍取得APIのURL
+    const get_books_url = useUrl("get_books");                 //上戸同じ
     const auth = useSelector((state) => state.auth.isSignIn);
     const currentPage = useSelector((state) => state.pagenation.currentPage); //初期値は「０」
     const dispatch = useDispatch();
@@ -26,58 +28,53 @@ export const Home = () => {
         authorization: `Bearer ${cookies.token}`,
     };
 
-    useEffect(() => {
-	  if(title){
-		axios.get(`${url}/public/books?title_keyword=${title}`)
-			.then((res)=> {
-				setBooks(res.data);
-			});
+    useEffect(async () => {
+      try{    
+          var response = null;
 
-		return
-	  }
+          if(auth){   //ログインしていたら認証情報が必要なAPIから情報を取得する
+              response = await axios.get(get_books_url, { headers });
+          }else{
+              response = await axios.get(get_public_books_url, {
+                params: {
+                    title_keyword: title_keyword
+                }
+              });
+          }
 
-      if(auth){   //ログインしていたら認証情報が必要なAPIから情報を取得する
-        axios.get(`${url}/books`, { headers })
-          .then((res) => {
-            setBooks(res.data); 
-          })
-
-        return
-      }
-
-        axios.get(`${url}/public/books`)
-        .then((res) => {
-          setBooks(res.data); 
-        })
+          setBooks(response.data); 
+        }catch (error){
+          alert(`書籍の取得に失敗しました${error}`);
+        }
       },[]);
 
         const handlePagenation = async (offset, e) => {
-          const res = await axios.get(`${url}/public/books`,{
-            params: {
-                offset: offset // ここにクエリパラメータを指定する。
-            }
-          });
-          setBooks([]);
-          setBooks(res.data);
-          e.target.id === 'next' ? dispatch(nextPagenation()) : dispatch(beforePagenation());
+          try{
+              const response = await axios.get(get_public_books_url,{
+                                        params: {
+                                            offset: offset, // ここにクエリパラメータを指定する。
+                                            title_keyword: title_keyword
+                                        }
+                                      });
+              setBooks(response.data);
+              e.target.id === 'next' ? dispatch(nextPagenation()) : dispatch(beforePagenation());
+          }catch(error){
+            alert(`次のページの取得に失敗しまいしました${error}`);
+          }
         };
-
-		const handleSearch = async () => {
-			const res = await axios.get(`${url}/search/books`);
-			setBooks([]);
-			setBooks(res.data);
-		};
 
    return(
         <div className="page">
             <Header />
             <h1>書籍レビュー一覧</h1>
             <div className="float_page">
-              <form onSubmit={handleSearch} >
-                  <input className="search" type="text" name="title_keyword" defaultValue={title}  placeholder="書籍のタイトルを入力" />
-                  <IconContext.Provider value={{ size: '15px' }}>
-                    <button type="submit" className="button"><AiOutlineSearch /></button>
-                  </IconContext.Provider>
+              <form>
+                  <input className="search" type="text" name="title_keyword" defaultValue={title_keyword}  placeholder="書籍のタイトルを入力" />
+                  <button type="submit" className="button">
+                    <IconContext.Provider value={{ size: '15px' }}>
+                      <AiOutlineSearch />
+                    </IconContext.Provider>
+                  </button>
               </form>
               <ul className="Book">
               {Books.map((BookList, key) => (
