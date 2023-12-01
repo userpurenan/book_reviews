@@ -8,17 +8,17 @@
 .float_page{
     background-color: aliceblue;
     border-radius: 3%;
-    margin-left: 400px;
-    margin-right: 200px;
+    margin-left: 800px;
+    margin-right: 300px;
 }
 
 .search{
     margin-left: 15%;
     height: 40px;
-    width: 500px;
+    width: 60%;
 }
 
-.button{
+.search_button{
     margin-top: 10px;
     height: 45px;
     width: 45px;
@@ -27,11 +27,11 @@
 
 .Book__list{
     list-style-type: none; /* リストスタイルを無効にする */
-    margin-left: 10%;
+    margin-left: 20%;
     
     &--link{
         border: solid;
-        width: 80%;
+        width: 70%;
         height: 100px;
         font-size: 30px;
         border-radius: 5px;
@@ -43,7 +43,7 @@
 
 
 .pagenation{
-    margin-left: 40%;
+    margin-left: 35%;
 
     &__button{
         height: 50px;

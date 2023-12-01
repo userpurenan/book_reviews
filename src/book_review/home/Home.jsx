@@ -3,119 +3,145 @@ import { Header } from "../header/Header";
 import axios from "axios";
 import { useCookies } from "react-cookie";
 import { AiOutlineSearch } from "react-icons/ai";
-import { IconContext } from 'react-icons'
-import './Home.scss';
+import { IconContext } from "react-icons";
+import "./Home.scss";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { beforePagenation, nextPagenation } from '../../pagenationSlice';
+import { beforePagenation, nextPagenation } from "../../pagenationSlice";
 import { useLocation } from "react-router-dom";
 import { useUrl } from "../../useUrl";
 
-
 export const Home = () => {
-    const [Books, setBooks] = useState([]);
-    const [cookies] = useCookies();
-    const search = useLocation().search;
-    const query = new URLSearchParams(search);
-    const title_keyword = query.get('title_keyword');
-    const get_public_books_url = useUrl("get_public_books");   //書籍取得APIのURL
-    const get_books_url = useUrl("get_books");                 //上戸同じ
-    const auth = useSelector((state) => state.auth.isSignIn);
-    const currentPage = useSelector((state) => state.pagenation.currentPage); //初期値は「０」
-    const dispatch = useDispatch();
+  const [Books, setBooks] = useState([]);
+  const [cookies] = useCookies();
+  const search = useLocation().search;
+  const query = new URLSearchParams(search);
+  const title_keyword = query.get("title_keyword");
+  const get_public_books_url = useUrl("get_public_books"); //書籍取得APIのURL
+  const get_books_url = useUrl("get_books"); //上戸同じ
+  const auth = useSelector((state) => state.auth.isSignIn);
+  const currentPage = useSelector((state) => state.pagenation.currentPage); //初期値は「０」
+  const dispatch = useDispatch();
 
-    const headers = {
-        authorization: `Bearer ${cookies.token}`,
-    };
+  const headers = {
+    authorization: `Bearer ${cookies.token}`,
+  };
 
-    useEffect(async () => {
-      try{    
-          var response = null;
-
-          if(auth){   //ログインしていたら認証情報が必要なAPIから情報を取得する
-              response = await axios.get(get_books_url, { headers });
-          }else{
-              response = await axios.get(get_public_books_url, {
-                params: {
-                    title_keyword: title_keyword
-                }
-              });
-          }
-
-          setBooks(response.data); 
-        }catch (error){
-          alert(`書籍の取得に失敗しました${error}`);
+  useEffect(() => {
+    //useEffect(「ここにasync入れたらダメ。」())
+    const axiosData = async () => {
+      try {
+        if (auth) {
+          //ログインしていたら認証情報が必要なAPIから情報を取得する
+          var response = await axios.get(get_books_url, { headers });
+        } else {
+          var response = await axios.get(get_public_books_url, {
+            params: {
+              title_keyword: title_keyword,
+            },
+          });
         }
-      },[]);
 
-        const handlePagenation = async (offset, e) => {
-          try{
-              const response = await axios.get(get_public_books_url,{
-                                        params: {
-                                            offset: offset, // ここにクエリパラメータを指定する。
-                                            title_keyword: title_keyword
-                                        }
-                                      });
-              setBooks(response.data);
-              e.target.id === 'next' ? dispatch(nextPagenation()) : dispatch(beforePagenation());
-          }catch(error){
-            alert(`次のページの取得に失敗しまいしました${error}`);
-          }
-        };
+        setBooks(response.data);
+      } catch (error) {
+        alert(`書籍の取得に失敗しました${error}`);
+      }
+    };
+    axiosData();
+  }, []);
 
-   return(
-        <div className="page">
-            <Header />
-            <h1>書籍レビュー一覧</h1>
-            <div className="float_page">
-              <form>
-                  <input className="search" type="text" name="title_keyword" defaultValue={title_keyword}  placeholder="書籍のタイトルを入力" />
-                  <button type="submit" className="button">
-                    <IconContext.Provider value={{ size: '15px' }}>
-                      <AiOutlineSearch />
-                    </IconContext.Provider>
-                  </button>
-              </form>
-              <ul className="Book">
-              {Books.map((BookList, key) => (
-                <li key={key} className="Book__list" value={BookList.id}>
-                  
-                  <Link to={`/detail/${BookList.id}`} className="Book__list--link" >{BookList.title}</Link>
-                </li>
-              ))}
-              </ul>
-              <Pagination 
-                  currentPage={currentPage} 
-                  Pagenation={handlePagenation}
-                  Books={Books}
-              />
-            </div>
-        </div>
-    )
-}
+  const handlePagenation = async (offset, e) => {
+    try {
+      const response = await axios.get(get_public_books_url, {
+        params: {
+          offset: offset, // ここにクエリパラメータを指定する。
+          title_keyword: title_keyword,
+        },
+      });
+      setBooks(response.data);
+      e.target.id === "next"
+        ? dispatch(nextPagenation())
+        : dispatch(beforePagenation());
+    } catch (error) {
+      alert(`次のページの取得に失敗しまいしました${error}`);
+    }
+  };
+
+  return (
+    <div className="page">
+      <Header />
+      <h1>書籍レビュー一覧</h1>
+      <div className="float_page">
+        <form>
+          <input
+            className="search"
+            type="text"
+            name="title_keyword"
+            defaultValue={title_keyword}
+            placeholder="書籍のタイトルを入力"
+          />
+          <button type="submit" className="search_button">
+            <IconContext.Provider value={{ size: "15px" }}>
+              <AiOutlineSearch />
+            </IconContext.Provider>
+          </button>
+        </form>
+        <ul className="Book">
+          {Books.map((BookList, key) => (
+            <li key={key} className="Book__list" value={BookList.id}>
+              <Link to={`/detail/${BookList.id}`} className="Book__list--link">
+                {BookList.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Pagination
+          currentPage={currentPage}
+          Pagenation={handlePagenation}
+          Books={Books}
+        />
+      </div>
+    </div>
+  );
+};
 
 const Pagination = ({ currentPage, Pagenation, Books }) => {
-    return (
-      <div className="pagenation">
-          {currentPage !== 0 ?
-           <button
-            id="before"
-            onClick={(e)=> {Pagenation((currentPage - 1) * 10, e)}}
-            className="pagenation__button"
-          >
-            前のページへ
-          </button> : <></>}
-          <input type="text" className="pagenation__currentPage" value={currentPage + 1} readOnly />
-          {Books.length === 10 ?
-          <button
-            id="next"
-            onClick={(e) => {Pagenation((currentPage + 1) * 10, e)}}
-            className="pagenation__button"
-          >
-            次のページへ
-          </button> : <></>}
-      </div>
-    );
-};  
+  return (
+    <div className="pagenation">
+      {currentPage !== 0 ? (
+        <button
+          id="before"
+          onClick={(e) => {
+            Pagenation((currentPage - 1) * 10, e);
+          }}
+          className="pagenation__button"
+        >
+          前のページへ
+        </button>
+      ) : (
+        <button className="pagenation__button" disabled>前のページへ</button>   
+      )}
+      <input
+        type="text"
+        className="pagenation__currentPage"
+        value={currentPage + 1}
+        readOnly
+      />
+      {Books.length === 10 ? (
+        <button
+          id="next"
+          onClick={(e) => {
+            Pagenation((currentPage + 1) * 10, e);
+          }}
+          className="pagenation__button"
+        >
+          次のページへ
+        </button>
+      ) : (
+        <button className="pagenation__button" disabled>次のページへ</button>   
+      )}
+    </div>
+  );
+};
 
 export default Home;
