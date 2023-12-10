@@ -20,7 +20,8 @@ class BookFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->realText($maxNbChars = 15),
+            // 'title' => $this->faker->realText($maxNbChars = 15),
+            'title' => "ワンピース",
             'user_id' => 1,
             'url' => $this->faker->email,
             'detail' => $this->faker->realText($maxNbChars = 15),
