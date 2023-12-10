@@ -24,7 +24,7 @@ export const Login = () => {
     axios
       .post(`${url}/login`, { email: email, password: password })
       .then((res) => {
-        setCookie('token', res.data.token);
+        setCookie('token', res.data.access_token);
         dispatch(signIn());
         navigate('/');
       })
