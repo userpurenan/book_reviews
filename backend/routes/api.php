@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Book;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookController;
+use Laravel\Passport\Http\Controllers\AccessTokenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +33,7 @@ Route::post('/users', [UserController::class, 'signUp']);
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/public/books', [BookController::class, 'getBooks']);
 
-Route::middleware('auth:api', 'cors')->group(function () {
+Route::middleware('auth:api')->group(function () {
     Route::post('/uploads', [UserController::class, 'imageUploads']);
     Route::put('/users', [UserController::class, 'editUser']);
     Route::get('/users', [UserController::class, 'getUser']);
