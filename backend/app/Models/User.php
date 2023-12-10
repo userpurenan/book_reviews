@@ -6,12 +6,18 @@ namespace App\Models;
 use App\Models\Log;
 use App\Models\Token;
 use App\Models\Book;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
+use PhpParser\Node\Expr\Cast\String_;
 
 class User extends Authenticatable
 {
     use HasFactory;
+    use Notifiable;
+    use HasApiTokens;
 
     protected $table = "users";
 
