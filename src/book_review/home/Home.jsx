@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { Header } from "../header/Header";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+import { IconContext } from 'react-icons';
+import { AiOutlineSearch } from 'react-icons/ai';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import PropTypes from 'prop-types';
-import { useCookies } from "react-cookie";
-import { AiOutlineSearch } from "react-icons/ai";
-import { IconContext } from "react-icons";
-import "./Home.scss";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { beforePagenation, nextPagenation } from "../../pagenationSlice";
-import { useLocation } from "react-router-dom";
-import { useUrl } from "../../useUrl";
+import { beforePagenation, nextPagenation } from '../../pagenationSlice';
+import { useUrl } from '../../useUrl';
+import { Header } from '../header/Header';
+import './Home.scss';
 
 export const Home = () => {
   const [Books, setBooks] = useState([]);
   const [cookies] = useCookies();
   const search = useLocation().search;
   const query = new URLSearchParams(search);
-  const title_keyword = query.get("title_keyword");
-  const get_public_books_url = useUrl("get_public_books"); //書籍取得APIのURL
-  const get_books_url = useUrl("get_books"); //上戸同じ
+  const title_keyword = query.get('title_keyword');
+  const get_public_books_url = useUrl('get_public_books'); //書籍取得APIのURL
+  const get_books_url = useUrl('get_books'); //上戸同じ
   const auth = useSelector((state) => state.auth.isSignIn);
   const currentPage = useSelector((state) => state.pagenation.currentPage); //初期値は「０」
   const dispatch = useDispatch();
 
   const headers = {
-    authorization: `Bearer ${cookies.token}`,
+    authorization: `Bearer ${cookies.token}`
   };
 
   useEffect(() => {
@@ -39,8 +39,8 @@ export const Home = () => {
         } else {
           response = await axios.get(get_public_books_url, {
             params: {
-              title_keyword: title_keyword,
-            },
+              title_keyword: title_keyword
+            }
           });
         }
 
@@ -57,13 +57,11 @@ export const Home = () => {
       const response = await axios.get(get_public_books_url, {
         params: {
           offset: offset, // ここにクエリパラメータを指定する。
-          title_keyword: title_keyword,
-        },
+          title_keyword: title_keyword
+        }
       });
       setBooks(response.data);
-      e.target.id === "next"
-        ? dispatch(nextPagenation())
-        : dispatch(beforePagenation());
+      e.target.id === 'next' ? dispatch(nextPagenation()) : dispatch(beforePagenation());
     } catch (error) {
       alert(`次のページの取得に失敗しまいしました${error}`);
     }
@@ -83,7 +81,7 @@ export const Home = () => {
             placeholder="書籍のタイトルを入力"
           />
           <button type="submit" className="search_button">
-            <IconContext.Provider value={{ size: "15px" }}>
+            <IconContext.Provider value={{ size: '15px' }}>
               <AiOutlineSearch />
             </IconContext.Provider>
           </button>
@@ -97,11 +95,7 @@ export const Home = () => {
             </li>
           ))}
         </ul>
-        <Pagination
-          currentPage={currentPage}
-          Pagenation={handlePagenation}
-          Books={Books}
-        />
+        <Pagination currentPage={currentPage} Pagenation={handlePagenation} Books={Books} />
       </div>
     </div>
   );
@@ -121,14 +115,11 @@ const Pagination = ({ currentPage, Pagenation, Books }) => {
           前のページへ
         </button>
       ) : (
-        <button className="pagenation__button" disabled>前のページへ</button>   
+        <button className="pagenation__button" disabled>
+          前のページへ
+        </button>
       )}
-      <input
-        type="text"
-        className="pagenation__currentPage"
-        value={currentPage + 1}
-        readOnly
-      />
+      <input type="text" className="pagenation__currentPage" value={currentPage + 1} readOnly />
       {Books.length === 10 ? (
         <button
           id="next"
@@ -140,7 +131,9 @@ const Pagination = ({ currentPage, Pagenation, Books }) => {
           次のページへ
         </button>
       ) : (
-        <button className="pagenation__button" disabled>次のページへ</button>   
+        <button className="pagenation__button" disabled>
+          次のページへ
+        </button>
       )}
     </div>
   );
@@ -149,7 +142,7 @@ const Pagination = ({ currentPage, Pagenation, Books }) => {
 Pagination.propTypes = {
   currentPage: PropTypes.number,
   Pagenation: PropTypes.func.isRequired,
-  Books:PropTypes.array,
+  Books: PropTypes.array
 };
 
 export default Home;
