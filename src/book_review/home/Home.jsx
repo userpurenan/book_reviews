@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Header } from "../header/Header";
 import axios from "axios";
+import PropTypes from 'prop-types';
 import { useCookies } from "react-cookie";
 import { AiOutlineSearch } from "react-icons/ai";
 import { IconContext } from "react-icons";
@@ -30,12 +31,13 @@ export const Home = () => {
   useEffect(() => {
     //useEffect(「ここにasync入れたらダメ。」())
     const axiosData = async () => {
+      var response;
       try {
+        //ログインしていたら認証情報が必要なAPIから情報を取得する
         if (auth) {
-          //ログインしていたら認証情報が必要なAPIから情報を取得する
-          var response = await axios.get(get_books_url, { headers });
+          response = await axios.get(get_books_url, { headers });
         } else {
-          var response = await axios.get(get_public_books_url, {
+          response = await axios.get(get_public_books_url, {
             params: {
               title_keyword: title_keyword,
             },
@@ -142,6 +144,12 @@ const Pagination = ({ currentPage, Pagenation, Books }) => {
       )}
     </div>
   );
+};
+
+Pagination.propTypes = {
+  currentPage: PropTypes.number,
+  Pagenation: PropTypes.func.isRequired,
+  Books:PropTypes.array,
 };
 
 export default Home;

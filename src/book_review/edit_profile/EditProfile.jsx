@@ -48,7 +48,7 @@ export const EditProfile = () => {  //コンポーネント名は大文字始ま
     const handleIconUrlChange = (e) => { //画像が1MBより大きかったらリサイズする関数
         const file = e.target.files[0];
         const url = URL.createObjectURL(file);
-        setImgUrl(url); // imgタグをusestateにセット　「usestateにurlをセットする」
+        setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
 
         if (file.size > 1024 * 1024) { // 1MB以上の場合
         new Compressor(file, { //画像のリサイズする関数

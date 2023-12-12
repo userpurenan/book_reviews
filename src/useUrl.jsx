@@ -1,5 +1,3 @@
-import React from "react";
-
 export const useUrl = (props) => {
     const endpoint = process.env.REACT_APP_API_URL;
 
