@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BookRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -12,13 +13,14 @@ use App\Models\Log;
 
 class BookController extends Controller
 {
-    public function getBooks(Request $request)
+    public function getBooks(BookRequest $request)
     {
         $number = $request->query('offset');
-        if($book_keyword = $request->query('title_keyword')){
-            $books = Book::where("title", "LIKE", "$book_keyword%")->skip($number)->orderBy('id', 'desc')->take(10)->get();
-        }else{
+        if(! $request->query('title_keyword')){ //フロント側の検索欄にスクリプト文が埋め込まれた時、エスケープする前に条件として使っていいのか？
             $books = Book::orderBy('id', 'desc')->skip($number)->take(10)->get(); //テーブルを10件ずつ取得する。
+        }else{
+            $book_keyword = htmlspecialchars($request->query('title_keyword'),ENT_QUOTES,"UTF-8");
+            $books = Book::where("title", "LIKE", "$book_keyword%")->skip($number)->orderBy('id', 'desc')->take(10)->get();
         }
 
         $bookData = [];
@@ -50,15 +52,15 @@ class BookController extends Controller
                 'review' => $request->input('review'),
                 'reviewer' => $user_name
             ]);
-
-            return response()->json([
-                'title' => $request->input('title'),
-                'url' => $request->input('url'),
-                'detail' => $request->input('detail'),
-                'review' => $request->input('review'),
-                'reviewer' => $user_name,
-            ], 200, [], JSON_UNESCAPED_UNICODE);    
         }, $retryTimes);
+
+        return response()->json([
+            'title' => $request->input('title'),
+            'url' => $request->input('url'),
+            'detail' => $request->input('detail'),
+            'review' => $request->input('review'),
+            'reviewer' => $user_name,
+        ], 200, [], JSON_UNESCAPED_UNICODE);    
     }
 
     public function getBookDatail($id)
