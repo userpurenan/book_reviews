@@ -28,14 +28,19 @@ export const Home = () => {
     authorization: `Bearer ${cookies.token}`
   };
 
+  //useEffect(「ここにasync入れたらダメ。」())
   useEffect(() => {
-    //useEffect(「ここにasync入れたらダメ。」())
     const axiosData = async () => {
       var response;
       try {
         //ログインしていたら認証情報が必要なAPIから情報を取得する
         if (auth) {
-          response = await axios.get(get_books_url, { headers });
+          response = await axios.get(get_books_url, {
+            headers,
+            params: {
+              title_keyword: title_keyword
+            }
+          });
         } else {
           response = await axios.get(get_public_books_url, {
             params: {
