@@ -4,6 +4,7 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 import { url } from "../../const";
 import { AiOutlineSearch } from "react-icons/ai";
+import PropTypes from 'prop-types';
 import { IconContext } from 'react-icons'
 import './Home.scss';
 import { Link } from "react-router-dom";
@@ -120,5 +121,11 @@ const Pagination = ({ currentPage, Pagenation, Books }) => {
       </div>
     );
 };  
+
+Pagination.propTypes = {
+  currentPage: PropTypes.number,
+  Pagenation: PropTypes.func.isRequired,
+  Books:PropTypes.array,
+};
 
 export default Home;

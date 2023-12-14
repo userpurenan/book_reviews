@@ -4,15 +4,12 @@ import './BookReviewInput.scss';
 import '../create_book_review/CreateBookReview.scss';
 import '../edit_book_review/EditBookReview.jsx';
 import { useForm } from "react-hook-form";
+import PropTypes from 'prop-types';
 
 
 
 export const BookReviewInput = (props) => {
     const { register, handleSubmit, formState: { errors } } = useForm(); // バリデーションのフォームを定義。
-    // const [bookTitle, setBookTitle] = useState('');
-    // const [bookUrl, setBookUrl] = useState('');
-    // const [bookDetail, setBookDetail] = useState('');
-    // const [bookReview, setBookReview] = useState('');
 
     const handleTitleChange = (e) => props.setBookTitle(e.target.value);
     const handleUrlChange = (e) => props.setBookUrl(e.target.value);
@@ -70,3 +67,18 @@ export const BookReviewInput = (props) => {
         </div>
     )
 }
+
+BookReviewInput.propTypes = {
+    setBookTitle: PropTypes.func.isRequired,
+    setBookUrl: PropTypes.func.isRequired,
+    setBookDetail: PropTypes.func.isRequired,
+    setBookReview: PropTypes.func.isRequired,
+    BookOperations: PropTypes.object.isRequired,
+    deleteBook: PropTypes.func.isRequired,
+    bookData: PropTypes.shape({
+        title: PropTypes.string,
+        url: PropTypes.string,
+        detail: PropTypes.string,
+        review: PropTypes.string,
+    }),
+};

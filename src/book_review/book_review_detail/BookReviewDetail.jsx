@@ -6,6 +6,7 @@ import axios from "axios";
 import { Header } from "../header/Header";
 import './BookReviewDetail.scss';
 import Loading from "../Loding";
+import { ReviewComment } from "../../review_comment/ReviewComment";
 
 
 export const BookReviewDetail = () => {
@@ -57,6 +58,7 @@ export const BookReviewDetail = () => {
                 <p className="bookDetail__detail">書籍の詳細情報: {bookData.detail}</p>
                 <p className="bookDetail__review">レビュー: {bookData.review}</p>
                 {bookData.isMine ? <Link to={`/edit/${BookId}`}>書籍編集画面へ</Link> : <></>}
+                <ReviewComment />
             </div>}
         </div>
     )

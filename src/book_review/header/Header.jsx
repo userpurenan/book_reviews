@@ -36,9 +36,9 @@ export const Header = () => {
       <h1>書籍レビュー</h1>
       {auth ? (
         <div className='userContainer'>
-          <Link to={'/'} className="Navigate-button">ホーム画面へ　　</Link>          
-          <Link to={'/new'} className='Navigate-button'>書籍レビュー投稿画面へ　　</Link>
-          <Link to={'/profile'} className="Navigate-button" state={user.name}>ユーザー名変更　　</Link>
+          <Link to={'/'} className="Navigate-button">ホーム画面へ</Link>          
+          <Link to={'/new'} className='Navigate-button'>書籍レビュー投稿画面へ</Link>
+          <Link to={'/profile'} className="Navigate-button" state={user.name}>ユーザー名変更</Link>
           <Link to={'/login'} onClick={handleSignOut} className="Navigate-button">
             ログアウト
           </Link>

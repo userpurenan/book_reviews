@@ -5,14 +5,12 @@ import axios from "axios";
 import { url } from "../../const";
 import { useCookies } from "react-cookie";
 import { useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { BookReviewInput } from "../book_review_input/BookReviewInput";
 import './EditBookReview.scss';
 
 
 export const EditBookReview = () =>{
-    // const { handleSubmit, formState: { errors } } = useForm(); // バリデーションのフォームを定義。
     const { BookId } = useParams(); //クエリパラメータを取得するには [] ではなく {} で囲わなければならない（ややこしい...）
     const navigate = useNavigate();
     const auth = useSelector((state) => state.auth.isSignIn);

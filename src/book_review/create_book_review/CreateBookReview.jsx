@@ -7,12 +7,10 @@ import axios from "axios";
 import { url } from "../../const";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 
 
 export const CreateBookReview = () =>{
-    // const { register, handleSubmit, formState: { errors } } = useForm(); // バリデーションのフォームを定義。
     const navigate = useNavigate();
     const auth = useSelector((state) => state.auth.isSignIn);
     const [cookies] = useCookies();
