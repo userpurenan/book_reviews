@@ -17,7 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('book_id');
             $table->text('comment');
             $table->integer('comment_likes')->default(0);
+            $table->timestamps();
 
+            $table->index('book_id');
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

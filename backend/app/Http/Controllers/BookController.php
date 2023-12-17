@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
+use App\Models\BookComment;
 use App\Models\Log;
 
 class BookController extends Controller
@@ -76,6 +77,38 @@ class BookController extends Controller
             'reviewer' => $bookDatail->reviewer,
             'isMine' => $isMine,
         ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function createComment(Request $request, $id){
+        $books_review_comment = BookComment::create([
+                                    'user_id' => Auth::id(),
+                                    'book_id' => $id,
+                                    'comment' => $request->input('comment')
+                                ]);
+
+        return response()->json([
+                    'user_name' => $books_review_comment->user->name,
+                    'user_icon_image_path' => $books_review_comment->user->imagePath,
+                    'comment' => $books_review_comment->comment,
+                ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getBookReviewComment(Request $request, $id){
+        $number = $request->query('comment_offset');
+
+        $books_review_comment = BookComment::where('book_id', $id)->skip($number)->orderBy('id', 'desc')->take(10)->get();
+
+        $review_comment = [];
+        foreach ($books_review_comment as $books_review) {
+            $review_comment[] = [
+                'user_name' => $books_review->user->name,
+                'image_path' => $books_review->user->imagePath,
+                'comment' => $books_review->comment,
+                'book_review_comment' => $books_review->comment_likes,
+            ];
+        }
+    
+        return response()->json($review_comment, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function updateBook(Request $request, $id)

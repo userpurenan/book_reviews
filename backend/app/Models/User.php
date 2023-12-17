@@ -6,12 +6,11 @@ namespace App\Models;
 use App\Models\Log;
 use App\Models\Token;
 use App\Models\Book;
-use Illuminate\Support\Facades\Http;
+use App\Models\BooksComment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
-use PhpParser\Node\Expr\Cast\String_;
 
 class User extends Authenticatable
 {
@@ -46,5 +45,9 @@ class User extends Authenticatable
 
     public function book(){
         return $this->hasmany(Book::class);
+    }
+
+    public function books_comment(){
+        return $this->hasMany(BooksComment::class);
     }
 }
