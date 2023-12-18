@@ -24,3 +24,10 @@
 .error-massage{
     color: #ff3333;
 }
+
+.comment_list{
+    @extend .Book__list--link;
+    font-size: 20px;
+    height: 100%;
+    background-color: aliceblue;
+}

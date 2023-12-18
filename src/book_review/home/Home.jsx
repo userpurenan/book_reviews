@@ -76,8 +76,8 @@ export const Home = () => {
     <div className="page">
       <Header />
       <h1>書籍レビュー一覧</h1>
-      <div className="float_page">
-        <form>
+      <div className="extend_float_page">
+        <form onSubmit={handleSearch}>
           <input
             className="search"
             type="text"

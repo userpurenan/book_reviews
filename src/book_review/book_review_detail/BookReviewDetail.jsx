@@ -13,6 +13,7 @@ export const BookReviewDetail = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [bookData, setBookData] = useState('');
+  const [bookComment, setBookComment] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
 
   const headers = {
@@ -41,6 +42,11 @@ export const BookReviewDetail = () => {
     axios.post(`${url}/logs`, { selectBookId: BookId }, { headers }).catch((err) => {
       setErrorMessage(`ログの送信に失敗しました${err}`);
     });
+
+    axios.get(`${url}/books/${BookId}/comment`, { headers })
+     .then((response) => {
+        setBookComment(response.data)
+     });
   }, [BookId]);
 
   return (
@@ -53,13 +59,20 @@ export const BookReviewDetail = () => {
       ) : (
         <div className="bookDetail">
           <p className="bookDetail__title">タイトル: {bookData.title}</p>
-          <p className="bookDetail__url">
-            URL: <a href={bookData.url}>{bookData.url}</a>
-          </p>
+          <p className="bookDetail__url">URL: <a href={bookData.url}>{bookData.url}</a></p>
           <p className="bookDetail__reviewer">レビュワー: {bookData.reviewer}</p>
           <p className="bookDetail__detail">書籍の詳細情報: {bookData.detail}</p>
           <p className="bookDetail__review">レビュー: {bookData.review}</p>
-          {bookData.isMine ? <Link to={`/edit/${BookId}`}>書籍編集画面へ</Link> : <></>}
+          {bookData.isMine ? <Link to={`/edit/${BookId}`} className='bookDetail__link-edit-book'>書籍編集画面へ</Link> : <></>}
+          <ReviewCommentInput bookComment={bookComment} setBookComment={setBookComment} />
+          <ul>
+            {bookComment.map((BookCommentList, key) => (
+              <li key={key} value={BookCommentList.id} className='comment_list'>
+                  {BookCommentList.user_name}<br />
+                  <p className='user_comment'>{BookCommentList.comment}</p>
+              </li>            
+            ))}
+          </ul>
         </div>
       )}
     </div>

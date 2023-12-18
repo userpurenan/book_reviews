@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Book;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookController;
+use App\Models\BooksComment;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Http\Controllers\AccessTokenController;
 
 /*
@@ -46,5 +48,7 @@ Route::middleware('auth:api')->group(function () {
 
         return 'delete success!!';
     });
+    Route::get('/books/{id}/comment', [BookController::class, 'getBookReviewComment']);
+    Route::post('/books/{id}/comment', [BookController::class, 'createComment']);
     Route::post('/logs', [BookController::class, 'setlog']);
 });
