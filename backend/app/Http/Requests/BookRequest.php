@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
+use App\Http\Requests\ApiRequest;
 
-class BookRequest extends FormRequest
+class BookRequest extends ApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,13 +25,5 @@ class BookRequest extends FormRequest
             'offset' => 'nullable',
             'title_keyword' => 'nullable|string|regex:/^[a-zA-Z0-9ぁ-んァ-ヶ一-龥々]+$/u',
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        $response  = $validator->errors()->toArray();
-    
-        throw new HttpResponseException(response()->json([ 'message' => 'バリデーションエラー',
-                                                           'error' => $response], 422, [], JSON_UNESCAPED_UNICODE));   
     }
 }

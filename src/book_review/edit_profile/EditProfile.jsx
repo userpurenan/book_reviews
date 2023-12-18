@@ -9,8 +9,9 @@ import { url } from '../../const';
 import { Header } from '../header/Header';
 import './EditProfile.scss';
 
+//コンポーネント名は大文字始まりでOK
 export const EditProfile = () => {
-  //コンポーネント名は大文字始まりでOK
+
   const {
     register,
     handleSubmit,
@@ -27,8 +28,8 @@ export const EditProfile = () => {
   const navigate = useNavigate();
   const handleNameChange = (e) => setName(e.target.value);
 
+  //関数は小文字始まり
   const updateName = () => {
-    //関数は小文字始まり
     const formdata = new FormData();
     formdata.append('icon', ImgFile, ImgFile.name);
 
@@ -50,16 +51,16 @@ export const EditProfile = () => {
       });
   };
 
+  //画像が1MBより大きかったらリサイズする関数
   const handleIconUrlChange = (e) => {
-    //画像が1MBより大きかったらリサイズする関数
     const file = e.target.files[0];
     const url = URL.createObjectURL(file);
     setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
 
+    // 1MB以上の場合
     if (file.size > 1024 * 1024) {
-      // 1MB以上の場合
+      //画像のリサイズする関数
       new Compressor(file, {
-        //画像のリサイズする関数
         quality: 0.3,
         maxHeight: 10,
         maxWidth: 10,

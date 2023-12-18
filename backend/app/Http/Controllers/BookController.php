@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\BookRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
+use App\Models\BookComment;
 use App\Models\Log;
 
 class BookController extends Controller
 {
-    public function getBooks(BookRequest $request)
+    public function getBooks(Request $request)
     {
         $number = $request->query('offset');
-        if(! $request->query('title_keyword')){ //フロント側の検索欄にスクリプト文が埋め込まれた時、エスケープする前に条件として使っていいのか？
-            $books = Book::orderBy('id', 'desc')->skip($number)->take(10)->get(); //テーブルを10件ずつ取得する。
-        }else{
-            $book_keyword = htmlspecialchars($request->query('title_keyword'),ENT_QUOTES,"UTF-8");
+        if($book_keyword = $request->query('title_keyword')){
             $books = Book::where("title", "LIKE", "$book_keyword%")->skip($number)->orderBy('id', 'desc')->take(10)->get();
+        }else{
+            $books = Book::orderBy('id', 'desc')->skip($number)->take(10)->get(); //テーブルを10件ずつ取得する。
         }
 
         $bookData = [];
@@ -52,15 +51,15 @@ class BookController extends Controller
                 'review' => $request->input('review'),
                 'reviewer' => $user_name
             ]);
-        }, $retryTimes);
 
-        return response()->json([
-            'title' => $request->input('title'),
-            'url' => $request->input('url'),
-            'detail' => $request->input('detail'),
-            'review' => $request->input('review'),
-            'reviewer' => $user_name,
-        ], 200, [], JSON_UNESCAPED_UNICODE);    
+            return response()->json([
+                'title' => $request->input('title'),
+                'url' => $request->input('url'),
+                'detail' => $request->input('detail'),
+                'review' => $request->input('review'),
+                'reviewer' => $user_name,
+            ], 200, [], JSON_UNESCAPED_UNICODE);    
+        }, $retryTimes);
     }
 
     public function getBookDatail($id)
@@ -78,6 +77,38 @@ class BookController extends Controller
             'reviewer' => $bookDatail->reviewer,
             'isMine' => $isMine,
         ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function createComment(Request $request, $id){
+        $books_review_comment = BookComment::create([
+                                    'user_id' => Auth::id(),
+                                    'book_id' => $id,
+                                    'comment' => $request->input('comment')
+                                ]);
+
+        return response()->json([
+                    'user_name' => $books_review_comment->user->name,
+                    'user_icon_image_path' => $books_review_comment->user->imagePath,
+                    'comment' => $books_review_comment->comment,
+                ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getBookReviewComment(Request $request, $id){
+        $number = $request->query('comment_offset');
+
+        $books_review_comment = BookComment::where('book_id', $id)->skip($number)->orderBy('id', 'desc')->take(10)->get();
+
+        $review_comment = [];
+        foreach ($books_review_comment as $books_review) {
+            $review_comment[] = [
+                'user_name' => $books_review->user->name,
+                'image_path' => $books_review->user->imagePath,
+                'comment' => $books_review->comment,
+                'book_review_comment' => $books_review->comment_likes,
+            ];
+        }
+    
+        return response()->json($review_comment, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function updateBook(Request $request, $id)

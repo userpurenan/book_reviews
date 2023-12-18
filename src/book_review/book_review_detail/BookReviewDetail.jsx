@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { url } from '../../const';
-import Loading from '../Loding';
-import { Header } from '../header/Header';
+import React, { useEffect, useState } from "react";
+import { url } from "../../const";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import axios from "axios";
+import { Header } from "../header/Header";
 import './BookReviewDetail.scss';
+import Loading from "../Loding";
+
 
 export const BookReviewDetail = () => {
   const { BookId } = useParams(); //クエリパラメータを取得するには[]ではなく{}で囲わなければならない
@@ -16,28 +17,26 @@ export const BookReviewDetail = () => {
   const [bookComment, setBookComment] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const headers = {
-    authorization: `Bearer ${cookies.token}`
-  };
+    const headers = {
+        authorization: `Bearer ${cookies.token}`,
+    };
 
-  useEffect(() => {
-    setIsLoading(true);
+    useEffect(() => {
+        setIsLoading(true);
 
-    if (!cookies.token) navigate('/login');
+        if(! cookies.token) navigate('/login');
 
-    axios
-      .get(`${url}/books/${BookId}`, { headers })
-      .then((res) => {
-        const bookData = res.data;
-        setBookData(bookData); //書籍の情報を一個にまとめた
-      })
-      .catch((err) => {
-        setErrorMessage(`エラー発生 ${err}`);
-      })
-      .finally(() => {
-        //「finally」は最後に必ず実行される処理群
-        setIsLoading(false);
-      });
+        axios.get(`${url}/books/${BookId}`, { headers })
+        .then((res) => {
+            const bookData = res.data;
+            setBookData(bookData); //書籍の情報を一個にまとめた
+        })
+        .catch((err) => {
+            setErrorMessage(`エラー発生 ${err}`);
+        })
+        .finally(() => { //「finally」は最後に必ず実行される処理群
+            setIsLoading(false);
+        });
 
     axios.post(`${url}/logs`, { selectBookId: BookId }, { headers }).catch((err) => {
       setErrorMessage(`ログの送信に失敗しました${err}`);
@@ -76,5 +75,5 @@ export const BookReviewDetail = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
