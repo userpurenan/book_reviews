@@ -23,8 +23,8 @@ export const Header = () => {
   };
 
   useEffect(() => {
+    //ログインしていたらユーザー情報を取得する
     if (auth) {
-      //ログインしていたらユーザー情報を取得する
       axios.get(`${url}/users`, { headers }).then((res) => {
         setUsers(res.data);
       });

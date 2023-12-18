@@ -106,6 +106,7 @@ export const Home = () => {
   );
 };
 
+
 const Pagination = ({ currentPage, Pagenation, Books }) => {
   return (
     <div className="pagenation">
@@ -123,6 +124,7 @@ const Pagination = ({ currentPage, Pagenation, Books }) => {
         <button className="pagenation__button" disabled>
           前のページへ
         </button>
+
       )}
       <input type="text" className="pagenation__currentPage" value={currentPage + 1} readOnly />
       {Books.length === 10 ? (

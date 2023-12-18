@@ -11,6 +11,7 @@ export const BookReviewInput = (props) => {
     handleSubmit,
     formState: { errors }
   } = useForm(); // バリデーションのフォームを定義。
+
   const handleTitleChange = (e) => props.setBookTitle(e.target.value);
   const handleUrlChange = (e) => props.setBookUrl(e.target.value);
   const handleDetailChange = (e) => props.setBookDetail(e.target.value);

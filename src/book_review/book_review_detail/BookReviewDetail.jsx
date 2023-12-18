@@ -3,6 +3,7 @@ import { useCookies } from 'react-cookie';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { url } from '../../const';
+import { ReviewComment } from '../../review_comment/ReviewComment';
 import Loading from '../Loding';
 import { Header } from '../header/Header';
 import './BookReviewDetail.scss';
@@ -33,8 +34,8 @@ export const BookReviewDetail = () => {
       .catch((err) => {
         setErrorMessage(`エラー発生 ${err}`);
       })
+      //「finally」は最後に必ず実行される処理群
       .finally(() => {
-        //「finally」は最後に必ず実行される処理群
         setIsLoading(false);
       });
 
@@ -60,6 +61,7 @@ export const BookReviewDetail = () => {
           <p className="bookDetail__detail">書籍の詳細情報: {bookData.detail}</p>
           <p className="bookDetail__review">レビュー: {bookData.review}</p>
           {bookData.isMine ? <Link to={`/edit/${BookId}`}>書籍編集画面へ</Link> : <></>}
+          <ReviewComment />
         </div>
       )}
     </div>

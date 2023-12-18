@@ -64,6 +64,7 @@ export const SignUp = () => {
     const url = URL.createObjectURL(file);
     setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
 
+
     // 1MB以上の場合
     if (file.size > 1024 * 1024) {
       //画像のリサイズする関数

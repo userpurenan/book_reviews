@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Request;
 
+use Illuminate\Http\Request;
 use App\Http\Requests\SignUpRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
-use App\Models\Token;
+use Laravel\Passport\Client;
 
 class UserController extends Controller
 {
@@ -29,10 +29,11 @@ class UserController extends Controller
             ]);
         });
 
+        $passport_client = Client::where('name', 'Laravel Password Grant Client')->first();
         $data = [
             'grant_type' => 'password',
-            'client_id' => '2',
-            'client_secret' => '9vmWqyeJgJnxKcR6cDj11cjj77ON32NB9x1IN3gu',
+            'client_id' => $passport_client->id,
+            'client_secret' => $passport_client->secret,
             'username' => $request->input('email'),
             'password' => $request->input('password'),
             'scope' => '',
@@ -50,14 +51,15 @@ class UserController extends Controller
 
     public function login(LoginRequest $request)
     {
+        $passport_client = Client::where('name', 'Laravel Password Grant Client')->first();
         $data = [
-                    'grant_type' => 'password',
-                    'client_id' => '2',
-                    'client_secret' => '9vmWqyeJgJnxKcR6cDj11cjj77ON32NB9x1IN3gu',
-                    'username' => $request->input('email'),
-                    'password' => $request->input('password'),
-                    'scope' => '',
-                ];
+            'grant_type' => 'password',
+            'client_id' => $passport_client->id,
+            'client_secret' => $passport_client->secret,
+            'username' => $request->input('email'),
+            'password' => $request->input('password'),
+            'scope' => '',
+        ];
 
         $request = Request::create('/oauth/token', 'POST', $data);
         $response = Route::prepareResponse($request, app()->handle($request));
@@ -71,8 +73,7 @@ class UserController extends Controller
     public function imageUploads(Request $request)
     {
         $imagePath = $request->file('icon')->store('public/img');
-        $token = $request->bearerToken();
-        $user = Token::where('token', $token)->first()->user;
+        $user = User::where('id', Auth::id())->first();
 
         if(is_null($user)){
             throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
@@ -99,7 +100,7 @@ class UserController extends Controller
 
     public function editUser(Request $request)
     {
-        $user = Token::where('token', $request->bearerToken())->first()->user;
+        $user = User::where('id', Auth::id())->first();
               
         $user->update(['name' => $request->input('name')]);
     }
