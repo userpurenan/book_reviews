@@ -7,7 +7,6 @@ namespace App\Http\Controllers;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -21,13 +20,11 @@ class UserController extends Controller
 {
     public function signUp(SignUpRequest $request)
     {
-        DB::transaction(function () use ($request, &$user){
-            $user = User::create([
-                "name" => $request->input('name'),
-                "email" => $request->input('email'),
-                "password" => Hash::make($request->input('password')),
-            ]);
-        });
+        $user = User::create([
+                    "name" => $request->input('name'),
+                    "email" => $request->input('email'),
+                    "password" => Hash::make($request->input('password')),
+                ]);
 
         $passport_client = Client::where('name', 'Laravel Password Grant Client')->first();
         $data = [
