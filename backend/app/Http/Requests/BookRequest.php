@@ -23,7 +23,7 @@ class BookRequest extends ApiRequest
     {
         return [
             'offset' => 'nullable',
-            'title_keyword' => 'nullable|string|regex:/^[a-zA-Z0-9ぁ-んァ-ヶ一-龥々]+$/u',
+            'title_keyword' => 'nullable|string|regex:/^[a-zA-Z0-9ぁ-んァ-ヴー-龥々]+$/u',
         ];
     }
 }
