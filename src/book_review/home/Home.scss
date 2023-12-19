@@ -5,10 +5,15 @@
 }
 
 .float_page{
-    background-color: aliceblue;
+    background-color: #ffffff;
+}
+
+.extend_float_page{
+    @extend .float_page;
     border-radius: 3%;
     margin-left: 400px;
     margin-right: 200px;
+
 }
 
 .search{
@@ -35,8 +40,8 @@
         font-size: 30px;
         border-radius: 5px;
         display: block;
+        color: black;
         text-decoration: none;
-        color: #000000;
     }    
 }
 
