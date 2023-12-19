@@ -38,7 +38,7 @@ export const SignUp = () => {
     };
 
     try {
-      const res = await axios.post(`${url}/users`, data);
+      const res = await axios.post(`${url}/signup`, data);
       const token = res.data.token;
       setCookie('token', token);
 
