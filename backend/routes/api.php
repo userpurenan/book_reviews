@@ -31,7 +31,7 @@ Route::get('unauthorized', function () {
     ], 401);
 })->name('api.jwt.unauthorized');
 
-Route::post('/users', [UserController::class, 'signUp']);
+Route::post('/signup', [UserController::class, 'signUp']);
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/public/books', [BookController::class, 'getBooks']);
 
