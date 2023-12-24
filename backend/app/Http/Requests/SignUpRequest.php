@@ -23,7 +23,7 @@ class SignUpRequest extends ApiRequest
     {
         return [
             'name' => ['required'],
-            'email' => ['required'],
+            'email' => ['required','email:filter'],
             'password' => ['required','min:5', 'max:15','zxcvbn:1,username,email'],
         ];
     }

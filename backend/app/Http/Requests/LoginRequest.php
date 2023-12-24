@@ -22,7 +22,7 @@ class LoginRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'email' => ['required'],
+            'email' => ['required', 'email:filter'],
             'password' => ['required','min:5', 'max:15'],
         ];
     }
