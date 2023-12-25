@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\SignUpRequest;
@@ -20,30 +21,32 @@ class UserController extends Controller
 {
     public function signUp(SignUpRequest $request)
     {
-        $user = User::create([
-                    "name" => $request->input('name'),
-                    "email" => $request->input('email'),
-                    "password" => Hash::make($request->input('password')),
-                ]);
+        DB::transaction(function () use ($request, &$user, &$response) {
+            $user = User::create([
+                "name" => $request->input('name'),
+                "email" => $request->input('email'),
+                "password" => Hash::make($request->input('password')),
+            ]);
 
-        $passport_client = Client::where('name', 'Laravel Password Grant Client')->first();
-        $data = [
-            'grant_type' => 'password',
-            'client_id' => $passport_client->id,
-            'client_secret' => $passport_client->secret,
-            'username' => $request->input('email'),
-            'password' => $request->input('password'),
-            'scope' => '',
-        ];
+            $passport_client = Client::where('name', 'Laravel Password Grant Client')->first();
+            $data = [
+                'grant_type' => 'password',
+                'client_id' => $passport_client->id,
+                'client_secret' => $passport_client->secret,
+                'username' => $request->input('email'),
+                'password' => $request->input('password'),
+                'scope' => '',
+            ];
 
-        $request = Request::create('/oauth/token', 'POST', $data);
-        $response = Route::prepareResponse($request, app()->handle($request));
+            $request = Request::create('/oauth/token', 'POST', $data);
+            $response = Route::prepareResponse($request, app()->handle($request));
+        });
 
         $content = $response->getContent();
 
         $token = json_decode($content, true);
 
-        return response()->json([ 'name' => $user->name, 'token' => $token['access_token'] ],200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json([ 'name' => $user->name, 'token' => $token['access_token'] ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function login(LoginRequest $request)
@@ -57,7 +60,7 @@ class UserController extends Controller
             'password' => $request->input('password'),
             'scope' => '',
         ];
-        
+
         $request = Request::create('/oauth/token', 'POST', $data);
         $response = Route::prepareResponse($request, app()->handle($request));
         $content = $response->getContent();
@@ -72,7 +75,7 @@ class UserController extends Controller
         $imagePath = $request->file('icon')->store('public/img');
         $user = User::where('id', Auth::id())->first();
 
-        if(is_null($user)){
+        if(is_null($user)) {
             throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
         }
 
@@ -98,7 +101,7 @@ class UserController extends Controller
     public function editUser(Request $request)
     {
         $user = User::where('id', Auth::id())->first();
-              
+
         $user->update(['name' => $request->input('name')]);
     }
 }
