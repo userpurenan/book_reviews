@@ -2,12 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
+use App\Http\Requests\ApiRequest;
 
-
-class LoginRequest extends FormRequest
+class LoginRequest extends ApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,16 +22,8 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required'],
+            'email' => ['required', 'email:filter'],
             'password' => ['required','min:5', 'max:15'],
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        $response  = $validator->errors()->toArray();
-    
-        throw new HttpResponseException(response()->json([ 'message' => 'バリデーションエラー',
-                                                           'error' => $response], 422));   
     }
 }

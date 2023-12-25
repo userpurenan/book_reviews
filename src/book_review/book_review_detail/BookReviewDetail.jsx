@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import { url } from "../../const";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
