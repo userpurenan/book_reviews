@@ -15,7 +15,8 @@ class BookController extends Controller
     public function getBooks(BookRequest $request)
     {
         $number = $request->query('offset');
-        $books = Book::where("title", "LIKE", "{$request->query('title_keyword')}%")->skip($number)->orderBy('id', 'desc')->take(10)->get();
+        $books = Book::where("title", "LIKE", "{$request->query('title_keyword')}%")
+                       ->offset($number)->limit(10)->orderBy('id', 'desc')->get();
 
         $book_data = [];
         foreach ($books as $book) {
