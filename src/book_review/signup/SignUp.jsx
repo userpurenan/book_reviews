@@ -61,6 +61,8 @@ export const SignUp = () => {
   //画像が1MBより大きかったらリサイズする関数
   const handleIconUrlChange = (e) => {
     const file = e.target.files[0];
+    const url = URL.createObjectURL(file);
+    setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
 
     // 1MB以上の場合
     if (file.size > 1024 * 1024) {
@@ -79,9 +81,6 @@ export const SignUp = () => {
     } else {
       setImgFile(file);
     }
-
-    const url = URL.createObjectURL(ImgFile);
-    setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
   };
 
   useEffect(() => {
