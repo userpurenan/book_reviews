@@ -44,13 +44,8 @@ export const SignUp = () => {
 
       const formdata = new FormData();
       formdata.append('icon', ImgFile, ImgFile.name); // フィールド名を「icon」に指定しないと400エラーが起きる。（swaggerの仕様ではフィールド名を「icon」にしていたため）
-  
-      const imagedata = {
-        formdata: formdata,
-        imageUrl: imgUrl
-      };
-  
-      await axios.post(`${url}/uploads`, imagedata, {
+
+      await axios.post(`${url}/uploads`, formdata, {
         headers: {
           authorization: `Bearer ${token}`,
           'content-Type': 'multipart/form-data'
