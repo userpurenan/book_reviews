@@ -34,7 +34,7 @@ export const EditProfile = () => {
     formdata.append('icon', ImgFile, ImgFile.name);
 
     const imegedata = {
-      formdata: data,
+      formdata: formdata,
       imageUrl: imgUrl
     };
 
