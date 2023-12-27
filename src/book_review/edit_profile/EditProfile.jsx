@@ -37,10 +37,15 @@ export const EditProfile = () => {
       authorization: `Bearer ${cookies.token}`
     };
 
+    const imagedata = {
+      formdata: formdata,
+      imgUrl: imgUrl
+    };
+
     axios
-      .put(`${url}/users`, { name: name }, { headers })
+      .patch(`${url}/users`, { name: name }, { headers })
       .then(async () => {
-        await axios.patch(`${url}/uploads`, formdata, {
+        await axios.patch(`${url}/uploads`, imagedata, {
           headers,
           'Content-Type': 'multipart/form-data'
         });
@@ -54,6 +59,8 @@ export const EditProfile = () => {
   //画像が1MBより大きかったらリサイズする関数
   const handleIconUrlChange = (e) => {
     const file = e.target.files[0];
+    const url = URL.createObjectURL(file);
+    setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
 
     // 1MB以上の場合
     if (file.size > 1024 * 1024) {
@@ -72,9 +79,6 @@ export const EditProfile = () => {
     } else {
       setImgFile(file);
     }
-
-    const url = URL.createObjectURL(ImgFile);
-    setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
   };
 
   useEffect(() => {
