@@ -33,6 +33,11 @@ export const EditProfile = () => {
     const formdata = new FormData();
     formdata.append('icon', ImgFile, ImgFile.name);
 
+    const imegedata = {
+      formdata: data,
+      imageUrl: imgUrl
+    };
+
     const headers = {
       authorization: `Bearer ${cookies.token}`
     };
@@ -40,7 +45,7 @@ export const EditProfile = () => {
     axios
       .put(`${url}/users`, { name: name }, { headers })
       .then(async () => {
-        await axios.post(`${url}/uploads`, formdata, {
+        await axios.post(`${url}/uploads`, imegedata, {
           headers,
           'Content-Type': 'multipart/form-data'
         });
