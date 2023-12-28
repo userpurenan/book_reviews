@@ -8,14 +8,13 @@ use App\Http\Requests\BookRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
-use App\Models\Log;
 
 class BookController extends Controller
 {
     public function getBooks(BookRequest $request)
     {
         $number = $request->query('offset');
-        $books = Book::where("title", "LIKE", "{$request->query('title_keyword')}%")
+        $books = Book::where("title", "LIKE", "%{$request->query('title_keyword')}%")
                        ->offset($number)->limit(10)->orderBy('id', 'desc')->get();
 
         $book_data = [];
@@ -90,16 +89,5 @@ class BookController extends Controller
               'review' => $book_datail->review,
               'reviewer' => $book_datail->reviewer
           ], 200, [], JSON_UNESCAPED_UNICODE);
-    }
-
-    public function setlog(Request $request)
-    {
-        $user_id = Auth::id();
-        $log = Log::create([
-                    'user_id' => $user_id,
-                    'access_log' => 'http://127.0.0.1:3000/detail/'.$request->input('selectBookId')
-                ]);
-
-         return response()->json(['log' => $log->access_log ]);
     }
 }
