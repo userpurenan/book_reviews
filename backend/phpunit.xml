@@ -14,6 +14,9 @@
         <testsuite name="User">
             <directory>tests/Unit/User</directory>
         </testsuite>
+        <testsuite name="Book">
+            <directory>tests/Unit/Book</directory>
+        </testsuite>
     </testsuites>
     <source>
         <include>
