@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\SignUpRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\Client;
 
 class UserController extends Controller
@@ -68,7 +67,9 @@ class UserController extends Controller
 
     public function imageUploads(Request $request)
     {
-        $image_url = $request->input('imgUrl');
+        $file_path = $request->file('icon')->store('public/img');
+        $image_path = str_replace('public', 'storage', $file_path);
+        $image_url = asset($image_path);
         $user = User::where('id', Auth::id())->first();
 
         if(is_null($user)) {
@@ -77,7 +78,7 @@ class UserController extends Controller
 
         $user->update(['imageUrl' => $image_url]);
 
-        return response()->json(['imageUrl' => $image_url]);
+        return response()->json(['imageUrl' => $image_url]);    
     }
 
     public function getUser()

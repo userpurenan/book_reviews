@@ -37,7 +37,6 @@ Route::get('/public/books', [BookController::class, 'getBooks']);
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/uploads', [UserController::class, 'imageUploads']);
-    Route::patch('/uploads', [UserController::class, 'imageUploads']);
     Route::patch('/users', [UserController::class, 'editUser']);
     Route::get('/users', [UserController::class, 'getUser']);
     Route::get('/books', [BookController::class, 'getBooks']);
