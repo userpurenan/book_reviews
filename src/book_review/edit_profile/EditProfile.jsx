@@ -37,15 +37,10 @@ export const EditProfile = () => {
       authorization: `Bearer ${cookies.token}`
     };
 
-    const imagedata = {
-      formdata: formdata,
-      imgUrl: imgUrl
-    };
-
     axios
       .patch(`${url}/users`, { name: name }, { headers })
       .then(async () => {
-        await axios.patch(`${url}/uploads`, imagedata, {
+        await axios.post(`${url}/uploads`, formdata, {
           headers,
           'Content-Type': 'multipart/form-data'
         });
