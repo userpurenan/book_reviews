@@ -53,8 +53,7 @@ class BookTest extends TestCase
 
     public function test_新規の書籍レビューを作れるか？()
     {
-        $books = $this->get('/api/public/books')->json();
-        $this->assertCount(0, $books);
+        $this->assertDatabaseCount('books', 0);
 
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
@@ -71,8 +70,7 @@ class BookTest extends TestCase
             'Authorization' => 'Bearer '.$token,
         ]);
 
-        $books = $this->get('/api/public/books')->json();
-        $this->assertCount(1, $books);
+        $this->assertDatabaseCount('books', 1);
     }
 
     public function test_書籍の更新ができるか？()
@@ -88,17 +86,20 @@ class BookTest extends TestCase
             'review' => 'バトル漫画です',
             'reviewer' => $user->name,
         ]);
-        
-        $this->put('/api/books/'.$book->id, [
+        $this->assertDatabaseCount('books', 1);
+
+        $update_book_data = [
             'title' => 'SLUM DUNK',
             'url' => 'slumdunk.com',
             'detail' => 'バスケ漫画',
             'review' => 'バスケ漫画です',
-        ],[
+        ];
+        
+        $this->put("/api/books/{$book->id}", $update_book_data, [
             'Authorization' => 'Bearer '.$token,
         ]);
 
-        $update_books = $this->get('/api/books/'.$book->id, [
+        $update_books = $this->get("/api/books/{$book->id}", [
             'Authorization' => 'Bearer '.$token,
         ]);
         $update_books->assertJsonMissing([
@@ -107,11 +108,28 @@ class BookTest extends TestCase
             'detail' => 'バトル漫画',
             'review' => 'バトル漫画です',
         ]);
-        $update_books->assertJson([
-            'title' => 'SLUM DUNK',
-            'url' => 'slumdunk.com',
-            'detail' => 'バスケ漫画',
-            'review' => 'バスケ漫画です',
+        $update_books->assertJson($update_book_data);
+    }
+
+    public function test_書籍を削除できるか？()
+    {
+        $user = $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
+
+        $book = Book::create([
+            'title' => 'ドラゴンボール',
+            'user_id' => $user->id,
+            'url' => 'sample.com',
+            'detail' => 'バトル漫画',
+            'review' => 'バトル漫画です',
+            'reviewer' => $user->name,
         ]);
+        $this->assertDatabaseCount('books', 1);
+
+        $this->delete("api/books/{$book->id}", [], [
+            'Authorization' => 'Bearer '.$token,
+        ]);
+
+        $this->assertDatabaseCount('books', 0);
     }
 }
