@@ -28,7 +28,7 @@ class BookController extends Controller
                 'reviewer' => $book->reviewer
             ];
         }
-    
+
         return response()->json($book_data, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -51,7 +51,7 @@ class BookController extends Controller
             'detail' => $book->detail,
             'review' => $book->review,
             'reviewer' => $user_name,
-        ], 200, [], JSON_UNESCAPED_UNICODE);    
+        ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function getBookDatail($id)

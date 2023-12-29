@@ -78,7 +78,7 @@ class UserController extends Controller
 
         $user->update(['imageUrl' => $image_url]);
 
-        return response()->json(['imageUrl' => $image_url]);    
+        return response()->json(['imageUrl' => $image_url]);
     }
 
     public function getUser()
