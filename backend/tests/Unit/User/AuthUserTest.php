@@ -45,8 +45,12 @@ class AuthUserTest extends TestCase
         $file1 = UploadedFile::fake()->image('icon.jpg');
         $file2 = UploadedFile::fake()->image('icon2.jpg');
 
-        $this->createUser();
+        $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
+
+        $this->assertDatabaseHas('users', [
+            'name' => $user->name,
+        ]);
 
         //画像のURL保存
         $createUser_icon = $this->post('/api/uploads', [
@@ -67,7 +71,7 @@ class AuthUserTest extends TestCase
         ]);
 
         $this->assertDatabaseMissing('users', [
-            'name' => 'いわさき',
+            'name' => $user->name,
         ]);
         $this->assertDatabaseHas('users', [
             'name' => 'なかじま'
@@ -87,6 +91,5 @@ class AuthUserTest extends TestCase
         $this->assertDatabaseHas('users', [
             'imageUrl' => $user_icon_url2,
         ]);
-
     }
 }
