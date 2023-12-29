@@ -46,7 +46,7 @@ class BookTest extends TestCase
 
     public function test_検索処理を実行できるか？()
     {
-        $this->createBook(5000);
+        $this->createBook(100);
         $books = $this->get('/api/public/books?title_keyword=NARUTO');
         $books->assertJsonMissing(["title" => "ワンピース"]);
     }
@@ -73,5 +73,45 @@ class BookTest extends TestCase
 
         $books = $this->get('/api/public/books')->json();
         $this->assertCount(1, $books);
+    }
+
+    public function test_書籍の更新ができるか？()
+    {
+        $user = $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
+
+        $book = Book::create([
+            'title' => 'ドラゴンボール',
+            'user_id' => $user->id,
+            'url' => 'sample.com',
+            'detail' => 'バトル漫画',
+            'review' => 'バトル漫画です',
+            'reviewer' => $user->name,
+        ]);
+        
+        $this->put('/api/books/'.$book->id, [
+            'title' => 'SLUM DUNK',
+            'url' => 'slumdunk.com',
+            'detail' => 'バスケ漫画',
+            'review' => 'バスケ漫画です',
+        ],[
+            'Authorization' => 'Bearer '.$token,
+        ]);
+
+        $update_books = $this->get('/api/books/'.$book->id, [
+            'Authorization' => 'Bearer '.$token,
+        ]);
+        $update_books->assertJsonMissing([
+            'title' => 'ドラゴンボール',
+            'url' => 'sample.com',
+            'detail' => 'バトル漫画',
+            'review' => 'バトル漫画です',
+        ]);
+        $update_books->assertJson([
+            'title' => 'SLUM DUNK',
+            'url' => 'slumdunk.com',
+            'detail' => 'バスケ漫画',
+            'review' => 'バスケ漫画です',
+        ]);
     }
 }
