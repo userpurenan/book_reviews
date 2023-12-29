@@ -15,8 +15,8 @@ class AuthUserTest extends TestCase
      */
     public function test_ユーザー情報が取得できるか？(): void
     {
-        $signUp_response = $this->create_user();
-        $token = $signUp_response['access_token'];
+        $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
 
         $response = $this->get('/api/users', [
             'Authorization' => "Bearer ".$token,
@@ -28,8 +28,8 @@ class AuthUserTest extends TestCase
     public function test_アイコン画像のURLを保存できるか？()
     {
         $image_file = UploadedFile::fake()->image('icon.jpg');
-        $signUp_response = $this->create_user();
-        $token = $signUp_response['access_token'];
+        $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
 
         $response = $this->post('/api/uploads', [
             'icon' => $image_file,
@@ -45,16 +45,16 @@ class AuthUserTest extends TestCase
         $file1 = UploadedFile::fake()->image('icon.jpg');
         $file2 = UploadedFile::fake()->image('icon2.jpg');
 
-        $signUp_response = $this->create_user();
-        $token = $signUp_response['access_token'];
+        $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
 
         //画像のURL保存
-        $create_user_icon = $this->post('/api/uploads', [
+        $createUser_icon = $this->post('/api/uploads', [
             'icon' => $file1,
         ],[
             'Authorization' => "Bearer ".$token,
         ]);
-        $user_icon_url = $create_user_icon['imageUrl'];
+        $user_icon_url = $createUser_icon['imageUrl'];
         $this->assertDatabaseHas('users', [
             'imageUrl' => $user_icon_url,
         ]);
