@@ -3,15 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Log;
 use App\Models\Token;
 use App\Models\Book;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
-use PhpParser\Node\Expr\Cast\String_;
 
 class User extends Authenticatable
 {
@@ -35,10 +32,6 @@ class User extends Authenticatable
     ];
 
     protected $guarded = ['created_at', 'updated_at'];
-
-    public function log(){
-        return $this->hasmany(Log::class);
-    }
 
     public function token(){
         return $this->hasmany(Token::class);
