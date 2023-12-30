@@ -1,8 +1,9 @@
 @charset "utf-8";
 @use '../home/Home.scss';
 
-.page{
-    @extend .page;
+.detail-page{
+    @extend .page-color;
+    height: 950px;
 }
 
 .bookDetail{
