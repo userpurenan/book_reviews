@@ -1,0 +1,36 @@
+@charset "utf-8";
+@use '../home/Home.scss';
+
+.input_comment{
+    width: 70%;
+    height: 100px;
+    margin-left: 100px;
+    font-size: 20px;
+}
+
+.comment_button{
+    width: 80px;
+    height: 40px;
+    margin-left: 73%;
+}
+
+.userIcon{
+    @extend .userIcon;
+}
+
+.comment_list{
+    list-style-type: none;
+    border: solid;
+    width: 80%;
+    height: 100%;
+    font-size: 20px;
+    border-radius: 5px;
+    display: block;
+    text-decoration: none;
+    color: #000000;
+}
+
+.comment-error-message{
+    color: #ff3333;
+    margin-left: 100px;
+}

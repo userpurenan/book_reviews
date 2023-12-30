@@ -1,12 +1,9 @@
 @charset "utf-8";
 
-.page-color{
-    background-color: rgb(223, 235, 235);
-}
-
 .page{
-    @extend .page-color;
-    height: 1500px;
+    background-color: rgb(223, 235, 235);
+    height: 100vh;
+    overflow: auto;
 }
 
 .float_page{

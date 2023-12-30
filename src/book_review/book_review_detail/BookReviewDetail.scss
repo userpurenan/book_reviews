@@ -2,8 +2,7 @@
 @use '../home/Home.scss';
 
 .detail-page{
-    @extend .page-color;
-    height: 950px;
+    @extend .page;
 }
 
 .bookDetail{
@@ -34,16 +33,4 @@
 
 .error-massage{
     color: #ff3333;
-}
-
-.comment_list{
-    list-style-type: none;
-    border: solid;
-    width: 80%;
-    height: 100%;
-    font-size: 20px;
-    border-radius: 5px;
-    display: block;
-    text-decoration: none;
-    color: #000000;
 }
