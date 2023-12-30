@@ -3,10 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Log;
 use App\Models\Token;
 use App\Models\Book;
-use App\Models\BooksComment;
+use App\Models\BookComment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -29,15 +28,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'imagePath',
+        'imageUrl',
         'token',
     ];
 
     protected $guarded = ['created_at', 'updated_at'];
-
-    public function log(){
-        return $this->hasmany(Log::class);
-    }
 
     public function token(){
         return $this->hasmany(Token::class);
@@ -48,6 +43,6 @@ class User extends Authenticatable
     }
 
     public function books_comment(){
-        return $this->hasMany(BooksComment::class);
+        return $this->hasMany(BookComment::class);
     }
 }

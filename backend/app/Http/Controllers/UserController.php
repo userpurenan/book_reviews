@@ -72,16 +72,18 @@ class UserController extends Controller
 
     public function imageUploads(Request $request)
     {
-        $imagePath = $request->file('icon')->store('public/img');
+        $file_path = $request->file('icon')->store('public/img');
+        $image_path = str_replace('public', 'storage', $file_path);
+        $image_url = asset($image_path);
         $user = User::where('id', Auth::id())->first();
 
-        if(is_null($user)){
+        if(is_null($user)) {
             throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
         }
 
-        $user->update(['imagePath' => '../../../backend/storage/app/' . $imagePath]);
+        $user->update(['imageUrl' => $image_url]);
 
-        return response()->json(['imagePath' => "backend/storage/app/" . $imagePath]);
+        return response()->json(['imageUrl' => $image_url]);
     }
 
     public function getUser()
@@ -94,7 +96,7 @@ class UserController extends Controller
 
         return response()->json([
                     'name' => $user->name,
-                    'imagePath' => $user->imagePath,
+                    'imageUrl' => $user->imagePath,
                 ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
