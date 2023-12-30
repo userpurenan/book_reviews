@@ -96,7 +96,7 @@ class UserController extends Controller
 
         return response()->json([
                     'name' => $user->name,
-                    'imageUrl' => $user->imagePath,
+                    'imageUrl' => $user->imageUrl,
                 ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
