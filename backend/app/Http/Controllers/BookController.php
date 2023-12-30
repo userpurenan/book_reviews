@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
 use App\Models\BookComment;
-use App\Models\Log;
 
 class BookController extends Controller
 {
@@ -79,32 +78,36 @@ class BookController extends Controller
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public function createComment(Request $request, $id){
+    public function createComment(Request $request, $id)
+    {
         $books_review_comment = BookComment::create([
                                     'user_id' => Auth::id(),
                                     'book_id' => $id,
-                                    'comment' => $request->input('comment')
+                                    'comment' => $request->input('comment'),
+                                    'comment_likes' => 0,
                                 ]);
 
         return response()->json([
                     'user_name' => $books_review_comment->user->name,
-                    'user_icon_image_path' => $books_review_comment->user->imagePath,
+                    'user_imageUrl' => $books_review_comment->user->imageUrl,
                     'comment' => $books_review_comment->comment,
+                    'comment_likes' => $books_review_comment->comment_likes
                 ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public function getBookReviewComment(Request $request, $id){
+    public function getBookReviewComment(Request $request, $id)
+    {
         $number = $request->query('comment_offset');
 
-        $books_review_comment = BookComment::where('book_id', $id)->skip($number)->orderBy('id', 'desc')->take(10)->get();
+        $books_review_comment = BookComment::where('book_id', $id)->offset($number)->limit(10)->orderBy('id', 'desc')->get();
 
         $review_comment = [];
         foreach ($books_review_comment as $books_review) {
             $review_comment[] = [
                 'user_name' => $books_review->user->name,
-                'image_path' => $books_review->user->imagePath,
+                'user_imageUrl' => $books_review->user->imageUrl,
                 'comment' => $books_review->comment,
-                'book_review_comment' => $books_review->comment_likes,
+                'comment_likes' => $books_review->comment_likes,
             ];
         }
     
@@ -131,25 +134,5 @@ class BookController extends Controller
               'review' => $bookDatail->review,
               'reviewer' => $bookDatail->reviewer
           ], 200, [], JSON_UNESCAPED_UNICODE);
-    }
-
-    public function setlog(Request $request)
-    {
-        $user_id = Auth::id();
-        DB::beginTransaction();
-
-        try{
-            $log = Log::create([
-                        'user_id' => $user_id,
-                        'access_log' => 'http://127.0.0.1:3000/detail/'.$request->input('selectBookId')
-                    ]);
-
-            DB::commit();
-
-            return response()->json(['log' => $log->access_log ]);
-        }catch(\Exception $e){
-            DB::rollBack();
-            return response()->json(['errormessage' => $e->getMessage() ]);
-        }
     }
 }
