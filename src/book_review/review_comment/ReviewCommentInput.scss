@@ -45,6 +45,15 @@
     color: #000000;
 }
 
+.comment-pagenation{
+    margin-left: 30%;
+
+    &__button{
+        height: 50px;
+        width: 100px;
+    }
+}
+
 .comment-error-message{
     color: #ff3333;
     margin-left: 100px;

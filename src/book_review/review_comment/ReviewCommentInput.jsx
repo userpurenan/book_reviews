@@ -18,6 +18,7 @@ export const ReviewCommentInput = (props) => {
 
   const [BookComment, setBookComment] = useState([]);
   const [UpdateComment, setUpdateComment] = useState();
+  const [commentPage, setCommentPage] = useState(0);
   const [commentLikes, setCommentLikes] = useState(() => {
     // localStorageからデータを取得し、存在しない場合はデフォルトで空のオブジェクトを返す
     const storedData = localStorage.getItem('commentLikes');
@@ -35,10 +36,15 @@ export const ReviewCommentInput = (props) => {
   }, [commentLikes]);
 
   useEffect(() => {
-    axios.get(`${url}/books/${props.BookId}/comment`, { headers }).then((response) => {
+    axios.get(`${url}/books/${props.BookId}/comment`, { 
+      headers,
+      params: {
+        comment_offset: commentPage
+      }})
+      .then((response) => {
       setBookComment(response.data);
     });
-  }, [UpdateComment]);
+  }, [UpdateComment, commentPage]);
 
   const sendComment = (event) => {
     const comment = event.comment;
@@ -98,6 +104,34 @@ export const ReviewCommentInput = (props) => {
           </li>
         ))}
       </ul>
+      <div className="comment-pagenation">
+        {commentPage !== 0 ? (
+          <button
+            id="before"
+            onClick={() => { setCommentPage(commentPage-10); }}
+            className="comment-pagenation__button"
+          >
+            前のページへ
+          </button>
+        ) : (
+          <button className="comment-pagenation__button" disabled>
+            前のページへ
+          </button>
+        )}
+        {BookComment.length === 10 ? (
+          <button
+            id="next"
+            onClick={() => { setCommentPage(commentPage+10); }}
+            className="comment-pagenation__button"
+          >
+            次のページへ
+          </button>
+        ) : (
+          <button className="comment-pagenation__button" disabled>
+            次のページへ
+          </button>
+        )}
+      </div>
     </div>
   );
 };
