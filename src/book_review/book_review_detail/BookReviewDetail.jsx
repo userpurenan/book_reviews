@@ -7,23 +7,25 @@ import { ReviewCommentInput } from '../review_comment/ReviewCommentInput';
 import Loading from '../Loding';
 import { Header } from '../header/Header';
 import './BookReviewDetail.scss';
+import Loading from "../Loding";
+
 
 export const BookReviewDetail = () => {
-  const { BookId } = useParams(); //クエリパラメータを取得するには[]ではなく{}で囲わなければならない
-  const [cookies] = useCookies();
-  const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [bookData, setBookData] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+    const { BookId } = useParams(); //クエリパラメータを取得するには[]ではなく{}で囲わなければならない
+    const [cookies] = useCookies();
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading ] = useState(false);
+    const [bookData, setBookData] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
-  const headers = {
-    authorization: `Bearer ${cookies.token}`
-  };
+    const headers = {
+        authorization: `Bearer ${cookies.token}`,
+    };
 
-  useEffect(() => {
-    setIsLoading(true);
+    useEffect(() => {
+        setIsLoading(true);
 
-    if (!cookies.token) navigate('/login');
+        if(! cookies.token) navigate('/login');
 
     axios
       .get(`${url}/books/${BookId}`, { headers })
@@ -57,7 +59,5 @@ export const BookReviewDetail = () => {
           {bookData.isMine ? <Link to={`/edit/${BookId}`} className='bookDetail__link-edit-book'>書籍編集画面へ</Link> : <></>}
           <ReviewCommentInput BookId={BookId} />
         </div>
-      )}
-    </div>
-  );
-};
+    )
+}

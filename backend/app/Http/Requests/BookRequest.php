@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\ApiRequest;
 
-class SignUpRequest extends ApiRequest
+class BookRequest extends ApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,8 @@ class SignUpRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'name' => ['required'],
-            'email' => ['required','email:filter'],
-            'password' => ['required','min:5', 'max:15','zxcvbn:1,username,email'],
+            'offset' => 'nullable',
+            'title_keyword' => 'nullable|string|regex:/^[a-zA-Z0-9ぁ-んァ-ヴー-龥々]+$/u',
         ];
     }
 }

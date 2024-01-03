@@ -11,6 +11,7 @@ import './EditProfile.scss';
 
 //コンポーネント名は大文字始まりでOK
 export const EditProfile = () => {
+
   const {
     register,
     handleSubmit,
@@ -26,7 +27,7 @@ export const EditProfile = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const handleNameChange = (e) => setName(e.target.value);
-  
+
   //関数は小文字始まり
   const updateName = () => {
     const formdata = new FormData();
@@ -37,7 +38,7 @@ export const EditProfile = () => {
     };
 
     axios
-      .put(`${url}/users`, { name: name }, { headers })
+      .patch(`${url}/users`, { name: name }, { headers })
       .then(async () => {
         await axios.post(`${url}/uploads`, formdata, {
           headers,

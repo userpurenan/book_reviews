@@ -24,7 +24,7 @@
     &__detail,
     &__review,
     &__link-edit-book {
-        font-size: 20px;
+        font-size: 20px
         padding-left: 60px;
         margin-bottom: 30px;
         overflow-wrap: break-word;
@@ -33,4 +33,11 @@
 
 .error-massage{
     color: #ff3333;
+}
+
+.comment_list{
+    @extend .Book__list--link;
+    font-size: 20px;
+    height: 100%;
+    background-color: aliceblue;
 }
