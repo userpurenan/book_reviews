@@ -33,12 +33,11 @@ export const Header = () => {
 
   return (
     <header className="header">
-      <h1>書籍レビュー</h1>
+      <Link to={'/'} className="Navigate-home">
+        <h1>書籍レビュー</h1>
+      </Link>
       {auth ? (
         <div className="userContainer">
-          <Link to={'/'} className="Navigate-button">
-            ホーム画面へ
-          </Link>
           <Link to={'/new'} className="Navigate-button">
             書籍レビュー投稿画面へ
           </Link>

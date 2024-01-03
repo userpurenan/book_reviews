@@ -24,14 +24,17 @@
   }
 }
 
-.Navigate-Login{
-  color: #ffffff;
-  text-decoration: none;
-  margin: auto 70px auto auto;
+.Navigate-home{
+  @extend .Navigate-button;
   &:hover{
-    color: gray;
+    color: #ffffff;
     cursor : pointer;
   }
+}
+
+.Navigate-Login{
+  @extend .Navigate-button;
+  margin: auto 70px auto auto;
 }
 
 .userName{

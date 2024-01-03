@@ -1,5 +1,5 @@
 @charset "utf-8";
-@use '../home/Home.scss';
+@use '../header/header.scss';
 
 .input_comment{
     width: 70%;
@@ -14,8 +14,23 @@
     margin-left: 73%;
 }
 
-.userIcon{
+.comment_userIcon{
     @extend .userIcon;
+    width: 25px;
+    height: 25px;
+}
+
+.h2_comment{
+    margin-left: 40px;
+}
+
+.likes{
+    margin-left: 90%;
+    cursor : pointer;
+}
+
+.count_likes{
+    padding-bottom: 15px;
 }
 
 .comment_list{
