@@ -2,10 +2,8 @@
 
 namespace Tests\Unit\User;
 
-use App\Models\User;
 use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -13,28 +11,9 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $password;
-
-    /**
-     * ユーザーを作成するメソッド。
-     */
-    public function create_user()
-    {
-        $faker = Factory::create('ja_JP');
-        $this->password = Str::random(10);
-
-        $user = User::create([
-                          'name' => $faker->name,
-                          'email' => $faker->safeEmail,
-                          'password' => Hash::make($this->password)
-                      ]);
-
-        return $user;
-    }
-
     public function test_会員登録できるか？(): void
     {
-        $this->create_user();
+        $this->createUser();
         $this->assertDatabaseCount('users', 1);
 
         $faker = Factory::create('ja_JP');
@@ -105,7 +84,7 @@ class UserTest extends TestCase
 
     public function test_ログインできるか？()
     {
-        $user = $this->create_user();
+        $user = $this->createUser();
         $response = $this->post('/api/login', [
                             'email' => $user->email,
                             'password' => $this->password
