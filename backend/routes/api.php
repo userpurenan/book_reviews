@@ -37,8 +37,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/users', [UserController::class, 'getUser']);
     Route::get('/books', [BookController::class, 'getBooks']);
     Route::post('/books', [BookController::class, 'createBooks']);
-    Route::get('/books/{id}', [BookController::class, 'getBookDatail']); 
-    Route::put('/books/{id}', [BookController::class, 'updateBook']); 
+    Route::get('/books/{id}', [BookController::class, 'getBookDatail']);
+    Route::put('/books/{id}', [BookController::class, 'updateBook']);
     Route::delete('/books/{id}', function ($id) {
         Book::findOrFail($id)->delete();
 
@@ -46,5 +46,6 @@ Route::middleware('auth:api')->group(function () {
     });
     Route::get('/books/{id}/comment', [BookController::class, 'getBookReviewComment']);
     Route::post('/books/{id}/comment', [BookController::class, 'createComment']);
+    Route::post('/comment/fluctuationLikes', [BookController::class, 'fluctuationLikes']);
     Route::post('/logs', [BookController::class, 'setlog']);
 });

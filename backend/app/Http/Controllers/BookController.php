@@ -15,9 +15,9 @@ class BookController extends Controller
     public function getBooks(Request $request)
     {
         $number = $request->query('offset');
-        if($book_keyword = $request->query('title_keyword')){
+        if($book_keyword = $request->query('title_keyword')) {
             $books = Book::where("title", "LIKE", "$book_keyword%")->skip($number)->orderBy('id', 'desc')->take(10)->get();
-        }else{
+        } else {
             $books = Book::orderBy('id', 'desc')->skip($number)->take(10)->get(); //テーブルを10件ずつ取得する。
         }
 
@@ -32,7 +32,7 @@ class BookController extends Controller
                 'reviewer' => $book->reviewer
             ];
         }
-    
+
         return response()->json($bookData, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
@@ -57,7 +57,7 @@ class BookController extends Controller
                 'detail' => $request->input('detail'),
                 'review' => $request->input('review'),
                 'reviewer' => $user_name,
-            ], 200, [], JSON_UNESCAPED_UNICODE);    
+            ], 200, [], JSON_UNESCAPED_UNICODE);
         }, $retryTimes);
     }
 
@@ -66,7 +66,9 @@ class BookController extends Controller
         $bookDatail = Book::findOrFail($id);
         $isMine = false;
 
-        if($bookDatail->user_id === Auth::id()) $isMine = true;
+        if($bookDatail->user_id === Auth::id()) {
+            $isMine = true;
+        }
 
         return response()->json([
             'title' => $bookDatail->title,
@@ -95,6 +97,18 @@ class BookController extends Controller
                 ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
+    public function fluctuationLikes(Request $request)
+    {
+        $likes_count_change = $request->input('likes');
+        $comment = BookComment::findOrFail($request->input('comment_id'));
+        $comment_likes_count = $comment->comment_likes + $likes_count_change;
+        $comment->update(['comment_likes' => $comment_likes_count ]);
+
+        return response()->json([
+            'comment_likes' => $comment->comment_likes
+        ], 200);
+    }
+
     public function getBookReviewComment(Request $request, $id)
     {
         $number = $request->query('comment_offset');
@@ -104,13 +118,14 @@ class BookController extends Controller
         $review_comment = [];
         foreach ($books_review_comment as $books_review) {
             $review_comment[] = [
+                'id' => $books_review->id,
                 'user_name' => $books_review->user->name,
                 'user_imageUrl' => $books_review->user->imageUrl,
                 'comment' => $books_review->comment,
                 'comment_likes' => $books_review->comment_likes,
             ];
         }
-    
+
         return response()->json($review_comment, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
