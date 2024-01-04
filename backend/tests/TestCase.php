@@ -30,7 +30,7 @@ abstract class TestCase extends BaseTestCase
         $this->password = Str::random(10);
 
         $user = User::create([
-                          'name' => '岩崎太郎',
+                          'name' => $faker->name(),
                           'email' => $this->email,
                           'password' => Hash::make($this->password)
                       ]);
