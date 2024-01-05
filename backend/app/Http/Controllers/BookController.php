@@ -84,7 +84,7 @@ class BookController extends Controller
 
         return response()->json([
                     'user_name' => $books_review_comment->user->name,
-                    'user_imageUrl' => $books_review_comment->user->imageUrl,
+                    'user_image_url' => $books_review_comment->user->image_url,
                     'comment' => $books_review_comment->comment,
                     'comment_likes' => $books_review_comment->comment_likes
                 ], 200, [], JSON_UNESCAPED_UNICODE);
@@ -110,12 +110,17 @@ class BookController extends Controller
 
         $review_comment = [];
         foreach ($books_review_comment as $books_review) {
+            $isReviewer = false;
+            if($books_review->book->user_id == $books_review->user_id){
+                $isReviewer = true;
+            }
             $review_comment[] = [
                 'id' => $books_review->id,
                 'user_name' => $books_review->user->name,
                 'user_image_url' => $books_review->user->image_url,
                 'comment' => $books_review->comment,
                 'comment_likes' => $books_review->comment_likes,
+                'isReviewer' => $isReviewer
             ];
         }
 
