@@ -1,10 +1,13 @@
 @charset "utf-8";
+@use '../home/Home.scss';
 
 .update{
+    @extend .float_page;
+    height: 50%;
+    width: 30%;
+    border-radius: 3%;
     display: block;
-    width: 500px;
-    margin: 100px auto;  
-    margin: 100px 60% 0 40%;
+    margin: 100px 30% 0 35%;
     
     &__form {
         margin: 25px 0;
@@ -32,6 +35,15 @@
             height: 40px;
         }
     }    
+}
+
+.page{
+    @extend .page;
+}
+
+.edit_user_float_page{
+    padding-top: 50px;
+    padding-left: 150px;
 }
 
 .error-message {

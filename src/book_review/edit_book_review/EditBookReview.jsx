@@ -68,7 +68,7 @@ export const EditBookReview = () => {
   }, []);
 
   return (
-    <div>
+    <div className='edit_review'>
       <Header />
       <h1>書籍レビュー編集</h1>
       <h2 className="error-massage">{errorMessage}</h2>

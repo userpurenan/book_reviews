@@ -19,7 +19,7 @@
   text-decoration: none;
   margin-left: 30px;
   &:hover{
-    color: gray;
+    opacity: 0.5;
     cursor : pointer;
   }
 }
@@ -27,7 +27,7 @@
 .Navigate-home{
   @extend .Navigate-button;
   &:hover{
-    color: #ffffff;
+    opacity: 0.5;
     cursor : pointer;
   }
 }

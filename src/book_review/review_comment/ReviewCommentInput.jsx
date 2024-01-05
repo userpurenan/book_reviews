@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { IconContext } from 'react-icons';
 import { BsHeart } from 'react-icons/bs';
 import { FaHeart } from 'react-icons/fa';
+import { FaCheckCircle } from "react-icons/fa";
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { url } from '../../const';
@@ -36,22 +37,25 @@ export const ReviewCommentInput = (props) => {
   }, [commentLikes]);
 
   useEffect(() => {
-    axios.get(`${url}/books/${props.BookId}/comment`, { 
-      headers,
-      params: {
-        comment_offset: commentPage
-      }})
+    axios
+      .get(`${url}/books/${props.BookId}/comment`, {
+        headers,
+        params: {
+          comment_offset: commentPage,
+        }})
       .then((response) => {
-      setBookComment(response.data);
-    });
+        setBookComment(response.data);
+      });
   }, [UpdateComment, commentPage]);
 
   const sendComment = (event) => {
     const comment = event.comment;
-    axios.post(`${url}/books/${props.BookId}/comment`, { comment: comment }, { headers }).then(() => {
-      //updateCommentに前とは違う数値を入れることで、sendCommentを呼び出すたびにuseEffectを実行できる。
-      //低確率で前に入っていた数値と同じ数値が入る
-      setUpdateComment(Math.random());
+    axios
+      .post(`${url}/books/${props.BookId}/comment`, { comment: comment }, { headers })
+      .then(() => {
+        //updateCommentに前とは違う数値を入れることで、sendCommentを呼び出すたびにuseEffectを実行できる。
+        //低確率で前に入っていた数値と同じ数値が入る
+        setUpdateComment(Math.random());
     });
   };
 
@@ -89,8 +93,15 @@ export const ReviewCommentInput = (props) => {
       <ul>
         {BookComment.map((BookCommentList, key) => (
           <li key={key} value={BookCommentList.id} className="comment_list">
-            {BookCommentList.user_name}
             <img src={BookCommentList.user_image_url} alt="ユーザーのアイコン" className="comment_userIcon" />
+            {BookCommentList.user_name}
+            {BookCommentList.isReviewer ? (
+              <IconContext.Provider value={{ color: '#ffffff', size: '20px' }}>
+                <FaCheckCircle />                        
+              </IconContext.Provider>
+            ) : (
+              <></>
+            )}
             <br />
             <p className="user_comment">{BookCommentList.comment}</p>
             <IconContext.Provider value={{ color: '#ff69b4', size: '20px' }}>
@@ -137,5 +148,5 @@ export const ReviewCommentInput = (props) => {
 };
 
 ReviewCommentInput.propTypes = {
-  BookId: PropTypes.string
+  BookId: PropTypes.string,
 };

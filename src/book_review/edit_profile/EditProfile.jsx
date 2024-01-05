@@ -11,7 +11,6 @@ import './EditProfile.scss';
 
 //コンポーネント名は大文字始まりでOK
 export const EditProfile = () => {
-
   const {
     register,
     handleSubmit,
@@ -93,34 +92,36 @@ export const EditProfile = () => {
   }, []);
 
   return (
-    <div>
+    <div className='page'>
       <Header />
-      <main className="update">
-        <h2>ユーザー情報編集</h2>
-        <p className="error-message">{errorMessage}</p>
-        <form onSubmit={handleSubmit(updateName)} className="Update__form">
-          <label>ユーザー名</label>
-          <br />
-          <input
-            type="text"
-            {...register('name', { required: true })}
-            onChange={handleNameChange}
-            className="update__form--name"
-            defaultValue={user.name} /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
-          />
-          <p>
-            {errors.name?.type === 'required' && <b className="error-message">※アカウント名を入力してください。</b>}
-          </p>
-          <label>アイコン画像アップロード</label>
-          <br />
-          <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />
-          <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" className="Update__form--iconImg" />
-          <br />
-          <button type="submit" className="update__form--button">
-            更新
-          </button>
-        </form>
-      </main>
-    </div>
+        <main className="update">
+          <div className='edit_user_float_page'>
+            <h2>ユーザー情報編集</h2>
+            <p className="error-message">{errorMessage}</p>
+            <form onSubmit={handleSubmit(updateName)} className="update__form">
+              <label>ユーザー名</label>
+              <br />
+              <input
+                type="text"
+                {...register('name', { required: true })}
+                onChange={handleNameChange}
+                className="update__form--name"
+                defaultValue={user.name} /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
+              />
+              <p>
+                {errors.name?.type === 'required' && <b className="error-message">※アカウント名を入力してください。</b>}
+              </p>
+              <label>アイコン画像アップロード</label>
+              <br />
+              <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />
+              <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" className="Update__form--iconImg" />
+              <br />
+              <button type="submit" className="update__form--button">
+                更新
+              </button>
+            </form>
+          </div>
+        </main>
+      </div>
   );
 };

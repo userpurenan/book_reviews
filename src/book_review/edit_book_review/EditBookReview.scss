@@ -1,4 +1,5 @@
 @charset "utf-8";
+@use '../home/Home.scss';
 
 .EditBook{
     width: 500px;
@@ -15,6 +16,10 @@
         cursor : pointer;    
     }
 
+}
+
+.edit_review{
+    @extend .page;
 }
 
 .error-massage{

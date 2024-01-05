@@ -46,7 +46,7 @@ export const CreateBookReview = () => {
   }, []);
 
   return (
-    <div>
+    <div className='page'>
       <Header />
       <h1>書籍レビュー新規投稿</h1>
       <h2 className="error-massage">{errorMessage}</h2>
