@@ -18,8 +18,8 @@ export const Home = () => {
   const search = useLocation().search;
   const query = new URLSearchParams(search);
   const title_keyword = query.get('title_keyword');
-  const get_public_books_url = useUrl('get_public_books'); //書籍取得APIのURL
-  const get_books_url = useUrl('get_books'); //上戸同じ
+  const get_public_books_url = useUrl('get_public_books'); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const get_books_url = useUrl('book_operation');
   const auth = useSelector((state) => state.auth.isSignIn);
   const currentPage = useSelector((state) => state.pagenation.currentPage); //初期値は「０」
   const dispatch = useDispatch();
@@ -78,13 +78,7 @@ export const Home = () => {
       <h1>書籍レビュー一覧</h1>
       <div className="extend_float_page">
         <form>
-          <input
-            className="search"
-            type="text"
-            name="title_keyword"
-            defaultValue={title_keyword}
-            placeholder="書籍のタイトルを入力"
-          />
+          <input className="search" type="text" name="title_keyword" defaultValue={title_keyword} placeholder="書籍のタイトルを入力" />
           <button type="submit" className="search_button">
             <IconContext.Provider value={{ size: '15px' }}>
               <AiOutlineSearch />
@@ -106,7 +100,6 @@ export const Home = () => {
   );
 };
 
-
 const Pagination = ({ currentPage, Pagenation, Books }) => {
   return (
     <div className="pagenation">
@@ -124,7 +117,6 @@ const Pagination = ({ currentPage, Pagenation, Books }) => {
         <button className="pagenation__button" disabled>
           前のページへ
         </button>
-
       )}
       <input type="text" className="pagenation__currentPage" value={currentPage + 1} readOnly />
       {Books.length === 10 ? (

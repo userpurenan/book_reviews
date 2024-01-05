@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { signIn } from '../../authSlice';
-import { url } from '../../const';
+import { useUrl } from '../../useUrl';
 import { Header } from '../header/Header';
 import './Login.scss';
 
@@ -21,12 +21,13 @@ export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState();
+  const login_url = useUrl('login'); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const [, setCookie] = useCookies();
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const onSignIn = () => {
     axios
-      .post(`${url}/login`, { email: email, password: password })
+      .post(login_url, { email: email, password: password })
       .then((res) => {
         setCookie('token', res.data.access_token);
         dispatch(signIn());
@@ -58,9 +59,7 @@ export const Login = () => {
             onChange={handleEmailChange}
           />
           {/* 何か所かにある以下のような記述はバリデーションエラーが発生したときに表示されるエラー文 */}
-          <p>
-            {errors.email?.type === 'required' && <b className="error-message">※メールアドレスを入力してください</b>}
-          </p>
+          <p>{errors.email?.type === 'required' && <b className="error-message">※メールアドレスを入力してください</b>}</p>
           <br />
           <label className="password-label">パスワード</label>
           <br />
@@ -71,9 +70,7 @@ export const Login = () => {
             className="password-input"
             onChange={handlePasswordChange}
           />
-          <p>
-            {errors.password?.type === 'required' && <b className="error-message">※パスワードを入力してください。</b>}
-          </p>
+          <p>{errors.password?.type === 'required' && <b className="error-message">※パスワードを入力してください。</b>}</p>
           <p>{errors.password?.type === 'minLength' && <b className="error-message">※パスワードは５文字以上です</b>}</p>
           <br />
           <button type="submit" name="login" className="Login-button">

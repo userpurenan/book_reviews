@@ -4,10 +4,10 @@ import { useForm } from 'react-hook-form';
 import { IconContext } from 'react-icons';
 import { BsHeart } from 'react-icons/bs';
 import { FaHeart } from 'react-icons/fa';
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle } from 'react-icons/fa';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import { url } from '../../const';
+import { useUrl } from '../../useUrl';
 import './ReviewCommentInput.scss';
 
 export const ReviewCommentInput = (props) => {
@@ -20,6 +20,9 @@ export const ReviewCommentInput = (props) => {
   const [BookComment, setBookComment] = useState([]);
   const [UpdateComment, setUpdateComment] = useState();
   const [commentPage, setCommentPage] = useState(0);
+  const get_comment_url = useUrl('comment_operation', props.BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const create_comment_url = useUrl('comment_operation', props.BookId);
+  const good_operation_url = useUrl('good_operation');
   const [commentLikes, setCommentLikes] = useState(() => {
     // localStorageからデータを取得し、存在しない場合はデフォルトで空のオブジェクトを返す
     const storedData = localStorage.getItem('commentLikes');
@@ -38,11 +41,12 @@ export const ReviewCommentInput = (props) => {
 
   useEffect(() => {
     axios
-      .get(`${url}/books/${props.BookId}/comment`, {
+      .get(get_comment_url, {
         headers,
         params: {
-          comment_offset: commentPage,
-        }})
+          comment_offset: commentPage
+        }
+      })
       .then((response) => {
         setBookComment(response.data);
       });
@@ -50,12 +54,10 @@ export const ReviewCommentInput = (props) => {
 
   const sendComment = (event) => {
     const comment = event.comment;
-    axios
-      .post(`${url}/books/${props.BookId}/comment`, { comment: comment }, { headers })
-      .then(() => {
-        //updateCommentに前とは違う数値を入れることで、sendCommentを呼び出すたびにuseEffectを実行できる。
-        //低確率で前に入っていた数値と同じ数値が入る
-        setUpdateComment(Math.random());
+    axios.post(create_comment_url, { comment: comment }, { headers }).then(() => {
+      //updateCommentに前とは違う数値を入れることで、sendCommentを呼び出すたびにuseEffectを実行できる。
+      //低確率で前に入っていた数値と同じ数値が入る
+      setUpdateComment(Math.random());
     });
   };
 
@@ -68,21 +70,15 @@ export const ReviewCommentInput = (props) => {
 
     // 状態を更新
     setCommentLikes(newCommentLikes);
-    axios
-      .post(`${url}/comment/fluctuationLikes`, { likes: likes_count_change, comment_id: comment_id }, { headers })
-      .then(() => {
-        setUpdateComment(Math.random());
-      });
+    axios.post(good_operation_url, { likes: likes_count_change, comment_id: comment_id }, { headers }).then(() => {
+      setUpdateComment(Math.random());
+    });
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit(sendComment)}>
-        <p>
-          {errors.comment?.type === 'required' && (
-            <b className="comment-error-message">※コメントを入力してください。</b>
-          )}
-        </p>
+        <p>{errors.comment?.type === 'required' && <b className="comment-error-message">※コメントを入力してください。</b>}</p>
         <textarea className="input_comment" {...register('comment', { required: true })} placeholder="コメントを入力" />
         <br />
         <button type="submit" className="comment_button">
@@ -97,7 +93,7 @@ export const ReviewCommentInput = (props) => {
             {BookCommentList.user_name}
             {BookCommentList.isReviewer ? (
               <IconContext.Provider value={{ color: '#ffffff', size: '20px' }}>
-                <FaCheckCircle />                        
+                <FaCheckCircle />
               </IconContext.Provider>
             ) : (
               <></>
@@ -119,7 +115,9 @@ export const ReviewCommentInput = (props) => {
         {commentPage !== 0 ? (
           <button
             id="before"
-            onClick={() => { setCommentPage(commentPage-10); }}
+            onClick={() => {
+              setCommentPage(commentPage - 10);
+            }}
             className="comment-pagenation__button"
           >
             前のページへ
@@ -132,7 +130,9 @@ export const ReviewCommentInput = (props) => {
         {BookComment.length === 10 ? (
           <button
             id="next"
-            onClick={() => { setCommentPage(commentPage+10); }}
+            onClick={() => {
+              setCommentPage(commentPage + 10);
+            }}
             className="comment-pagenation__button"
           >
             次のページへ
@@ -148,5 +148,5 @@ export const ReviewCommentInput = (props) => {
 };
 
 ReviewCommentInput.propTypes = {
-  BookId: PropTypes.string,
+  BookId: PropTypes.string
 };

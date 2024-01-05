@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { url } from '../../const';
+import { useUrl } from '../../useUrl';
 import { BookReviewInput } from '../book_review_input/BookReviewInput';
 import { Header } from '../header/Header';
 import './CreateBookReview.scss';
@@ -17,7 +17,8 @@ export const CreateBookReview = () => {
   const [bookDetail, setBookDetail] = useState('');
   const [bookReview, setBookReview] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [bookData] = useState({});
+  const create_book_url = useUrl('book_operation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const [bookData] = useState([]);
 
   const createBook = () => {
     const data = {
@@ -28,7 +29,7 @@ export const CreateBookReview = () => {
     };
 
     axios
-      .post(`${url}/books`, data, {
+      .post(create_book_url, data, {
         headers: {
           authorization: `Bearer ${cookies.token}`
         }
@@ -46,7 +47,7 @@ export const CreateBookReview = () => {
   }, []);
 
   return (
-    <div className='page'>
+    <div className="page">
       <Header />
       <h1>書籍レビュー新規投稿</h1>
       <h2 className="error-massage">{errorMessage}</h2>

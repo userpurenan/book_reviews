@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Compressor from 'compressorjs';
-import { url } from '../../const';
+import { useUrl } from '../../useUrl';
 import { Header } from '../header/Header';
 import './EditProfile.scss';
 
@@ -20,6 +20,9 @@ export const EditProfile = () => {
   const [ImgFile, setImgFile] = useState(); //「ImgFile」にはリサイズした画像が入る
   const [imgUrl, setImgUrl] = useState(''); //画面に表示させる画像のurlをセット
   const [user, setUsers] = useState('');
+  const edit_user_neme_url = useUrl('user_operation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const get_user_url = useUrl('user_operation');
+  const icon_upload_url = useUrl('icon_upload');
   const [cookies] = useCookies();
   const auth = useSelector((state) => state.auth.isSignIn);
 
@@ -37,9 +40,9 @@ export const EditProfile = () => {
     };
 
     axios
-      .patch(`${url}/users`, { name: name }, { headers })
+      .patch(edit_user_neme_url, { name: name }, { headers })
       .then(async () => {
-        await axios.post(`${url}/uploads`, formdata, {
+        await axios.post(icon_upload_url, formdata, {
           headers,
           'Content-Type': 'multipart/form-data'
         });
@@ -79,7 +82,7 @@ export const EditProfile = () => {
     if (auth === false) return navigate('/login'); //「navegate」はレンダリング時に呼び出したらだめらしい。（「useEfect」内で呼び出そうとのエラーが出た）
 
     axios
-      .get(`${url}/users`, {
+      .get(get_user_url, {
         //アクセス時、ユーザーの情報を取得する
         headers: {
           authorization: `Bearer ${cookies.token}`
@@ -87,41 +90,39 @@ export const EditProfile = () => {
       })
       .then((res) => {
         setUsers(res.data);
-        setImgUrl(res.data.iconUrl);
+        setImgUrl(res.data.icon_url);
       });
   }, []);
 
   return (
-    <div className='page'>
+    <div className="page">
       <Header />
-        <main className="update">
-          <div className='edit_user_float_page'>
-            <h2>ユーザー情報編集</h2>
-            <p className="error-message">{errorMessage}</p>
-            <form onSubmit={handleSubmit(updateName)} className="update__form">
-              <label>ユーザー名</label>
-              <br />
-              <input
-                type="text"
-                {...register('name', { required: true })}
-                onChange={handleNameChange}
-                className="update__form--name"
-                defaultValue={user.name} /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
-              />
-              <p>
-                {errors.name?.type === 'required' && <b className="error-message">※アカウント名を入力してください。</b>}
-              </p>
-              <label>アイコン画像アップロード</label>
-              <br />
-              <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />
-              <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" className="Update__form--iconImg" />
-              <br />
-              <button type="submit" className="update__form--button">
-                更新
-              </button>
-            </form>
-          </div>
-        </main>
-      </div>
+      <main className="update">
+        <div className="edit_user_float_page">
+          <h2>ユーザー情報編集</h2>
+          <p className="error-message">{errorMessage}</p>
+          <form onSubmit={handleSubmit(updateName)} className="update__form">
+            <label>ユーザー名</label>
+            <br />
+            <input
+              type="text"
+              {...register('name', { required: true })}
+              onChange={handleNameChange}
+              className="update__form--name"
+              defaultValue={user.name} /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
+            />
+            <p>{errors.name?.type === 'required' && <b className="error-message">※アカウント名を入力してください。</b>}</p>
+            <label>アイコン画像アップロード</label>
+            <br />
+            <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />
+            <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" className="Update__form--iconImg" />
+            <br />
+            <button type="submit" className="update__form--button">
+              更新
+            </button>
+          </form>
+        </div>
+      </main>
+    </div>
   );
 };

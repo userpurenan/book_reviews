@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { url } from '../../const';
+import { useUrl } from '../../useUrl';
 import { BookReviewInput } from '../book_review_input/BookReviewInput';
 import { Header } from '../header/Header';
 import './EditBookReview.scss';
@@ -18,7 +18,10 @@ export const EditBookReview = () => {
   const [bookDetail, setBookDetail] = useState('');
   const [bookReview, setBookReview] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [bookData, setBookData] = useState({});
+  const edit_book_url = useUrl('book_detail_operation', BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const delete_book_url = useUrl('book_detail_operation', BookId);
+  const get_book_detail_url = useUrl('book_detail_operation', BookId);
+  const [bookData, setBookData] = useState([]);
 
   const headers = {
     authorization: `Bearer ${cookies.token}`
@@ -33,7 +36,7 @@ export const EditBookReview = () => {
     };
 
     axios
-      .put(`${url}/books/${BookId}`, data, { headers })
+      .put(edit_book_url, data, { headers })
       .then(() => {
         navigate('/');
       })
@@ -44,7 +47,7 @@ export const EditBookReview = () => {
 
   const deleteBook = () => {
     axios
-      .delete(`${url}/books/${BookId}`, { headers })
+      .delete(delete_book_url, { headers })
       .then(() => {
         navigate('/');
       })
@@ -57,7 +60,7 @@ export const EditBookReview = () => {
     if (auth === false) return navigate('/login');
 
     axios
-      .get(`${url}/books/${BookId}`, { headers })
+      .get(get_book_detail_url, { headers })
       .then((res) => {
         if (!res.data.isMine) return navigate('/'); //自分の書いた書籍レビューじゃなかったらホーム画面に遷移する
         setBookData(res.data);
@@ -68,7 +71,7 @@ export const EditBookReview = () => {
   }, []);
 
   return (
-    <div className='edit_review'>
+    <div className="edit_review">
       <Header />
       <h1>書籍レビュー編集</h1>
       <h2 className="error-massage">{errorMessage}</h2>

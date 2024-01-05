@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Compressor from 'compressorjs';
 import { signIn } from '../../authSlice';
-import { url } from '../../const';
+import { useUrl } from '../../useUrl';
 import { Header } from '../header/Header';
 import './signUp.scss';
 
@@ -25,7 +25,9 @@ export const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [ImgFile, setImgFile] = useState(); //「ImgFile」にはリサイズした画像が入る
   const [imgUrl, setImgUrl] = useState(''); //画面に表示させる画像のurlをセット
-  const [, setCookie] = useCookies(['token']);
+  const sign_up_url = useUrl('signup'); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const icon_upload_url = useUrl('icon_upload');
+  const [, setCookie] = useCookies();
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handleNameChange = (e) => setName(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
@@ -38,14 +40,14 @@ export const SignUp = () => {
     };
 
     try {
-      const res = await axios.post(`${url}/signup`, data);
+      const res = await axios.post(sign_up_url, data);
       const token = res.data.token;
       setCookie('token', token);
 
       const formdata = new FormData();
       formdata.append('icon', ImgFile, ImgFile.name); // フィールド名を「icon」に指定しないと400エラーが起きる。（swaggerの仕様ではフィールド名を「icon」にしていたため）
 
-      await axios.post(`${url}/uploads`, formdata, {
+      await axios.post(icon_upload_url, formdata, {
         headers: {
           authorization: `Bearer ${token}`,
           'content-Type': 'multipart/form-data'
@@ -96,28 +98,14 @@ export const SignUp = () => {
         <form onSubmit={handleSubmit(onSignUp)} className="signup-form">
           <label htmlFor="email">メールアドレス</label>
           <br />
-          <input
-            type="email"
-            {...register('email', { required: true })}
-            onChange={handleEmailChange}
-            className="email-input"
-          />
+          <input type="email" {...register('email', { required: true })} onChange={handleEmailChange} className="email-input" />
           {/* 何か所かにある以下のような記述はバリデーションエラーが発生したときに表示されるエラー文 */}
-          <p>
-            {errors.email?.type === 'required' && <b className="error-message">※メールアドレスを入力してください</b>}
-          </p>
+          <p>{errors.email?.type === 'required' && <b className="error-message">※メールアドレスを入力してください</b>}</p>
           <br />
           <label>ユーザ名</label>
           <br />
-          <input
-            type="text"
-            {...register('name', { required: true })}
-            onChange={handleNameChange}
-            className="name-input"
-          />
-          <p>
-            {errors.name?.type === 'required' && <b className="error-message">※アカウント名を入力してください。</b>}
-          </p>
+          <input type="text" {...register('name', { required: true })} onChange={handleNameChange} className="name-input" />
+          <p>{errors.name?.type === 'required' && <b className="error-message">※アカウント名を入力してください。</b>}</p>
           <br />
           <label htmlFor="password">パスワード</label>
           <br />
@@ -127,14 +115,8 @@ export const SignUp = () => {
             onChange={handlePasswordChange}
             className="password-input"
           />
-          <p>
-            {errors.password?.type === 'required' && <b className="error-message">※パスワードを入力してください。</b>}
-          </p>
-          <p>
-            {errors.password?.type === 'minLength' && (
-              <b className="error-message">※パスワードは５文字以上で設定してください</b>
-            )}
-          </p>
+          <p>{errors.password?.type === 'required' && <b className="error-message">※パスワードを入力してください。</b>}</p>
+          <p>{errors.password?.type === 'minLength' && <b className="error-message">※パスワードは５文字以上で設定してください</b>}</p>
           <label>アイコン画像アップロード</label>
           <br />
           <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />

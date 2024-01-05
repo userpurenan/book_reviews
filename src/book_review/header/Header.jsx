@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { signOut } from '../../authSlice';
-import { url } from '../../const';
+import { useUrl } from '../../useUrl';
 import './header.scss';
 
 export const Header = () => {
@@ -12,6 +12,7 @@ export const Header = () => {
   const dispatch = useDispatch();
   const [cookies, , removeCookie] = useCookies();
   const [user, setUsers] = useState('');
+  const get_user_url = useUrl('user_operation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
 
   const handleSignOut = () => {
     dispatch(signOut());
@@ -25,7 +26,7 @@ export const Header = () => {
   useEffect(() => {
     //ログインしていたらユーザー情報を取得する
     if (auth) {
-      axios.get(`${url}/users`, { headers }).then((res) => {
+      axios.get(get_user_url, { headers }).then((res) => {
         setUsers(res.data);
       });
     }
