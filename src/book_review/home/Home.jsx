@@ -18,9 +18,7 @@ export const Home = () => {
   const search = useLocation().search;
   const query = new URLSearchParams(search);
   const title_keyword = query.get('title_keyword');
-  const get_public_books_url = useUrl('get_public_books'); //カスタムフック。このコンポーネントで使うapiのurlが返る
-  const get_books_url = useUrl('book_operation');
-  const auth = useSelector((state) => state.auth.isSignIn);
+  const get_books_url = useUrl('book_operation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const currentPage = useSelector((state) => state.pagenation.currentPage); //初期値は「０」
   const dispatch = useDispatch();
 
@@ -30,36 +28,24 @@ export const Home = () => {
 
   //useEffect(「ここにasync入れたらダメ。」())
   useEffect(() => {
-    const axiosData = async () => {
-      var response;
-      try {
-        //ログインしていたら認証情報が必要なAPIから情報を取得する
-        if (auth) {
-          response = await axios.get(get_books_url, {
-            headers,
-            params: {
-              title_keyword: title_keyword
-            }
-          });
-        } else {
-          response = await axios.get(get_public_books_url, {
-            params: {
-              title_keyword: title_keyword
-            }
-          });
+    axios
+      .get(get_books_url, {
+        headers,
+        params: {
+          title_keyword: title_keyword
         }
-
-        setBooks(response.data);
-      } catch (error) {
+      })
+      .then((response) => {
+          setBooks(response.data);
+      })
+      .catch((error) => {
         alert(`書籍の取得に失敗しました${error}`);
-      }
-    };
-    axiosData();
+      });
   }, []);
 
   const handlePagenation = async (offset, e) => {
     try {
-      const response = await axios.get(get_public_books_url, {
+      const response = await axios.get(get_books_url, {
         params: {
           offset: offset, // ここにクエリパラメータを指定する。
           title_keyword: title_keyword
