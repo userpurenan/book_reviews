@@ -1,18 +1,60 @@
 @charset "utf-8";
+@use '../header/header.scss';
 
 .input_comment{
-    margin-top: 10px;
+    width: 70%;
+    height: 100px;
     margin-left: 100px;
     font-size: 20px;
-    height: 100px;
-    width: 70%;
 }
 
 .comment_button{
-    margin-left: 70%;
-
+    width: 80px;
     height: 40px;
-    width: 100px;
-    background-image: linear-gradient(90deg, rgba(216, 227, 237, 1), rgba(190, 252, 255, 1) 0%);
+    margin-left: 73%;
+}
+
+.comment_userIcon{
+    @extend .userIcon;
+    width: 25px;
+    height: 25px;
+}
+
+.h2_comment{
+    margin-left: 40px;
+}
+
+.likes{
+    margin-left: 90%;
+    cursor : pointer;
+}
+
+.count_likes{
+    padding-bottom: 15px;
+}
+
+.comment_list{
+    list-style-type: none;
+    border: solid;
+    width: 80%;
+    height: 100%;
+    font-size: 20px;
     border-radius: 5px;
+    display: block;
+    text-decoration: none;
+    color: #000000;
+}
+
+.comment-pagenation{
+    margin-left: 30%;
+
+    &__button{
+        height: 50px;
+        width: 100px;
+    }
+}
+
+.comment-error-message{
+    color: #ff3333;
+    margin-left: 100px;
 }

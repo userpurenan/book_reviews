@@ -8,6 +8,8 @@ use App\Http\Requests\BookRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
+use App\Models\BookComment;
+
 
 class BookController extends Controller
 {
@@ -69,6 +71,55 @@ class BookController extends Controller
             'reviewer' => $book_datail->reviewer,
             'isMine' => $isMine,
         ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function createComment(Request $request, $id)
+    {
+        $books_review_comment = BookComment::create([
+                                    'user_id' => Auth::id(),
+                                    'book_id' => $id,
+                                    'comment' => $request->input('comment'),
+                                    'comment_likes' => 0,
+                                ]);
+
+        return response()->json([
+                    'user_name' => $books_review_comment->user->name,
+                    'user_imageUrl' => $books_review_comment->user->imageUrl,
+                    'comment' => $books_review_comment->comment,
+                    'comment_likes' => $books_review_comment->comment_likes
+                ], 200, [], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function fluctuationLikes(Request $request)
+    {
+        $likes_count_change = $request->input('likes');
+        $comment = BookComment::findOrFail($request->input('comment_id'));
+        $comment_likes_count = $comment->comment_likes + $likes_count_change;
+        $comment->update(['comment_likes' => $comment_likes_count ]);
+
+        return response()->json([
+            'comment_likes' => $comment->comment_likes
+        ], 200);
+    }
+
+    public function getBookReviewComment(Request $request, $id)
+    {
+        $number = $request->query('comment_offset');
+
+        $books_review_comment = BookComment::where('book_id', $id)->offset($number)->limit(10)->orderBy('id', 'desc')->get();
+
+        $review_comment = [];
+        foreach ($books_review_comment as $books_review) {
+            $review_comment[] = [
+                'id' => $books_review->id,
+                'user_name' => $books_review->user->name,
+                'user_imageUrl' => $books_review->user->imageUrl,
+                'comment' => $books_review->comment,
+                'comment_likes' => $books_review->comment_likes,
+            ];
+        }
+
+        return response()->json($review_comment, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function updateBook(Request $request, $id)

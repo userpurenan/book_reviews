@@ -51,6 +51,9 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ],
+        "prepare": [
+            "php-cs-fixer fix"
+        ],
         "BookTest": [
             "php artisan test --env=testing --testsuite Book"
         ],
