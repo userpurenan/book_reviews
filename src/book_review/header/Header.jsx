@@ -51,7 +51,7 @@ export const Header = () => {
           <br />
           <p className="userName">
             ユーザー名：{user.name}
-            <img src={user.imageUrl} alt="ユーザーのアイコン画像" className="userIcon" />
+            <img src={user.image_url} alt="ユーザーのアイコン画像" className="userIcon" />
           </p>
         </div>
       ) : (

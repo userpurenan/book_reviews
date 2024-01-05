@@ -76,9 +76,9 @@ class UserController extends Controller
             throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
         }
 
-        $user->update(['imageUrl' => $image_url]);
+        $user->update(['image_url' => $image_url]);
 
-        return response()->json(['imageUrl' => $image_url]);
+        return response()->json(['image_url' => $image_url]);
     }
 
     public function getUser()
@@ -91,7 +91,7 @@ class UserController extends Controller
 
         return response()->json([
                     'name' => $user->name,
-                    'imageUrl' => $user->imageUrl,
+                    'image_url' => $user->image_url,
                 ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
