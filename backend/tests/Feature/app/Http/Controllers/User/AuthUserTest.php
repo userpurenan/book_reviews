@@ -15,7 +15,7 @@ class AuthUserTest extends TestCase
      */
     public function test_ユーザー情報が取得できるか？(): void
     {
-        $this->createUser();
+        $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
 
         $response = $this->get('/api/users', [
@@ -23,6 +23,9 @@ class AuthUserTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+        $response->assertJson(['name' => $user->name,
+                               'image_url' => $user->imege_url
+                              ]);
     }
 
     public function test_アイコン画像のURLを保存できるか？()
@@ -38,6 +41,10 @@ class AuthUserTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+        $response->assertJson(['image_url' => $response['image_url'] ]);
+        $this->assertDatabaseMissing('users', [
+            'image_url' => null
+        ]);
     }
 
     public function test_ユーザーの名前の変更ができるか？()
@@ -65,33 +72,28 @@ class AuthUserTest extends TestCase
         $file1 = UploadedFile::fake()->image('icon.jpg');
         $file2 = UploadedFile::fake()->image('icon2.jpg');
 
-        $user = $this->createUser();
+        $this->createUser();
         $token = $this->createToken($this->email, $this->password);
 
         //画像のURL保存
-        $create_user_icon = $this->post('/api/uploads', [
+        $create_user_icon_response = $this->post('/api/uploads', [
             'icon' => $file1,
         ],[
             'Authorization' => "Bearer ".$token,
         ]);
-        $user_icon_url = $create_user_icon['imageUrl'];
-        $this->assertDatabaseHas('users', [
-            'imageUrl' => $user_icon_url,
-        ]);
         
         //ユーザーの画像の変更
-        $edit_user_icon = $this->post('api/uploads', [
+        $edit_user_icon_response = $this->post('api/uploads', [
             'icon' => $file2,
         ],[
             'Authorization' => "Bearer ".$token,
         ]);
-        $user_icon_url2 = $edit_user_icon['imageUrl'];
 
         $this->assertDatabaseMissing('users', [
-            'imageUrl' => $user_icon_url,
+            'image_url' => $create_user_icon_response['image_url'],
         ]);
         $this->assertDatabaseHas('users', [
-            'imageUrl' => $user_icon_url2,
+            'image_url' => $edit_user_icon_response['image_url'],
         ]);
     }
 }

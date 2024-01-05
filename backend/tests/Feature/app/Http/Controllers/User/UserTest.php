@@ -13,6 +13,7 @@ class UserTest extends TestCase
 
     public function test_会員登録できるか？(): void
     {
+        $this->assertDatabaseCount('users', 0);
         $faker = Factory::create('ja_JP');
         $response = $this->post('/api/signup',[
                                 'name' => $faker->name,
@@ -21,6 +22,7 @@ class UserTest extends TestCase
                             ]);
 
         $response->assertStatus(200);
+        $this->assertDatabaseCount('users', 1);
     }
 
     /**
@@ -59,6 +61,7 @@ class UserTest extends TestCase
                         ]);
         
         $response->assertStatus(200);
+        $response->assertJsonMissing(['access_token' => '']);
     }
 
     /**
