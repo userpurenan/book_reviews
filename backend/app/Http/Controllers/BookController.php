@@ -113,7 +113,7 @@ class BookController extends Controller
             $review_comment[] = [
                 'id' => $books_review->id,
                 'user_name' => $books_review->user->name,
-                'user_imageUrl' => $books_review->user->imageUrl,
+                'user_image_url' => $books_review->user->image_url,
                 'comment' => $books_review->comment,
                 'comment_likes' => $books_review->comment_likes,
             ];

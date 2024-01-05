@@ -90,7 +90,7 @@ export const ReviewCommentInput = (props) => {
         {BookComment.map((BookCommentList, key) => (
           <li key={key} value={BookCommentList.id} className="comment_list">
             {BookCommentList.user_name}
-            <img src={BookCommentList.user_imageUrl} alt="ユーザーのアイコン" className="comment_userIcon" />
+            <img src={BookCommentList.user_image_url} alt="ユーザーのアイコン" className="comment_userIcon" />
             <br />
             <p className="user_comment">{BookCommentList.comment}</p>
             <IconContext.Provider value={{ color: '#ff69b4', size: '20px' }}>

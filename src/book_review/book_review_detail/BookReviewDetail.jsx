@@ -7,7 +7,6 @@ import { ReviewCommentInput } from '../review_comment/ReviewCommentInput';
 import Loading from '../Loding';
 import { Header } from '../header/Header';
 import './BookReviewDetail.scss';
-import Loading from "../Loding";
 
 
 export const BookReviewDetail = () => {
@@ -48,16 +47,19 @@ export const BookReviewDetail = () => {
       <h1>書籍の詳細</h1>
       <h2 className="error-massage">{errorMessage}</h2>
       {isLoading ? (
-        <Loading />
-      ) : (
-        <div className="bookDetail">
-          <p className="bookDetail__title">タイトル: {bookData.title}</p>
-          <p className="bookDetail__url">URL: <a href={bookData.url}>{bookData.url}</a></p>
-          <p className="bookDetail__reviewer">レビュワー: {bookData.reviewer}</p>
-          <p className="bookDetail__detail">書籍の詳細情報: {bookData.detail}</p>
-          <p className="bookDetail__review">レビュー: {bookData.review}</p>
-          {bookData.isMine ? <Link to={`/edit/${BookId}`} className='bookDetail__link-edit-book'>書籍編集画面へ</Link> : <></>}
-          <ReviewCommentInput BookId={BookId} />
-        </div>
-    )
+          <Loading />
+        ) : (
+          <div className="bookDetail">
+            <p className="bookDetail__title">タイトル: {bookData.title}</p>
+            <p className="bookDetail__url">URL: <a href={bookData.url}>{bookData.url}</a></p>
+            <p className="bookDetail__reviewer">レビュワー: {bookData.reviewer}</p>
+            <p className="bookDetail__detail">書籍の詳細情報: {bookData.detail}</p>
+            <p className="bookDetail__review">レビュー: {bookData.review}</p>
+            {bookData.isMine ? <Link to={`/edit/${BookId}`} className='bookDetail__link-edit-book'>書籍編集画面へ</Link> : <></>}
+            <ReviewCommentInput BookId={BookId} />
+          </div>
+       )
+      }
+    </div>
+  )
 }

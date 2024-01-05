@@ -23,11 +23,11 @@ class BookFactory extends Factory
         return [
             // 'title' => fake()>realText($maxNbChars = 15),
             'title' => "ワンピース",
-            'user_id' => 1,
+            'user_id' => $randomUserId,
             'url' => fake()->url(),
             'detail' => fake()->realText(15),
             'review' => fake()->realText(35),
-            'reviewer' => User::findOrFail(1)->name
+            'reviewer' => User::findOrFail($randomUserId)->name
         ];
     }
 }
