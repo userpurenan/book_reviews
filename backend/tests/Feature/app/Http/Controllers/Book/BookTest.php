@@ -3,7 +3,6 @@
 namespace Tests\Unit\Book;
 
 use App\Models\Book;
-use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -38,14 +37,13 @@ class BookTest extends TestCase
 
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
-        $faker = Factory::create('ja_JP');
 
         $this->post('/api/books', [
-            'title' => $faker->realtext(10),
+            'title' => fake()->realtext(10),
             'user_id' => $user->id,
             'url' => 'sample.com',
-            'detail' => $faker->realText(15),
-            'review' => $faker->realText(30),
+            'detail' => fake()->realText(15),
+            'review' => fake()->realText(30),
             'reviewer' => $user->name,
         ],[
             'Authorization' => 'Bearer '.$token,

@@ -3,7 +3,6 @@
 namespace Tests;
 
 use App\Models\User;
-use Faker\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -25,12 +24,11 @@ abstract class TestCase extends BaseTestCase
      */
     public function createUser()
     {
-        $faker = Factory::create('ja_JP');
-        $this->email = $faker->safeEmail;
+        $this->email = fake()->safeEmail();
         $this->password = Str::random(10);
 
         $user = User::create([
-                          'name' => $faker->name(),
+                          'name' => fake()->name(),
                           'email' => $this->email,
                           'password' => Hash::make($this->password)
                       ]);
