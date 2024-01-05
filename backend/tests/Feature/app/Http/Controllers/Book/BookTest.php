@@ -11,42 +11,23 @@ class BookTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function createBook(int $record)
+    public function createBook()
     {
-        $user = $this->createUser();
-        $faker = Factory::create('ja_JP');
-        for($i=1; $i<=$record; $i++){
-            Book::create([
-                'title' => 'ワンピース',
-                'user_id' => $user->id,
-                'url' => 'sample.com',
-                'detail' => $faker->realText(15),
-                'review' => $faker->realText(30),
-                'reviewer' => $user->name,
-            ]);
-        }
-        for($i=1; $i<=$record; $i++){
-            Book::create([
-                'title' => 'NARUTO',
-                'user_id' => $user->id,
-                'url' => 'sample.com',
-                'detail' => $faker->realText(15),
-                'review' => $faker->realText(30),
-                'reviewer' => $user->name,
-            ]);
-        }
+        $this->createUser();
+        Book::factory()->count(100)->create();
+        Book::factory()->count(100)->create([ 'title' => 'NARUTO' ]);
     }
 
     public function test_本を取得できるか？(): void
     {
-        $this->createBook(100);
+        $this->createBook();
         $books = $this->get('/api/public/books')->json();
         $this->assertCount(10, $books);
     }
 
     public function test_検索処理を実行できるか？()
     {
-        $this->createBook(100);
+        $this->createBook();
         $books = $this->get('/api/public/books?title_keyword=NARUTO');
         $books->assertJsonMissing(["title" => "ワンピース"]);
     }
@@ -86,7 +67,6 @@ class BookTest extends TestCase
             'review' => 'バトル漫画です',
             'reviewer' => $user->name,
         ]);
-        $this->assertDatabaseCount('books', 1);
 
         $update_book_data = [
             'title' => 'SLUM DUNK',

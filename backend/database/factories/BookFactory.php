@@ -19,14 +19,15 @@ class BookFactory extends Factory
      */
     public function definition(): array
     {
+        $randomUserId = User::inRandomOrder()->first()->id;
         return [
             // 'title' => $this->faker->realText($maxNbChars = 15),
             'title' => "ワンピース",
-            'user_id' => 1,
+            'user_id' => $randomUserId,
             'url' => $this->faker->email,
             'detail' => $this->faker->realText($maxNbChars = 15),
             'review' => $this->faker->realText($maxNbChars = 35),
-            'reviewer' => User::findOrFail(1)->name
+            'reviewer' => User::findOrFail($randomUserId)->name,
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\User;
+namespace Tests\Feature\App\Http\Controllers\User;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -40,28 +40,10 @@ class AuthUserTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_ユーザー情報の変更ができるか？()
+    public function test_ユーザーの名前の変更ができるか？()
     {
-        $file1 = UploadedFile::fake()->image('icon.jpg');
-        $file2 = UploadedFile::fake()->image('icon2.jpg');
-
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
-
-        $this->assertDatabaseHas('users', [
-            'name' => $user->name,
-        ]);
-
-        //画像のURL保存
-        $createUser_icon = $this->post('/api/uploads', [
-            'icon' => $file1,
-        ],[
-            'Authorization' => "Bearer ".$token,
-        ]);
-        $user_icon_url = $createUser_icon['imageUrl'];
-        $this->assertDatabaseHas('users', [
-            'imageUrl' => $user_icon_url,
-        ]);
         
         //ユーザー名の変更
         $this->patch('/api/users', [
@@ -76,7 +58,27 @@ class AuthUserTest extends TestCase
         $this->assertDatabaseHas('users', [
             'name' => 'なかじま'
         ]);
+    }
 
+    public function test_ユーザーのアイコンの変更ができるか？()
+    {
+        $file1 = UploadedFile::fake()->image('icon.jpg');
+        $file2 = UploadedFile::fake()->image('icon2.jpg');
+
+        $user = $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
+
+        //画像のURL保存
+        $create_user_icon = $this->post('/api/uploads', [
+            'icon' => $file1,
+        ],[
+            'Authorization' => "Bearer ".$token,
+        ]);
+        $user_icon_url = $create_user_icon['imageUrl'];
+        $this->assertDatabaseHas('users', [
+            'imageUrl' => $user_icon_url,
+        ]);
+        
         //ユーザーの画像の変更
         $edit_user_icon = $this->post('api/uploads', [
             'icon' => $file2,

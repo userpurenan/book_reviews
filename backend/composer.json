@@ -53,6 +53,12 @@
         ],
         "prepare": [
             "php-cs-fixer fix"
+        ],
+        "BookTest": [
+            "php artisan test --env=testing --testsuite Book"
+        ],
+        "UserTest": [
+            "php artisan test --env=testing --testsuite User"
         ]
     },
     "extra": {
