@@ -21,6 +21,7 @@ class UserTest extends TestCase
                             ]);
 
         $response->assertStatus(200);
+        $this->assertDatabaseCount('users', 1);
     }
 
     /**
@@ -59,6 +60,7 @@ class UserTest extends TestCase
                         ]);
         
         $response->assertStatus(200);
+        $response->assertJsonMissing(['access_token' => '']);
     }
 
     /**
