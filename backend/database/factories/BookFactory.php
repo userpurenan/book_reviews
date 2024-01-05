@@ -21,13 +21,13 @@ class BookFactory extends Factory
     {
         $randomUserId = User::inRandomOrder()->first()->id;
         return [
-            // 'title' => $this->faker->realText($maxNbChars = 15),
+            // 'title' => fake()>realText($maxNbChars = 15),
             'title' => "ワンピース",
-            'user_id' => $randomUserId,
-            'url' => $this->faker->email,
-            'detail' => $this->faker->realText($maxNbChars = 15),
-            'review' => $this->faker->realText($maxNbChars = 35),
-            'reviewer' => User::findOrFail($randomUserId)->name,
+            'user_id' => 1,
+            'url' => fake()->url(),
+            'detail' => fake()->realText(15),
+            'review' => fake()->realText(35),
+            'reviewer' => User::findOrFail(1)->name
         ];
     }
 }
