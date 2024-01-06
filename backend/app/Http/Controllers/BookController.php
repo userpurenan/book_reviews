@@ -108,23 +108,23 @@ class BookController extends Controller
 
         $books_review_comment = BookComment::where('book_id', $id)->offset($number)->limit(10)->orderBy('id', 'desc')->get();
 
-        $review_comment = [];
-        foreach ($books_review_comment as $books_review) {
+        $review_comment_array = [];
+        foreach ($books_review_comment as $review_comment) {
             $isReviewer = false;
-            if($books_review->book->user_id == $books_review->user_id){
+            if($review_comment->book->user_id == $review_comment->user_id){
                 $isReviewer = true;
             }
-            $review_comment[] = [
-                'id' => $books_review->id,
-                'user_name' => $books_review->user->name,
-                'user_image_url' => $books_review->user->image_url,
-                'comment' => $books_review->comment,
-                'comment_likes' => $books_review->comment_likes,
+            $review_comment_array[] = [
+                'id' => $review_comment->id,
+                'user_name' => $review_comment->user->name,
+                'user_image_url' => $review_comment->user->image_url,
+                'comment' => $review_comment->comment,
+                'comment_likes' => $review_comment->comment_likes,
                 'isReviewer' => $isReviewer
             ];
         }
 
-        return response()->json($review_comment, 200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json($review_comment_array, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function updateBook(Request $request, $id)
