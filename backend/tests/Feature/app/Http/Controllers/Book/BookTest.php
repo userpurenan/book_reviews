@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Book;
+namespace Tests\Feature\App\Http\Controllers\Book;
 
 use App\Models\Book;
 use App\Models\BookComment;
@@ -112,6 +112,42 @@ class BookTest extends TestCase
         $this->assertDatabaseCount('books', 0);
     }
 
+    public function test_コメントを取得できるか？()
+    {
+        $user = $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
+
+        $book = Book::create([
+            'title' => 'ドラゴンボール',
+            'user_id' => $user->id,
+            'url' => 'sample.com',
+            'detail' => 'バトル漫画',
+            'review' => 'バトル漫画です',
+            'reviewer' => $user->name,
+        ]);
+
+        $create_comment_response = BookComment::create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+            'comment' => '良いレビューですね！',
+            'comment_likes' => 0,
+        ]);
+
+        $response = $this->get("/api/books/{$book->id}/comment", [
+            'Authorization' => 'Bearer '.$token,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([[
+            'id' => $create_comment_response->id,
+            'user_name' => $create_comment_response->user->name,
+            'user_image_url' => $create_comment_response->user->image_url,
+            'comment' => urldecode($create_comment_response->comment),
+            'comment_likes' => 0,
+            'isReviewer' => true
+        ]]);
+    }
+
     public function test_レビューに対してのコメントを作れるか？()
     {
         $user = $this->createUser();
@@ -126,12 +162,13 @@ class BookTest extends TestCase
             'reviewer' => $user->name,
         ]);
 
-        $response = $this->post("/api/books/$book->id/comment", [
+        $response = $this->post("/api/books/{$book->id}/comment", [
             'comment' => '良いレビューですね！'
         ], [
             'Authorization' => 'Bearer '.$token,
         ]);
 
+        $response->assertStatus(200);
         $response->assertJson([
             'user_name' => $user->name,
             'user_image_url' => $user->image_url,
@@ -168,7 +205,6 @@ class BookTest extends TestCase
             'comment_likes' => 1,
         ]);
 
-
         $response = $this->post('/api/comment/fluctuationLikes', [
             'comment_id' => $create_comment_response->id,
             'likes' => $fluctuation
@@ -176,6 +212,7 @@ class BookTest extends TestCase
             'Authorization' => 'Bearer '.$token,
         ]);
 
+        $response->assertStatus(200);
         $response->assertJson(['comment_likes' => 1 + $fluctuation ]);
         $this->assertDatabaseHas('book_review_comment', [
             'comment_likes' => 1 + $fluctuation,
@@ -189,5 +226,4 @@ class BookTest extends TestCase
             'いいねの減少が可能か？' => [-1],
         ];
     }
-
 }
