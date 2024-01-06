@@ -32,6 +32,16 @@ export const SignUp = () => {
   const handleNameChange = (e) => setName(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
+  /**
+   * ユーザー更新時の画像をアイコンにするスタイルの調整はsassでやってもうまくいかなかったためjsx側でしました。
+    （恐らく、動的にimgタグのsrcを変化させているため、sassでスタイルを調整すると二回目以降、画像をファイルから指定した際にスタイルが反映されなくなるからかと。）
+   */
+    const defaultStyle = {
+      width: '50px',
+      height: '50px',
+      borderRadius: '50%'
+    };  
+
   const onSignUp = async () => {
     const data = {
       name: name,
@@ -120,7 +130,9 @@ export const SignUp = () => {
           <label>アイコン画像アップロード</label>
           <br />
           <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />
-          <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" />
+          <div>
+            <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" style={defaultStyle} />
+          </div>
           <br />
           <button type="submit" className="signup-button">
             作成

@@ -30,10 +30,14 @@ export const EditProfile = () => {
   const navigate = useNavigate();
   const handleNameChange = (e) => setName(e.target.value);
 
+  /**
+   * ユーザー更新時の画像をアイコンにするスタイルの調整はsassでやってもうまくいかなかったためjsx側でしました。
+    （恐らく、動的にimgタグのsrcを変化させているため、sassでスタイルを調整すると二回目以降、画像をファイルから指定した際にスタイルが反映されなくなるからかと。）
+   */
   const defaultStyle = {
-    width: "50px",
-    height: "50px",
-    borderRadius: "50%",
+    width: '50px',
+    height: '50px',
+    borderRadius: '50%'
   };
 
   //関数は小文字始まり
@@ -72,7 +76,7 @@ export const EditProfile = () => {
         maxWidth: 10,
         success(result) {
           const url = URL.createObjectURL(result);
-          setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」      
+          setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
           setImgFile(result);
         },
         error(err) {
@@ -81,7 +85,7 @@ export const EditProfile = () => {
       });
     } else {
       const url = URL.createObjectURL(file);
-      setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」  
+      setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
       setImgFile(file);
     }
   };
@@ -124,7 +128,7 @@ export const EditProfile = () => {
             <br />
             <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />
             <div>
-            <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" style={defaultStyle} />
+              <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" style={defaultStyle} />
             </div>
             <br />
             <button type="submit" className="update__form--button">
