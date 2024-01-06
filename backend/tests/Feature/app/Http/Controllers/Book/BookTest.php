@@ -3,6 +3,7 @@
 namespace Tests\Unit\Book;
 
 use App\Models\Book;
+use App\Models\BookComment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -45,7 +46,7 @@ class BookTest extends TestCase
             'detail' => fake()->realText(15),
             'review' => fake()->realText(30),
             'reviewer' => $user->name,
-        ],[
+        ], [
             'Authorization' => 'Bearer '.$token,
         ]);
 
@@ -72,7 +73,7 @@ class BookTest extends TestCase
             'detail' => 'バスケ漫画',
             'review' => 'バスケ漫画です',
         ];
-        
+
         $this->put("/api/books/{$book->id}", $update_book_data, [
             'Authorization' => 'Bearer '.$token,
         ]);
@@ -125,12 +126,12 @@ class BookTest extends TestCase
             'reviewer' => $user->name,
         ]);
 
-        $response = $this->post("/api/books/$book->id/comment",[
-                            'comment' => '良いレビューですね！'
-                        ], [
-                            'Authorization' => 'Bearer '.$token,
-                        ]);
-        
+        $response = $this->post("/api/books/$book->id/comment", [
+            'comment' => '良いレビューですね！'
+        ], [
+            'Authorization' => 'Bearer '.$token,
+        ]);
+
         $response->assertJson([
             'user_name' => $user->name,
             'user_image_url' => $user->image_url,
@@ -142,4 +143,51 @@ class BookTest extends TestCase
             'book_id' => $book->id,
         ]);
     }
+
+    /**
+     * @dataProvider fluctuationLikesProvider
+     */
+    public function test_コメントのいいねの増減が可能か？($fluctuation)
+    {
+        $user = $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
+
+        $book = Book::create([
+            'title' => 'ドラゴンボール',
+            'user_id' => $user->id,
+            'url' => 'sample.com',
+            'detail' => 'バトル漫画',
+            'review' => 'バトル漫画です',
+            'reviewer' => $user->name,
+        ]);
+
+        $create_comment_response = BookComment::create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+            'comment' => '良いレビューですね！',
+            'comment_likes' => 1,
+        ]);
+
+
+        $response = $this->post('/api/comment/fluctuationLikes', [
+            'comment_id' => $create_comment_response->id,
+            'likes' => $fluctuation
+        ], [
+            'Authorization' => 'Bearer '.$token,
+        ]);
+
+        $response->assertJson(['comment_likes' => 1 + $fluctuation ]);
+        $this->assertDatabaseHas('book_review_comment', [
+            'comment_likes' => 1 + $fluctuation,
+        ]);
+    }
+
+    public static function fluctuationLikesProvider()
+    {
+        return[
+            'いいねの増加が可能か？' => [1],
+            'いいねの減少が可能か？' => [-1],
+        ];
+    }
+
 }
