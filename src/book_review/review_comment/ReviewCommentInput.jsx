@@ -92,7 +92,7 @@ export const ReviewCommentInput = (props) => {
             <img src={BookCommentList.user_image_url} alt="ユーザーのアイコン" className="comment_userIcon" />
             {BookCommentList.user_name}
             {BookCommentList.isReviewer ? (
-              <IconContext.Provider value={{ color: '#ffffff', size: '20px' }}>
+              <IconContext.Provider value={{ color: '#000000', size: '20px' }}>
                 <FaCheckCircle />
               </IconContext.Provider>
             ) : (
