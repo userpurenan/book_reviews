@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -52,7 +53,7 @@ class UserController extends Controller
                 "password" => Hash::make($request->input('password')),
             ]);
 
-            $token = $this->password_grant($request->input('email'), $request->input('password'));
+            $token = $this->password_grant($user->email, $request->input('password'));
         });
 
         return response()->json([ 'name' => $user->name, 'token' => $token['access_token'] ], 200, [], JSON_UNESCAPED_UNICODE);
@@ -62,6 +63,11 @@ class UserController extends Controller
     {
         $token = $this->password_grant($request->input('email'), $request->input('password'));
 
+        //パスワードグラントの返り値のjsonに「error」キーがあったらエラーメッセージを返す
+        if(array_key_exists('error', $token)) {
+            throw new BadRequestHttpException('メールアドレス又はパスワードが間違っています');
+        }
+
         return response()->json(['access_token' => $token['access_token']]);
     }
 
@@ -70,7 +76,7 @@ class UserController extends Controller
         $file_path = $request->file('icon')->store('public/img');
         $image_path = str_replace('public', 'storage', $file_path);
         $image_url = asset($image_path);
-        $user = User::where('id', Auth::id())->first();
+        $user = User::find(Auth::id());
 
         if(is_null($user)) {
             throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
@@ -97,7 +103,11 @@ class UserController extends Controller
 
     public function editUser(Request $request)
     {
-        $user = User::where('id', Auth::id())->first();
+        $user = User::find(Auth::id());
+
+        if(is_null($user)) {
+            throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
+        }
 
         $user->update(['name' => $request->input('name')]);
     }
