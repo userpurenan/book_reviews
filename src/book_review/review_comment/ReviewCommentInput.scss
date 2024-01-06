@@ -16,6 +16,9 @@
 
 .comment_userIcon{
     @extend .userIcon;
+    position: relative;
+    top: 5px;
+    margin-right: 5px;
     width: 25px;
     height: 25px;
 }
@@ -26,11 +29,21 @@
 
 .likes{
     margin-left: 90%;
-    cursor : pointer;
+
+    &-icon{
+        cursor : pointer;
+    }
+
+    &-count{
+        position: relative;
+        left: 5px;
+        bottom: 4px;
+    }
 }
 
-.count_likes{
-    padding-bottom: 15px;
+.reviewer{
+    position: relative;
+    top: 2px;
 }
 
 .comment_list{

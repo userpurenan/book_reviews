@@ -30,6 +30,12 @@ export const EditProfile = () => {
   const navigate = useNavigate();
   const handleNameChange = (e) => setName(e.target.value);
 
+  const defaultStyle = {
+    width: "50px",
+    height: "50px",
+    borderRadius: "50%",
+  };
+
   //関数は小文字始まり
   const updateName = () => {
     const formdata = new FormData();
@@ -56,8 +62,6 @@ export const EditProfile = () => {
   //画像が1MBより大きかったらリサイズする関数
   const handleIconUrlChange = (e) => {
     const file = e.target.files[0];
-    const url = URL.createObjectURL(file);
-    setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
 
     // 1MB以上の場合
     if (file.size > 1024 * 1024) {
@@ -67,6 +71,8 @@ export const EditProfile = () => {
         maxHeight: 10,
         maxWidth: 10,
         success(result) {
+          const url = URL.createObjectURL(result);
+          setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」      
           setImgFile(result);
         },
         error(err) {
@@ -74,6 +80,8 @@ export const EditProfile = () => {
         }
       });
     } else {
+      const url = URL.createObjectURL(file);
+      setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」  
       setImgFile(file);
     }
   };
@@ -115,7 +123,9 @@ export const EditProfile = () => {
             <label>アイコン画像アップロード</label>
             <br />
             <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />
-            <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" className="Update__form--iconImg" />
+            <div>
+            <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" style={defaultStyle} />
+            </div>
             <br />
             <button type="submit" className="update__form--button">
               更新

@@ -93,21 +93,23 @@ export const ReviewCommentInput = (props) => {
             {BookCommentList.user_name}
             {BookCommentList.isReviewer ? (
               <IconContext.Provider value={{ color: '#000000', size: '20px' }}>
-                <FaCheckCircle />
+                <FaCheckCircle className='reviewer' />
               </IconContext.Provider>
             ) : (
               <></>
             )}
             <br />
             <p className="user_comment">{BookCommentList.comment}</p>
-            <IconContext.Provider value={{ color: '#ff69b4', size: '20px' }}>
-              {commentLikes[BookCommentList.id] ? (
-                <FaHeart className="likes" onClick={() => fluctuationLikes(-1, BookCommentList.id)} />
-              ) : (
-                <BsHeart className="likes" onClick={() => fluctuationLikes(1, BookCommentList.id)} />
-              )}
-            </IconContext.Provider>
-            <span className="count_likes">{BookCommentList.comment_likes}</span>
+            <div className='likes'>
+              <IconContext.Provider value={{ color: '#ff69b4', size: '20px' }}>
+                {commentLikes[BookCommentList.id] ? (
+                  <FaHeart className="likes-icon" onClick={() => fluctuationLikes(-1, BookCommentList.id)} />
+                ) : (
+                  <BsHeart className="likes-icon" onClick={() => fluctuationLikes(1, BookCommentList.id)} />
+                )}
+              </IconContext.Provider>
+              <span className="likes-count">{BookCommentList.comment_likes}</span>
+            </div>
           </li>
         ))}
       </ul>
