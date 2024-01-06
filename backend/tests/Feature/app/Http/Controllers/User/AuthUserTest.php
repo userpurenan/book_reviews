@@ -18,7 +18,7 @@ class AuthUserTest extends TestCase
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
 
-        $response = $this->get('/api/users', [
+        $response = $this->get('/api/user', [
             'Authorization' => "Bearer ".$token,
         ]);
 
@@ -34,7 +34,7 @@ class AuthUserTest extends TestCase
         $this->createUser();
         $token = $this->createToken($this->email, $this->password);
 
-        $response = $this->post('/api/uploads', [
+        $response = $this->post('/api/upload', [
             'icon' => $image_file,
         ],[
             'Authorization' => "Bearer ".$token,
@@ -53,7 +53,7 @@ class AuthUserTest extends TestCase
         $token = $this->createToken($this->email, $this->password);
         
         //ユーザー名の変更
-        $this->patch('/api/users', [
+        $this->patch('/api/user', [
             'name' => 'なかじま'
         ],[
             'Authorization' => "Bearer ".$token,
@@ -76,14 +76,14 @@ class AuthUserTest extends TestCase
         $token = $this->createToken($this->email, $this->password);
 
         //画像のURL保存
-        $create_user_icon_response = $this->post('/api/uploads', [
+        $create_user_icon_response = $this->post('/api/upload', [
             'icon' => $file1,
         ],[
             'Authorization' => "Bearer ".$token,
         ]);
         
         //ユーザーの画像の変更
-        $edit_user_icon_response = $this->post('api/uploads', [
+        $edit_user_icon_response = $this->post('api/upload', [
             'icon' => $file2,
         ],[
             'Authorization' => "Bearer ".$token,
