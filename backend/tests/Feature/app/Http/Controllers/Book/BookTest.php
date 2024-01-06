@@ -20,14 +20,14 @@ class BookTest extends TestCase
     public function test_本を取得できるか？(): void
     {
         $this->createBook();
-        $books = $this->get('/api/public/books')->json();
+        $books = $this->get('/api/books')->json();
         $this->assertCount(10, $books);
     }
 
     public function test_検索処理を実行できるか？()
     {
         $this->createBook();
-        $books = $this->get('/api/public/books?title_keyword=NARUTO');
+        $books = $this->get('/api/books?title_keyword=NARUTO');
         $books->assertJsonMissing(["title" => "ワンピース"]);
     }
 
@@ -104,10 +104,42 @@ class BookTest extends TestCase
         ]);
         $this->assertDatabaseCount('books', 1);
 
-        $this->delete("api/books/{$book->id}", [], [
+        $this->delete("/api/books/{$book->id}", [], [
             'Authorization' => 'Bearer '.$token,
         ]);
 
         $this->assertDatabaseCount('books', 0);
+    }
+
+    public function test_レビューに対してのコメントを作れるか？()
+    {
+        $user = $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
+
+        $book = Book::create([
+            'title' => 'ドラゴンボール',
+            'user_id' => $user->id,
+            'url' => 'sample.com',
+            'detail' => 'バトル漫画',
+            'review' => 'バトル漫画です',
+            'reviewer' => $user->name,
+        ]);
+
+        $response = $this->post("/api/books/$book->id/comment",[
+                            'comment' => '良いレビューですね！'
+                        ], [
+                            'Authorization' => 'Bearer '.$token,
+                        ]);
+        
+        $response->assertJson([
+            'user_name' => $user->name,
+            'user_image_url' => $user->image_url,
+            'comment' => '良いレビューですね！',
+            'comment_likes' => 0
+        ]);
+        $this->assertDatabaseCount('book_review_comment', 1);
+        $this->assertDatabaseHas('book_review_comment', [
+            'book_id' => $book->id,
+        ]);
     }
 }
