@@ -11,15 +11,13 @@ import { useUrl } from '../../useUrl';
 import './ReviewCommentInput.scss';
 
 export const ReviewCommentInput = (props) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm(); // バリデーションのフォームを定義。
-
+  //useFormのregisterとかに名前つけれるらしい
+  const { register: sendCommentRegister, handleSubmit: sendCommentSubmit, formState: sendCommentFormState } = useForm();
+  const { register: editCommentRegister, handleSubmit: editCommentSubmit, formState: editCommentFormState } = useForm();
   const [BookComment, setBookComment] = useState([]);
-  const [UpdateComment, setUpdateComment] = useState();
+  const [UpdateComment, setUpdateComment] = useState(false);
   const [commentPage, setCommentPage] = useState(0);
+  const [isEditComment, setIsEditComment] = useState(false);
   const get_comment_url = useUrl('comment_operation', props.BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const create_comment_url = useUrl('comment_operation', props.BookId);
   const good_operation_url = useUrl('good_operation');
@@ -55,9 +53,24 @@ export const ReviewCommentInput = (props) => {
   const sendComment = (event) => {
     const comment = event.comment;
     axios.post(create_comment_url, { comment: comment }, { headers }).then(() => {
-      //updateCommentに前とは違う数値を入れることで、sendCommentを呼び出すたびにuseEffectを実行できる。
-      //低確率で前に入っていた数値と同じ数値が入る
-      setUpdateComment(Math.random());
+      //初期値「false」のUpdateCommentの否定をstateに入れてあげることでapiを再度呼び出す
+      setUpdateComment(!UpdateComment);
+    });
+  };
+
+  const editComment = (data, book_comment_id) => {
+    const comment = data.edit_comment_input;
+    const edit_comment_url = useUrl('comment_operation', book_comment_id);
+    axios.patch(edit_comment_url, { comment: comment }, { headers }).then(() => {
+      setUpdateComment(!UpdateComment);
+      setIsEditComment(false);
+    });
+  };
+
+  const deleteComment = (book_comment_id) => {
+    const delete_comment_url = useUrl('comment_operation', book_comment_id);
+    axios.delete(delete_comment_url, { headers }).then(() => {
+      setUpdateComment(!UpdateComment);
     });
   };
 
@@ -77,9 +90,9 @@ export const ReviewCommentInput = (props) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit(sendComment)}>
-        <p>{errors.comment?.type === 'required' && <b className="comment-error-message">※コメントを入力してください。</b>}</p>
-        <textarea className="input_comment" {...register('comment', { required: true })} placeholder="コメントを入力" />
+      <form onSubmit={sendCommentSubmit(sendComment)}>
+        <p>{sendCommentFormState.errors.comment?.type === 'required' && <b className="comment-error-message">※コメントを入力してください。</b>}</p>
+        <textarea className="input_comment" {...sendCommentRegister('comment', { required: true })} placeholder="コメントを入力" />
         <br />
         <button type="submit" className="comment_button">
           コメント
@@ -91,25 +104,57 @@ export const ReviewCommentInput = (props) => {
           <li key={key} value={BookCommentList.id} className="comment_list">
             <img src={BookCommentList.user_image_url} alt="ユーザーのアイコン" className="comment_userIcon" />
             {BookCommentList.user_name}
-            {BookCommentList.isReviewer ? (
+            {BookCommentList.is_reviewer ? (
               <IconContext.Provider value={{ color: '#000000', size: '20px' }}>
-                <FaCheckCircle className='reviewer' />
+                <FaCheckCircle className="reviewer" />
               </IconContext.Provider>
             ) : (
               <></>
             )}
+            {BookCommentList.is_your_comment ? (
+              <>
+                <span className="comment_operation" onClick={() => setIsEditComment(BookCommentList.id)}>
+                  編集
+                </span>
+                <span className="comment_operation" onClick={() => deleteComment(BookCommentList.id)}>
+                  削除
+                </span>
+              </>
+            ) : (
+              <></>
+            )}
             <br />
-            <p className="user_comment">{BookCommentList.comment}</p>
-            <div className='likes'>
-              <IconContext.Provider value={{ color: '#ff69b4', size: '20px' }}>
-                {commentLikes[BookCommentList.id] ? (
-                  <FaHeart className="likes-icon" onClick={() => fluctuationLikes(-1, BookCommentList.id)} />
-                ) : (
-                  <BsHeart className="likes-icon" onClick={() => fluctuationLikes(1, BookCommentList.id)} />
-                )}
-              </IconContext.Provider>
-              <span className="likes-count">{BookCommentList.comment_likes}</span>
-            </div>
+            {isEditComment === BookCommentList.id ? (
+              <form onSubmit={editCommentSubmit((data) => editComment(data, BookCommentList.id))}>
+                <p>
+                  {editCommentFormState.errors.edit_comment_input?.type === 'required' && (
+                    <b className="comment-error-message">※コメントを入力してください。</b>
+                  )}
+                </p>
+                <textarea className="edit_comment" {...editCommentRegister('edit_comment_input', { required: true })} placeholder="コメントを入力" />
+                <br />
+                <button className="cancel_button" onClick={() => setIsEditComment(false)}>
+                  キャンセル
+                </button>
+                <button className="edit_button" type="submit">
+                  更新
+                </button>
+              </form>
+            ) : (
+              <>
+                <p className="user_comment">{BookCommentList.comment}</p>
+                <div className="likes">
+                  <IconContext.Provider value={{ color: '#ff69b4', size: '20px' }}>
+                    {commentLikes[BookCommentList.id] ? (
+                      <FaHeart className="likes-icon" onClick={() => fluctuationLikes(-1, BookCommentList.id)} />
+                    ) : (
+                      <BsHeart className="likes-icon" onClick={() => fluctuationLikes(1, BookCommentList.id)} />
+                    )}
+                  </IconContext.Provider>
+                  <span className="likes-count">{BookCommentList.comment_likes}</span>
+                </div>
+              </>
+            )}
           </li>
         ))}
       </ul>

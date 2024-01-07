@@ -67,6 +67,35 @@
     }
 }
 
+.comment_operation{
+    position: relative;
+    left: 70%;
+    font-size: 15px;
+    margin-right: 5px;
+    &:hover{
+        opacity: 0.5;
+        cursor : pointer;
+      }
+}
+
+.edit_comment{
+    @extend .input_comment;
+    width: 90%;
+    margin-left: 20px;
+}
+
+.edit_button{
+    width: 50px;
+    height: 30px;
+    margin-left: 5px;
+}
+
+.cansel_button{
+    width: 90px;
+    height: 30px;
+    margin-left: 73%;
+}
+
 .comment-error-message{
     color: #ff3333;
     margin-left: 100px;
