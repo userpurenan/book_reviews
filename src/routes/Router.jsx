@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { SignUp } from "../book_review/signup/SignUp";
 import { Login } from "../book_review/login/Login";
 import { Home } from "../book_review/home/Home";
-import { Test } from "../__test__/test";
 import { EditProfile } from "../book_review/edit_profile/EditProfile";
 import { CreateBookReview } from "../book_review/create_book_review/CreateBookReview";
 import { BookReviewDetail } from "../book_review/book_review_detail/BookReviewDetail";
@@ -15,7 +14,6 @@ export const Router = () => {
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route path="/test" element={<Test />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/profile" element={<EditProfile />} />
