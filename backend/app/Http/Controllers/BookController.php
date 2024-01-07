@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
 use App\Models\BookComment;
 
-
 class BookController extends Controller
 {
     public function getBooks(BookRequest $request)
@@ -61,7 +60,9 @@ class BookController extends Controller
         $book_datail = Book::findOrFail($id);
         $isMine = false;
 
-        if($book_datail->user_id === Auth::id()) $isMine = true;
+        if($book_datail->user_id === Auth::id()) {
+            $isMine = true;
+        }
 
         return response()->json([
             'title' => $book_datail->title,
@@ -102,7 +103,7 @@ class BookController extends Controller
             'comment' => $book_review_comment->comment,
             'comment_likes' => $book_review_comment->comment_likes
         ], 200, [], JSON_UNESCAPED_UNICODE);
-}
+    }
 
     public function fluctuationLikes(Request $request)
     {
@@ -126,11 +127,11 @@ class BookController extends Controller
         foreach ($books_review_comment as $review_comment) {
             $is_your_comment = false;
             $is_reviewer = false;
-            if($review_comment->book->user_id === $review_comment->user_id){ //書籍のレビュワーが書いたコメントかをここで判定
+            if($review_comment->book->user_id === $review_comment->user_id) { //書籍のレビュワーが書いたコメントかをここで判定
                 $is_reviewer = true;
             }
 
-            if($review_comment->user_id === Auth::id()){ //認証ユーザーが書いたコメントかを判定
+            if($review_comment->user_id === Auth::id()) { //認証ユーザーが書いたコメントかを判定
                 $is_your_comment = true;
             }
             $review_comment_array[] = [

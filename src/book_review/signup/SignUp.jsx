@@ -36,11 +36,11 @@ export const SignUp = () => {
    * ユーザー更新時の画像をアイコンにするスタイルの調整はsassでやってもうまくいかなかったためjsx側でしました。
     （恐らく、動的にimgタグのsrcを変化させているため、sassでスタイルを調整すると二回目以降、画像をファイルから指定した際にスタイルが反映されなくなるからかと。）
    */
-    const defaultStyle = {
-      width: '50px',
-      height: '50px',
-      borderRadius: '50%'
-    };  
+  const defaultStyle = {
+    width: '50px',
+    height: '50px',
+    borderRadius: '50%'
+  };
 
   const onSignUp = async () => {
     const data = {

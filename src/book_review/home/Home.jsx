@@ -36,7 +36,7 @@ export const Home = () => {
         }
       })
       .then((response) => {
-          setBooks(response.data);
+        setBooks(response.data);
       })
       .catch((error) => {
         alert(`書籍の取得に失敗しました${error}`);

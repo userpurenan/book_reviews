@@ -47,7 +47,7 @@ class BookTest extends TestCase
             'review' => fake()->realText(30),
             'reviewer' => $user->name,
         ], [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer ' . $token,
         ]);
 
         $this->assertDatabaseCount('books', 1);
@@ -75,11 +75,11 @@ class BookTest extends TestCase
         ];
 
         $this->put("/api/books/{$book->id}", $update_book_data, [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer ' . $token,
         ]);
 
         $update_books = $this->get("/api/books/{$book->id}", [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer ' . $token,
         ]);
         $update_books->assertJsonMissing([
             'title' => 'ドラゴンボール',
@@ -106,7 +106,7 @@ class BookTest extends TestCase
         $this->assertDatabaseCount('books', 1);
 
         $this->delete("/api/books/{$book->id}", [], [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer ' . $token,
         ]);
 
         $this->assertDatabaseCount('books', 0);
@@ -134,7 +134,7 @@ class BookTest extends TestCase
         ]);
 
         $response = $this->get("/api/books/{$book->id}/comment", [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer ' . $token,
         ]);
 
         $response->assertStatus(200);
@@ -166,7 +166,7 @@ class BookTest extends TestCase
         $response = $this->post("/api/books/{$book->id}/comment", [
             'comment' => '良いレビューですね！'
         ], [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer ' . $token,
         ]);
 
         $response->assertStatus(200);
@@ -210,7 +210,7 @@ class BookTest extends TestCase
             'comment_id' => $create_comment_response->id,
             'likes' => $fluctuation
         ], [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer ' . $token,
         ]);
 
         $response->assertStatus(200);
@@ -249,10 +249,10 @@ class BookTest extends TestCase
             'comment_likes' => 1,
         ]);
 
-        $edit_comment_response = $this->patch("/api/books/$book_review_comment->id/comment", [ 
-            'comment' => '更新したコメントだよ' 
+        $edit_comment_response = $this->patch("/api/books/$book_review_comment->id/comment", [
+            'comment' => '更新したコメントだよ'
         ], [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer ' . $token,
         ]);
 
         $edit_comment_response->assertStatus(200);
@@ -293,7 +293,7 @@ class BookTest extends TestCase
         $this->assertDatabaseCount('book_review_comment', 1);
 
         $this->delete("/api/books/$book_review_comment->id/comment", [], [
-            'Authorization' => 'Bearer '.$token,
+            'Authorization' => 'Bearer ' . $token,
         ]);
         $this->assertDatabaseCount('book_review_comment', 0);
     }

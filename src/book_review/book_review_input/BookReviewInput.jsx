@@ -18,9 +18,9 @@ export const BookReviewInput = (props) => {
   const handleReviewChange = (e) => props.setBookReview(e.target.value);
 
   return (
-    <div className='float_component'>
+    <div className="float_component">
       <form onSubmit={handleSubmit(props.BookOperations)} className="book_operation">
-        <label className='title'>タイトル</label>
+        <label className="title">タイトル</label>
         <br />
         <input
           type="text"
@@ -30,7 +30,7 @@ export const BookReviewInput = (props) => {
           defaultValue={props.bookData.title}
         />
         <p>{errors.title?.type === 'required' && <b className="error-message">※タイトルを入力してください。</b>}</p>
-        <label className='url'>URL</label>
+        <label className="url">URL</label>
         <br />
         <input
           type="text"
@@ -40,11 +40,11 @@ export const BookReviewInput = (props) => {
           defaultValue={props.bookData.url}
         />
         <p>{errors.url?.type === 'required' && <b className="error-message">※書籍URLを入力してください。</b>}</p>
-        <label className='detail_info'>書籍の詳細情報</label>
+        <label className="detail_info">書籍の詳細情報</label>
         <br />
         <textarea onChange={handleDetailChange} className="input_detail" defaultValue={props.bookData.detail} />
         <br />
-        <label className='review'>書籍のレビュー</label>
+        <label className="review">書籍のレビュー</label>
         <br />
         <textarea
           {...register('review', { required: true })}
@@ -52,9 +52,7 @@ export const BookReviewInput = (props) => {
           className="input_review"
           defaultValue={props.bookData.review}
         />
-        <p>
-          {errors.review?.type === 'required' && <b className="error-message">※書籍レビューを入力してください。</b>}
-        </p>
+        <p>{errors.review?.type === 'required' && <b className="error-message">※書籍レビューを入力してください。</b>}</p>
         {props.BookOperations.name === 'createBook' ? (
           <button type="submit" className="createBook__button">
             作成
