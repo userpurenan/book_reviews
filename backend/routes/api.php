@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Book;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookController;
+use App\Models\BookComment;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,5 +46,11 @@ Route::middleware('auth:api')->group(function () {
     });
     Route::get('/books/{id}/comment', [BookController::class, 'getBookReviewComment']);
     Route::post('/books/{id}/comment', [BookController::class, 'createComment']);
+    Route::patch('/books/{id}/comment', [BookController::class, 'editComment']);
+    Route::delete('/books/{id}/comment', function ($id) {
+        BookComment::findOrFail($id)->delete();
+
+        return 'delete success!!';
+    });
     Route::post('/comment/fluctuationLikes', [BookController::class, 'fluctuationLikes']);
 });

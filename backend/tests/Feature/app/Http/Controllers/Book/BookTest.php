@@ -144,7 +144,8 @@ class BookTest extends TestCase
             'user_image_url' => $create_comment_response->user->image_url,
             'comment' => urldecode($create_comment_response->comment),
             'comment_likes' => 0,
-            'isReviewer' => true
+            'is_reviewer' => true,
+            'is_your_comment' => true
         ]]);
     }
 
@@ -225,5 +226,75 @@ class BookTest extends TestCase
             'いいねの増加が可能か？' => [1],
             'いいねの減少が可能か？' => [-1],
         ];
+    }
+
+    public function test_コメントを編集できるか？()
+    {
+        $user = $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
+
+        $book = Book::create([
+            'title' => 'ドラゴンボール',
+            'user_id' => $user->id,
+            'url' => 'sample.com',
+            'detail' => 'バトル漫画',
+            'review' => 'バトル漫画です',
+            'reviewer' => $user->name,
+        ]);
+
+        $book_review_comment = BookComment::create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+            'comment' => '良いレビューですね！',
+            'comment_likes' => 1,
+        ]);
+
+        $edit_comment_response = $this->patch("/api/books/$book_review_comment->id/comment", [ 
+            'comment' => '更新したコメントだよ' 
+        ], [
+            'Authorization' => 'Bearer '.$token,
+        ]);
+
+        $edit_comment_response->assertStatus(200);
+        $edit_comment_response->assertJson([
+            'user_name' => $user->name,
+            'user_image_url' => $user->image_url,
+            'comment' => '更新したコメントだよ',
+            'comment_likes' => 1
+        ]);
+        $this->assertDatabaseHas('book_review_comment', [
+            'comment' => '更新したコメントだよ',
+        ]);
+        $this->assertDatabaseMissing('book_review_comment', [
+            'comment' => '良いレビューですね！',
+        ]);
+    }
+
+    public function test_コメントを削除できるか？()
+    {
+        $user = $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
+
+        $book = Book::create([
+            'title' => 'ドラゴンボール',
+            'user_id' => $user->id,
+            'url' => 'sample.com',
+            'detail' => 'バトル漫画',
+            'review' => 'バトル漫画です',
+            'reviewer' => $user->name,
+        ]);
+
+        $book_review_comment = BookComment::create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+            'comment' => '良いレビューですね！',
+            'comment_likes' => 1,
+        ]);
+        $this->assertDatabaseCount('book_review_comment', 1);
+
+        $this->delete("/api/books/$book_review_comment->id/comment", [], [
+            'Authorization' => 'Bearer '.$token,
+        ]);
+        $this->assertDatabaseCount('book_review_comment', 0);
     }
 }

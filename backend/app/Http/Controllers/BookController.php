@@ -68,7 +68,7 @@ class BookController extends Controller
             'url' => $book_datail->url,
             'detail' => $book_datail->detail,
             'review' => $book_datail->review,
-            'reviewer' => $book_datail->reviewer,
+            'reviewer' => $book_datail->user->name,
             'isMine' => $isMine,
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
@@ -90,6 +90,20 @@ class BookController extends Controller
                 ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
+    public function editComment(Request $request, $id)
+    {
+        $book_review_comment = BookComment::findOrFail($id);
+
+        $book_review_comment->update([ 'comment' => $request->input('comment') ]);
+
+        return response()->json([
+            'user_name' => $book_review_comment->user->name,
+            'user_image_url' => $book_review_comment->user->image_url,
+            'comment' => $book_review_comment->comment,
+            'comment_likes' => $book_review_comment->comment_likes
+        ], 200, [], JSON_UNESCAPED_UNICODE);
+}
+
     public function fluctuationLikes(Request $request)
     {
         $likes_count_change = $request->input('likes');
@@ -110,9 +124,14 @@ class BookController extends Controller
 
         $review_comment_array = [];
         foreach ($books_review_comment as $review_comment) {
-            $isReviewer = false;
-            if($review_comment->book->user_id == $review_comment->user_id){
-                $isReviewer = true;
+            $is_your_comment = false;
+            $is_reviewer = false;
+            if($review_comment->book->user_id === $review_comment->user_id){ //書籍のレビュワーが書いたコメントかをここで判定
+                $is_reviewer = true;
+            }
+
+            if($review_comment->user_id === Auth::id()){ //認証ユーザーが書いたコメントかを判定
+                $is_your_comment = true;
             }
             $review_comment_array[] = [
                 'id' => $review_comment->id,
@@ -120,7 +139,8 @@ class BookController extends Controller
                 'user_image_url' => $review_comment->user->image_url,
                 'comment' => $review_comment->comment,
                 'comment_likes' => $review_comment->comment_likes,
-                'isReviewer' => $isReviewer
+                'is_reviewer' => $is_reviewer,
+                'is_your_comment' => $is_your_comment
             ];
         }
 
