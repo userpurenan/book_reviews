@@ -57,7 +57,7 @@ export const BookReviewDetail = () => {
           <p className="bookDetail__reviewer">レビュワー: {bookData.reviewer}</p>
           <p className="bookDetail__detail">書籍の詳細情報: {bookData.detail}</p>
           <p className="bookDetail__review">レビュー: {bookData.review}</p>
-          {bookData.isMine ? (
+          {bookData.is_mine ? (
             <Link to={`/edit/${BookId}`} className="bookDetail__link-edit-book">
               書籍編集画面へ
             </Link>
