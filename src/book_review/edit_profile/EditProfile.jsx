@@ -70,7 +70,7 @@ export const EditProfile = () => {
           setImgFile(result);
         },
         error(err) {
-          console.error('画像の圧縮エラー:', err.message);
+          setErrorMessage('画像の圧縮エラー:', err.message);
         }
       });
     } else {
@@ -90,9 +90,12 @@ export const EditProfile = () => {
           authorization: `Bearer ${cookies.token}`
         }
       })
-      .then((res) => {
-        setUsers(res.data);
-        setImgUrl(res.data.icon_url);
+      .then((response) => {
+        setUsers(response.data.name);
+        setImgUrl(response.data.image_url);
+      })
+      .catch((error) => {
+        setErrorMessage(`ユーザー情報の取得に失敗しました。${error}`);
       });
   }, []);
 
@@ -111,7 +114,7 @@ export const EditProfile = () => {
               {...register('name', { required: true })}
               onChange={handleNameChange}
               className="update__form--name"
-              defaultValue={user.name} /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
+              defaultValue={user} /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
             />
             <p>{errors.name?.type === 'required' && <b className="error-message">※アカウント名を入力してください。</b>}</p>
             <label>アイコン画像アップロード</label>

@@ -47,31 +47,49 @@ export const ReviewCommentInput = (props) => {
       })
       .then((response) => {
         setBookComment(response.data);
+      })
+      .catch((error) => {
+        alert(`コメントの取得に失敗しました。${error}`);
       });
   }, [UpdateComment, commentPage]);
 
   const sendComment = (event) => {
     const comment = event.comment;
-    axios.post(create_comment_url, { comment: comment }, { headers }).then(() => {
-      //初期値「false」のUpdateCommentの否定をstateに入れてあげることでapiを再度呼び出す
-      setUpdateComment(!UpdateComment);
-    });
+    axios
+      .post(create_comment_url, { comment: comment }, { headers })
+      .then(() => {
+        //初期値「false」のUpdateCommentの否定をstateに入れてあげることでapiを再度呼び出す
+        setUpdateComment(!UpdateComment);
+      })
+      .catch((error) => {
+        alert(`コメントの作成に失敗しました。${error}`);
+      });
   };
 
   const editComment = (data, book_comment_id) => {
     const comment = data.edit_comment_input;
     const edit_comment_url = useUrl('comment_operation', book_comment_id);
-    axios.patch(edit_comment_url, { comment: comment }, { headers }).then(() => {
-      setUpdateComment(!UpdateComment);
-      setIsEditComment(false);
-    });
+    axios
+      .patch(edit_comment_url, { comment: comment }, { headers })
+      .then(() => {
+        setUpdateComment(!UpdateComment);
+        setIsEditComment(false);
+      })
+      .catch((error) => {
+        alert(`コメントの編集に失敗しました。${error}`);
+      });
   };
 
   const deleteComment = (book_comment_id) => {
     const delete_comment_url = useUrl('comment_operation', book_comment_id);
-    axios.delete(delete_comment_url, { headers }).then(() => {
-      setUpdateComment(!UpdateComment);
-    });
+    axios
+      .delete(delete_comment_url, { headers })
+      .then(() => {
+        setUpdateComment(!UpdateComment);
+      })
+      .catch((error) => {
+        alert(`コメントの削除に失敗しました。${error}`);
+      });
   };
 
   const fluctuationLikes = (likes_count_change, comment_id) => {

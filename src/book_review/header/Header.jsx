@@ -26,9 +26,14 @@ export const Header = () => {
   useEffect(() => {
     //ログインしていたらユーザー情報を取得する
     if (auth) {
-      axios.get(get_user_url, { headers }).then((res) => {
-        setUsers(res.data);
-      });
+      axios
+        .get(get_user_url, { headers })
+        .then((res) => {
+          setUsers(res.data);
+        })
+        .catch((error) => {
+          alert(`ヘッダーのユーザー情報の取得に失敗しました。${error}`);
+        });
     }
   }, []);
 

@@ -14,6 +14,7 @@ import './Home.scss';
 
 export const Home = () => {
   const [Books, setBooks] = useState([]);
+  const [errorMessage, setErrorMessage] = useState();
   const [cookies] = useCookies();
   const search = useLocation().search;
   const query = new URLSearchParams(search);
@@ -39,29 +40,32 @@ export const Home = () => {
         setBooks(response.data);
       })
       .catch((error) => {
-        alert(`書籍の取得に失敗しました${error}`);
+        setErrorMessage(`書籍の取得に失敗しました${error}`);
       });
   }, []);
 
-  const handlePagenation = async (offset, e) => {
-    try {
-      const response = await axios.get(get_books_url, {
+  const handlePagenation = (offset, e) => {
+    axios
+      .get(get_books_url, {
         params: {
           offset: offset, // ここにクエリパラメータを指定する。
           title_keyword: title_keyword
         }
+      })
+      .then((response) => {
+        setBooks(response.data);
+        e.target.id === 'next' ? dispatch(nextPagenation()) : dispatch(beforePagenation());
+      })
+      .catch((error) => {
+        setErrorMessage(`次のページの取得に失敗しました${error}`);
       });
-      setBooks(response.data);
-      e.target.id === 'next' ? dispatch(nextPagenation()) : dispatch(beforePagenation());
-    } catch (error) {
-      alert(`次のページの取得に失敗しまいしました${error}`);
-    }
   };
 
   return (
     <div className="page">
       <Header />
       <h1 className="book_home_h1">書籍レビュー一覧</h1>
+      <p className="error-message">{errorMessage}</p>
       <div className="extend_float_page">
         <form className="search">
           <input className="search_input" type="text" name="title_keyword" defaultValue={title_keyword} placeholder="書籍のタイトルを入力" />
