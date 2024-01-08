@@ -23,7 +23,7 @@ class UserController extends Controller
     /**
      * パスワードグラントを使いトークンを取得するメソッド
      */
-    public function password_grant($email, $password)
+    public function passwordGrant($email, $password)
     {
         $passport_client = Client::where('name', 'Laravel Password Grant Client')->first();
         $data = [
@@ -53,7 +53,7 @@ class UserController extends Controller
                 "password" => Hash::make($request->input('password')),
             ]);
 
-            $token = $this->password_grant($user->email, $request->input('password'));
+            $token = $this->passwordGrant($user->email, $request->input('password'));
         });
 
         return response()->json([ 'name' => $user->name, 'token' => $token['access_token'] ], 200, [], JSON_UNESCAPED_UNICODE);
@@ -61,7 +61,7 @@ class UserController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $token = $this->password_grant($request->input('email'), $request->input('password'));
+        $token = $this->passwordGrant($request->input('email'), $request->input('password'));
 
         //パスワードグラントの返り値のjsonに「error」キーがあったらエラーメッセージを返す
         if(array_key_exists('error', $token)) {

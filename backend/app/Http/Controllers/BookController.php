@@ -58,10 +58,10 @@ class BookController extends Controller
     public function getBookDatail($id)
     {
         $book_datail = Book::findOrFail($id);
-        $isMine = false;
+        $is_mine = false;
 
         if($book_datail->user_id === Auth::id()) {
-            $isMine = true;
+            $is_mine = true;
         }
 
         return response()->json([
@@ -70,7 +70,7 @@ class BookController extends Controller
             'detail' => $book_datail->detail,
             'review' => $book_datail->review,
             'reviewer' => $book_datail->user->name,
-            'isMine' => $isMine,
+            'is_mine' => $is_mine,
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
