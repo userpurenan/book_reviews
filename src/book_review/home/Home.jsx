@@ -71,7 +71,7 @@ export const Home = () => {
             </IconContext.Provider>
           </button>
         </form>
-        <ul className="Book">
+        <ul>
           {Books.map((BookList, key) => (
             <li key={key} className="Book__list" value={BookList.id}>
               <Link to={`/detail/${BookList.id}`} className="Book__list--link">
