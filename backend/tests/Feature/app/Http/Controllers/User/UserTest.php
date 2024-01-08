@@ -12,7 +12,7 @@ class UserTest extends TestCase
 
     public function test_会員登録できるか？(): void
     {
-        $response = $this->post('/api/signup',[
+        $response = $this->post('/api/signup', [
                                 'name' => fake()->name(),
                                 'email' => fake()->safeEmail(),
                                 'password' => Str::random(10)
@@ -23,11 +23,11 @@ class UserTest extends TestCase
     }
 
     /**
-     * @dataProvider validationFailsProvider
+     * @dataProvider signUpValidFailsProvider
      */
     public function test_会員登録時のバリデーションチェック($name, $email, $password)
     {
-        $invalid = $this->post('/api/signup',[
+        $invalid = $this->post('/api/signup', [
             'name' => $name,
             'email' => $email,
             'password' => $password
@@ -36,11 +36,11 @@ class UserTest extends TestCase
         $invalid->assertStatus(422);
     }
 
-    public static function validationFailsProvider()
+    public static function signUpValidFailsProvider()
     {
         return[
             '無効なメールアドレス' => [ fake()->name(), 'sample', Str::random(10) ],
-            '無効なパスワード（4文字以下）' => [ fake()->name(), fake()->safeEmail(), Str::random(rand(1,4)) ],
+            '無効なパスワード（4文字以下）' => [ fake()->name(), fake()->safeEmail(), Str::random(rand(1, 4)) ],
             '無効なパスワード（16文字以下）' => [ fake()->name(), fake()->safeEmail(), Str::random(rand(16, 17)) ],
             '名前が入力されていない状態' => [ '', fake()->safeEmail(), Str::random(10) ],
             'メールアドレスが入力されていない状態' => [ fake()->name(), '', Str::random(10) ],
@@ -55,21 +55,32 @@ class UserTest extends TestCase
                             'email' => $user->email,
                             'password' => $this->password
                         ]);
-        
+
         $response->assertStatus(200);
         $response->assertJsonMissing(['access_token' => '']);
     }
 
     /**
-     * @dataProvider validationFailsProvider
+     * @dataProvider loginValidFailsProvider
      */
-    public function test_ログインの際にバリデーションルールが適応されているか？($email, $password)
+    public function test_ログインの際のバリデーションチェック($email, $password)
     {
-        $invalid = $this->post('/api/login',[
+        $invalid = $this->post('/api/login', [
             'email' => $email,
             'password' => $password
         ]);
 
         $invalid->assertStatus(422);
+    }
+
+    public static function loginValidFailsProvider()
+    {
+        return[
+            '無効なメールアドレス' => [ 'sample', Str::random(10) ],
+            '無効なパスワード（4文字以下）' => [ fake()->safeEmail(), Str::random(rand(1, 4)) ],
+            '無効なパスワード（16文字以下）' => [ fake()->safeEmail(), Str::random(rand(16, 17)) ],
+            'メールアドレスが入力されていない状態' => [ '', Str::random(10) ],
+            'パスワードが入力されていない状態' => [ fake()->safeEmail(), '' ]
+        ];
     }
 }

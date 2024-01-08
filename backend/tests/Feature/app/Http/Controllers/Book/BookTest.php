@@ -30,6 +30,7 @@ class BookTest extends TestCase
         $this->createBook();
         $books = $this->get('/api/books?title_keyword=NARUTO');
         $books->assertJsonMissing(["title" => "ワンピース"]);
+        $books->assertJsonFragment(['title' => 'NARUTO']);
     }
 
     public function test_新規の書籍レビューを作れるか？()
@@ -249,7 +250,7 @@ class BookTest extends TestCase
             'comment_likes' => 1,
         ]);
 
-        $edit_comment_response = $this->patch("/api/books/$book_review_comment->id/comment", [
+        $edit_comment_response = $this->patch("/api/books/{$book_review_comment->id}/comment", [
             'comment' => '更新したコメントだよ'
         ], [
             'Authorization' => 'Bearer ' . $token,
@@ -292,7 +293,7 @@ class BookTest extends TestCase
         ]);
         $this->assertDatabaseCount('book_review_comment', 1);
 
-        $this->delete("/api/books/$book_review_comment->id/comment", [], [
+        $this->delete("/api/books/{$book_review_comment->id}/comment", [], [
             'Authorization' => 'Bearer ' . $token,
         ]);
         $this->assertDatabaseCount('book_review_comment', 0);
