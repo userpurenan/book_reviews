@@ -44,7 +44,7 @@ export const BookReviewDetail = () => {
   return (
     <div className="detail-page">
       <Header />
-      <h1>書籍の詳細</h1>
+      <h1 className="book_detail_h1">書籍の詳細</h1>
       <h2 className="error-massage">{errorMessage}</h2>
       {isLoading ? (
         <Loading />

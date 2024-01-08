@@ -49,7 +49,7 @@ export const CreateBookReview = () => {
   return (
     <div className="page">
       <Header />
-      <h1>書籍レビュー新規投稿</h1>
+      <h1 className="create_book_h1">書籍レビュー新規投稿</h1>
       <h2 className="error-massage">{errorMessage}</h2>
       <BookReviewInput
         bookData={bookData}

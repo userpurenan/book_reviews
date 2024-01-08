@@ -61,10 +61,10 @@ export const Home = () => {
   return (
     <div className="page">
       <Header />
-      <h1>書籍レビュー一覧</h1>
+      <h1 className="book_home_h1">書籍レビュー一覧</h1>
       <div className="extend_float_page">
-        <form>
-          <input className="search" type="text" name="title_keyword" defaultValue={title_keyword} placeholder="書籍のタイトルを入力" />
+        <form className="search">
+          <input className="search_input" type="text" name="title_keyword" defaultValue={title_keyword} placeholder="書籍のタイトルを入力" />
           <button type="submit" className="search_button">
             <IconContext.Provider value={{ size: '15px' }}>
               <AiOutlineSearch />

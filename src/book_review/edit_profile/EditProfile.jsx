@@ -18,7 +18,7 @@ export const EditProfile = () => {
   } = useForm(); // バリデーションのフォームを定義。
   const [name, setName] = useState('');
   const [ImgFile, setImgFile] = useState(); //「ImgFile」にはリサイズした画像が入る
-  const [imgUrl, setImgUrl] = useState(''); //画面に表示させる画像のurlをセット
+  const [imgUrl, setImgUrl] = useState(); //画面に表示させる画像のurlをセット
   const [user, setUsers] = useState('');
   const edit_user_neme_url = useUrl('user_operation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const get_user_url = useUrl('user_operation');
@@ -29,16 +29,6 @@ export const EditProfile = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const handleNameChange = (e) => setName(e.target.value);
-
-  /**
-   * ユーザー更新時の画像をアイコンにするスタイルの調整はsassでやってもうまくいかなかったためjsx側でしました。
-    （恐らく、動的にimgタグのsrcを変化させているため、sassでスタイルを調整すると二回目以降、画像をファイルから指定した際にスタイルが反映されなくなるからかと。）
-   */
-  const defaultStyle = {
-    width: '50px',
-    height: '50px',
-    borderRadius: '50%'
-  };
 
   //関数は小文字始まり
   const updateName = () => {
@@ -109,9 +99,9 @@ export const EditProfile = () => {
   return (
     <div className="page">
       <Header />
+      <h1 className="user_edit_h1">ユーザー情報編集</h1>
       <main className="update">
         <div className="edit_user_float_page">
-          <h2>ユーザー情報編集</h2>
           <p className="error-message">{errorMessage}</p>
           <form onSubmit={handleSubmit(updateName)} className="update__form">
             <label>ユーザー名</label>
@@ -128,7 +118,7 @@ export const EditProfile = () => {
             <br />
             <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />
             <div>
-              <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" style={defaultStyle} />
+              <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" className="icon_image" />
             </div>
             <br />
             <button type="submit" className="update__form--button">

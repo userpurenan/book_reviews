@@ -1,27 +1,30 @@
 @charset "utf-8";
 @use '../home/Home.scss';
 
-.createBook{
-    width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-
-    &__button{
-        background-color: #242f9b;
-        color: #ffffff;
-        width: 100px;
-        height: 40px;
-        border-radius: 5px;
-        margin-left: 40%;
-        cursor : pointer;    
-    }
-
+.create_book_h1 {
+  text-align: center;
 }
 
-.page{
-    @extend .page;
+.createBook {
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+
+  &__button {
+    background-color: #242f9b;
+    color: #ffffff;
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
+    margin-left: 40%;
+    cursor: pointer;
+  }
 }
 
-.error-massage{
-    color: #ff3333;
+.page {
+  @extend .page;
+}
+
+.error-massage {
+  color: #ff3333;
 }

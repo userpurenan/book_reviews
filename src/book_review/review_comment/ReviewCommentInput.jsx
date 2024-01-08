@@ -84,7 +84,7 @@ export const ReviewCommentInput = (props) => {
     // 状態を更新
     setCommentLikes(newCommentLikes);
     axios.post(good_operation_url, { likes: likes_count_change, comment_id: comment_id }, { headers }).then(() => {
-      setUpdateComment(Math.random());
+      setUpdateComment(!UpdateComment);
     });
   };
 
@@ -105,21 +105,21 @@ export const ReviewCommentInput = (props) => {
             <img src={BookCommentList.user_image_url} alt="ユーザーのアイコン" className="comment_userIcon" />
             {BookCommentList.user_name}
             {BookCommentList.is_reviewer ? (
-              <IconContext.Provider value={{ color: '#000000', size: '20px' }}>
+              <IconContext.Provider value={{ color: '#000000', size: '17px' }}>
                 <FaCheckCircle className="reviewer" />
               </IconContext.Provider>
             ) : (
               <></>
             )}
             {BookCommentList.is_your_comment ? (
-              <>
+              <span className="comment_operation_container">
                 <span className="comment_operation" onClick={() => setIsEditComment(BookCommentList.id)}>
                   編集
                 </span>
                 <span className="comment_operation" onClick={() => deleteComment(BookCommentList.id)}>
                   削除
                 </span>
-              </>
+              </span>
             ) : (
               <></>
             )}

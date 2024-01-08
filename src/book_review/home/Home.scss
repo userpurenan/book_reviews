@@ -1,5 +1,9 @@
 @charset "utf-8";
 
+.book_home_h1 {
+  text-align: center;
+}
+
 .page {
   background-color: rgb(223, 235, 235);
   height: 100vh;
@@ -18,16 +22,20 @@
 }
 
 .search {
-  margin-left: 15%;
-  height: 40px;
-  width: 60%;
-}
+  padding: 10px 0 15px 30%;
 
-.search_button {
-  margin-top: 10px;
-  height: 45px;
-  width: 45px;
-  background-color: burlywood;
+  &_input {
+    height: 40px;
+    width: 40%;
+  }
+
+  &_button {
+    background-color: burlywood;
+    position: relative;
+    top: 1px;
+    height: 45px;
+    width: 45px;
+  }
 }
 
 .Book__list {
@@ -37,7 +45,6 @@
     border: solid;
     width: 70%;
     height: 100px;
-    max-height: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
