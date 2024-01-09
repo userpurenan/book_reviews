@@ -47,7 +47,7 @@ export const Header = () => {
           <Link to={'/new'} className="Navigate-button">
             書籍レビュー投稿画面へ
           </Link>
-          <Link to={'/profile'} className="Navigate-button" state={user.name}>
+          <Link to={'/edit/profile'} className="Navigate-button" state={user.name}>
             ユーザー名変更
           </Link>
           <Link to={'/login'} onClick={handleSignOut} className="Navigate-button">

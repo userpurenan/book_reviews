@@ -62,7 +62,7 @@ export const EditBookReview = () => {
     axios
       .get(get_book_detail_url, { headers })
       .then((res) => {
-        if (!res.data.isMine) return navigate('/'); //自分の書いた書籍レビューじゃなかったらホーム画面に遷移する
+        if (!res.data.is_mine) return navigate('/'); //自分の書いた書籍レビューじゃなかったらホーム画面に遷移する
         setBookData(res.data);
       })
       .catch((err) => {

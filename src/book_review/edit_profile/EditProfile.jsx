@@ -56,6 +56,8 @@ export const EditProfile = () => {
   //画像が1MBより大きかったらリサイズする関数
   const handleIconUrlChange = (e) => {
     const file = e.target.files[0];
+    const url = URL.createObjectURL(file);
+    setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
 
     // 1MB以上の場合
     if (file.size > 1024 * 1024) {
@@ -65,17 +67,13 @@ export const EditProfile = () => {
         maxHeight: 10,
         maxWidth: 10,
         success(result) {
-          const url = URL.createObjectURL(result);
-          setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
           setImgFile(result);
         },
         error(err) {
-          setErrorMessage('画像の圧縮エラー:', err.message);
+          setErrorMessage(`画像の圧縮エラー:${err.message}`);
         }
       });
     } else {
-      const url = URL.createObjectURL(file);
-      setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
       setImgFile(file);
     }
   };
