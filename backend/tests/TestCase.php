@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 use Laravel\Passport\Client;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
-
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
