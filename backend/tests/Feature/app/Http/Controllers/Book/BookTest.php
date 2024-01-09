@@ -11,32 +11,46 @@ class BookTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function createBook()
+    public function setUp(): void
     {
-        $this->createUser();
-        Book::factory()->count(100)->create();
-        Book::factory()->count(100)->create([ 'title' => 'NARUTO' ]);
+        parent::setUp();
+
+        $cmd = 'php artisan passport:install --env=testing';
+        exec($cmd);
     }
 
-    public function test_本を取得できるか？(): void
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        $cmd = 'php artisan migrate:refresh --env=testing';
+        exec($cmd);
+    }
+
+    public function createBook(): void
+    {
+        $this->createUser();
+        Book::factory()->count(11)->create();
+    }
+
+    public function test_書籍を10件ずつ取得できる(): void
     {
         $this->createBook();
         $books = $this->get('/api/books')->json();
         $this->assertCount(10, $books);
     }
 
-    public function test_検索処理を実行できるか？()
+    public function test_検索処理を実行する事ができる(): void
     {
         $this->createBook();
+        Book::factory()->create([ 'title' => 'NARUTO']);
         $books = $this->get('/api/books?title_keyword=NARUTO');
-        $books->assertJsonMissing(["title" => "ワンピース"]);
+        $books->assertJsonMissing(["title" => 'ワンピース']);
         $books->assertJsonFragment(['title' => 'NARUTO']);
     }
 
-    public function test_新規の書籍レビューを作れるか？()
+    public function test_新規の書籍レビューを作ることができる(): void
     {
-        $this->assertDatabaseCount('books', 0);
-
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
 
@@ -54,7 +68,7 @@ class BookTest extends TestCase
         $this->assertDatabaseCount('books', 1);
     }
 
-    public function test_書籍の更新ができるか？()
+    public function test_書籍の更新が実行できる(): void
     {
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
@@ -91,7 +105,7 @@ class BookTest extends TestCase
         $update_books->assertJson($update_book_data);
     }
 
-    public function test_書籍を削除できるか？()
+    public function test_書籍を削除する事ができる(): void
     {
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
@@ -113,7 +127,7 @@ class BookTest extends TestCase
         $this->assertDatabaseCount('books', 0);
     }
 
-    public function test_コメントを取得できるか？()
+    public function test_レビューに対するコメントを取得することができる(): void
     {
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
@@ -150,7 +164,7 @@ class BookTest extends TestCase
         ]]);
     }
 
-    public function test_レビューに対してのコメントを作れるか？()
+    public function test_レビューに対してのコメントを作成することができる(): void
     {
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
@@ -186,7 +200,7 @@ class BookTest extends TestCase
     /**
      * @dataProvider fluctuationLikesProvider
      */
-    public function test_コメントのいいねの増減が可能か？($fluctuation)
+    public function test_コメントのいいねの増減が可能である($fluctuation): void
     {
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
@@ -221,15 +235,15 @@ class BookTest extends TestCase
         ]);
     }
 
-    public static function fluctuationLikesProvider()
+    public static function fluctuationLikesProvider(): array
     {
         return[
-            'いいねの増加が可能か？' => [1],
-            'いいねの減少が可能か？' => [-1],
+            'いいねの数が増える' => [1],
+            'いいねの数が減る' => [-1],
         ];
     }
 
-    public function test_コメントを編集できるか？()
+    public function test_コメントを編集することができる(): void
     {
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
@@ -271,7 +285,7 @@ class BookTest extends TestCase
         ]);
     }
 
-    public function test_コメントを削除できるか？()
+    public function test_コメントを削除することができる(): void
     {
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);

@@ -10,16 +10,29 @@ class AuthUserTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     */
-    public function test_ユーザー情報が取得できるか？(): void
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $cmd = 'php artisan passport:install --env=testing';
+        exec($cmd);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        $cmd = 'php artisan migrate:refresh --env=testing';
+        exec($cmd);
+    }
+
+    public function test_ユーザー情報が取得できる(): void
     {
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
 
         $response = $this->get('/api/user', [
-            'Authorization' => "Bearer ".$token,
+            'Authorization' => "Bearer " . $token,
         ]);
 
         $response->assertStatus(200);
@@ -28,7 +41,7 @@ class AuthUserTest extends TestCase
                               ]);
     }
 
-    public function test_アイコン画像のURLを保存できるか？()
+    public function test_アイコン画像のURLを保存できる()
     {
         $image_file = UploadedFile::fake()->image('icon.jpg');
         $this->createUser();
@@ -36,8 +49,8 @@ class AuthUserTest extends TestCase
 
         $response = $this->post('/api/upload', [
             'icon' => $image_file,
-        ],[
-            'Authorization' => "Bearer ".$token,
+        ], [
+            'Authorization' => "Bearer " . $token,
         ]);
 
         $response->assertStatus(200);
@@ -47,16 +60,16 @@ class AuthUserTest extends TestCase
         ]);
     }
 
-    public function test_ユーザーの名前の変更ができるか？()
+    public function test_ユーザーの名前の変更ができる()
     {
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
-        
+
         //ユーザー名の変更
         $this->patch('/api/user', [
             'name' => 'なかじま'
-        ],[
-            'Authorization' => "Bearer ".$token,
+        ], [
+            'Authorization' => "Bearer " . $token,
         ]);
 
         $this->assertDatabaseMissing('users', [
@@ -67,7 +80,7 @@ class AuthUserTest extends TestCase
         ]);
     }
 
-    public function test_ユーザーのアイコンの変更ができるか？()
+    public function test_ユーザーのアイコンの変更ができる()
     {
         $file1 = UploadedFile::fake()->image('icon.jpg');
         $file2 = UploadedFile::fake()->image('icon2.jpg');
@@ -78,15 +91,15 @@ class AuthUserTest extends TestCase
         //画像のURL保存
         $create_user_icon_response = $this->post('/api/upload', [
             'icon' => $file1,
-        ],[
-            'Authorization' => "Bearer ".$token,
+        ], [
+            'Authorization' => "Bearer " . $token,
         ]);
-        
+
         //ユーザーの画像の変更
         $edit_user_icon_response = $this->post('api/upload', [
             'icon' => $file2,
-        ],[
-            'Authorization' => "Bearer ".$token,
+        ], [
+            'Authorization' => "Bearer " . $token,
         ]);
 
         $this->assertDatabaseMissing('users', [
