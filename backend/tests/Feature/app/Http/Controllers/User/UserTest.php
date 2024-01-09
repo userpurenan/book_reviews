@@ -10,7 +10,7 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_会員登録できるか？(): void
+    public function test_会員登録することができる(): void
     {
         $response = $this->post('/api/signup', [
                                 'name' => fake()->name(),
@@ -23,9 +23,9 @@ class UserTest extends TestCase
     }
 
     /**
-     * @dataProvider signUpValidFailsProvider
+     * @dataProvider failSignUpValidProvider
      */
-    public function test_会員登録時のバリデーションチェック($name, $email, $password)
+    public function test_無効な入力を会員登録時にバリデーションではじく($name, $email, $password)
     {
         $invalid = $this->post('/api/signup', [
             'name' => $name,
@@ -36,19 +36,32 @@ class UserTest extends TestCase
         $invalid->assertStatus(422);
     }
 
-    public static function signUpValidFailsProvider()
+    /**
+     * 全ての入力欄に「required」バリデーションを実装しています。
+     * パスワードは5文字以上15文字以下の長さに収まらないとバリデーションではじく設定にしています。
+     * メールアドレスは「hoge@hoge.com」このような形式以外ははじく設定にしています。
+     * 名前は「required」のみです。
+     */
+    public static function failSignUpValidProvider()
     {
+        //以下の返り値は全てバリデーションではじいてくれることを正常として想定しています。
         return[
-            '無効なメールアドレス' => [ fake()->name(), 'sample', Str::random(10) ],
+            '無効なメールアドレス形式（「@」無し）' => [ fake()->name(), 'sample', Str::random(10) ],
+            '無効なメールアドレス形式（ひらがな）' => [ fake()->name(), 'さんぷる@さんぷる.com', Str::random(10) ],
+            '無効なメールアドレス形式（カタカナ）' => [ fake()->name(), 'サンプル@サンプル.com', Str::random(10) ],
+            '無効なメールアドレス形式（漢字）' => [ fake()->name(), '例形式@例形式.com', Str::random(10) ],
             '無効なパスワード（4文字以下）' => [ fake()->name(), fake()->safeEmail(), Str::random(rand(1, 4)) ],
-            '無効なパスワード（16文字以下）' => [ fake()->name(), fake()->safeEmail(), Str::random(rand(16, 17)) ],
+            '無効なパスワード（16文字以上）' => [ fake()->name(), fake()->safeEmail(), Str::random(rand(16, 17)) ],
             '名前が入力されていない状態' => [ '', fake()->safeEmail(), Str::random(10) ],
             'メールアドレスが入力されていない状態' => [ fake()->name(), '', Str::random(10) ],
-            'パスワードが入力されていない状態' => [ fake()->name(), fake()->safeEmail(), '' ]
+            'パスワードが入力されていない状態' => [ fake()->name(), fake()->safeEmail(), '' ],
+            '名前とメールアドレスが入力されていない状態' => [ '', '', Str::random(10) ],
+            '名前とパスワードが入力されていない状態' => [ '', fake()->safeEmail(), '' ],
+            'メールアドレスとパスワードが入力されていない状態' => [ fake()->name(), '', '' ]
         ];
     }
 
-    public function test_ログインできるか？()
+    public function test_ログインすることができる()
     {
         $user = $this->createUser();
         $response = $this->post('/api/login', [
@@ -61,9 +74,9 @@ class UserTest extends TestCase
     }
 
     /**
-     * @dataProvider loginValidFailsProvider
+     * @dataProvider failLoginValidProvider
      */
-    public function test_ログインの際のバリデーションチェック($email, $password)
+    public function test_無効な入力をログインの際にバリデーションではじく($email, $password)
     {
         $invalid = $this->post('/api/login', [
             'email' => $email,
@@ -73,14 +86,24 @@ class UserTest extends TestCase
         $invalid->assertStatus(422);
     }
 
-    public static function loginValidFailsProvider()
+    /**
+     * 全ての入力欄に「required」バリデーションを実装しています。
+     * パスワードは5文字以上15文字以下の長さに収まらないとバリデーションではじく設定にしています。
+     * メールアドレスは「hoge@hoge.com」このような形式以外ははじく設定にしています。
+     */
+    public static function failLoginValidProvider()
     {
+        //以下の返り値は全てバリデーションではじいてくれることを正常として想定しています。
         return[
-            '無効なメールアドレス' => [ 'sample', Str::random(10) ],
+            '無効なメールアドレス形式（「@」無し）' => [ 'sample', Str::random(10) ],
+            '無効なメールアドレス形式（ひらがな）' => [ 'さんぷる@さんぷる.com', Str::random(10) ],
+            '無効なメールアドレス形式（カタカナ）' => [ 'サンプル@サンプル.com', Str::random(10) ],
+            '無効なメールアドレス形式（漢字）' => [ '例形式@例形式.com', Str::random(10) ],
             '無効なパスワード（4文字以下）' => [ fake()->safeEmail(), Str::random(rand(1, 4)) ],
             '無効なパスワード（16文字以下）' => [ fake()->safeEmail(), Str::random(rand(16, 17)) ],
             'メールアドレスが入力されていない状態' => [ '', Str::random(10) ],
-            'パスワードが入力されていない状態' => [ fake()->safeEmail(), '' ]
+            'パスワードが入力されていない状態' => [ fake()->safeEmail(), '' ],
+            'メールアドレスとパスワードが入力されていない状態' => [ fake()->name(), '', '' ]
         ];
     }
 }
