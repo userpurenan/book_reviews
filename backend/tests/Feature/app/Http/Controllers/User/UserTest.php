@@ -10,16 +10,33 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_会員登録することができる(): void
+    public function setUp(): void
     {
+        parent::setUp();
+
+        $cmd = 'php artisan passport:install --env=testing';
+        exec($cmd);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        $cmd = 'php artisan migrate:refresh --env=testing';
+        exec($cmd);
+    }
+
+    public function test_アカウント作成することができる(): void
+    {
+        $email = fake()->safeEmail();
         $response = $this->post('/api/signup', [
                                 'name' => fake()->name(),
-                                'email' => fake()->safeEmail(),
+                                'email' => $email,
                                 'password' => Str::random(10)
                             ]);
 
         $response->assertStatus(200);
-        $this->assertDatabaseCount('users', 1);
+        $this->assertDatabaseHas('users', ['email' => $email]); //emailカラムはユニークなので$emailがデータベースに確認出来たらアカウント作成できたといえる
     }
 
     /**

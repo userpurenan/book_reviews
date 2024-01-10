@@ -64,10 +64,11 @@ class AuthUserTest extends TestCase
     {
         $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
+        $update_name = fake()->name();
 
         //ユーザー名の変更
         $this->patch('/api/user', [
-            'name' => 'なかじま'
+            'name' => $update_name
         ], [
             'Authorization' => "Bearer " . $token,
         ]);
@@ -76,7 +77,7 @@ class AuthUserTest extends TestCase
             'name' => $user->name,
         ]);
         $this->assertDatabaseHas('users', [
-            'name' => 'なかじま'
+            'name' => $update_name
         ]);
     }
 
@@ -96,7 +97,7 @@ class AuthUserTest extends TestCase
         ]);
 
         //ユーザーの画像の変更
-        $edit_user_icon_response = $this->post('api/upload', [
+        $update_user_icon_response = $this->post('api/upload', [
             'icon' => $file2,
         ], [
             'Authorization' => "Bearer " . $token,
@@ -106,7 +107,7 @@ class AuthUserTest extends TestCase
             'image_url' => $create_user_icon_response['image_url'],
         ]);
         $this->assertDatabaseHas('users', [
-            'image_url' => $edit_user_icon_response['image_url'],
+            'image_url' => $update_user_icon_response['image_url'],
         ]);
     }
 }
