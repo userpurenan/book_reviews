@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\User;
-use App\Models\BooksComment;
+use App\Models\BookComment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,12 +24,14 @@ class Book extends Model
 
     protected $guarded = ['created_at', 'updated_at'];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function books_comment(){
-        return $this->hasMany(BooksComment::class);
+    public function bookComment()
+    {
+        return $this->hasMany(BookComment::class);
     }
 
 }
