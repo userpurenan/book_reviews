@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
@@ -69,46 +67,5 @@ class UserController extends Controller
         }
 
         return response()->json(['access_token' => $token['access_token']]);
-    }
-
-    public function imageUploads(Request $request)
-    {
-        $file_path = $request->file('icon')->store('public/img');
-        $image_path = str_replace('public', 'storage', $file_path);
-        $image_url = asset($image_path);
-        $user = User::find(Auth::id());
-
-        if(is_null($user)) {
-            throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
-        }
-
-        $user->update(['image_url' => $image_url]);
-
-        return response()->json(['image_url' => $image_url]);
-    }
-
-    public function getUser()
-    {
-        $user = Auth::user();
-
-        if(is_null($user)) {
-            throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
-        }
-
-        return response()->json([
-                    'name' => $user->name,
-                    'image_url' => $user->image_url,
-                ], 200, [], JSON_UNESCAPED_UNICODE);
-    }
-
-    public function editUser(Request $request)
-    {
-        $user = User::find(Auth::id());
-
-        if(is_null($user)) {
-            throw new NotFoundHttpException('ユーザー情報が見つかりませんでした');
-        }
-
-        $user->update(['name' => $request->input('name')]);
     }
 }

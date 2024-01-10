@@ -1,11 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\BookCommentController;
 use Illuminate\Support\Facades\Route;
-use App\Models\Book;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BookController;
-use App\Models\BookComment;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,9 +33,9 @@ Route::post('/login', [UserController::class, 'login']);
 Route::get('/books', [BookController::class, 'getBooks']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('/upload', [UserController::class, 'imageUploads']);
-    Route::patch('/user', [UserController::class, 'editUser']);
-    Route::get('/user', [UserController::class, 'getUser']);
+    Route::post('/upload', [AuthUserController::class, 'imageUploads']);
+    Route::patch('/user', [AuthUserController::class, 'editUser']);
+    Route::get('/user', [AuthUserController::class, 'getUser']);
     Route::post('/books', [BookController::class, 'createBook']);
     Route::get('/books/{id}', [BookController::class, 'getBookDatail']);
     Route::put('/books/{id}', [BookController::class, 'updateBook']);
