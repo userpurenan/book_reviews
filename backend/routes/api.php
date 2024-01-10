@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookCommentController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Book;
 use App\Http\Controllers\UserController;
@@ -36,21 +37,13 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/upload', [UserController::class, 'imageUploads']);
     Route::patch('/user', [UserController::class, 'editUser']);
     Route::get('/user', [UserController::class, 'getUser']);
-    Route::post('/books', [BookController::class, 'createBooks']);
+    Route::post('/books', [BookController::class, 'createBook']);
     Route::get('/books/{id}', [BookController::class, 'getBookDatail']);
     Route::put('/books/{id}', [BookController::class, 'updateBook']);
-    Route::delete('/books/{id}', function ($id) {
-        Book::findOrFail($id)->delete();
-
-        return 'delete success!!';
-    });
-    Route::get('/books/{id}/comment', [BookController::class, 'getBookReviewComment']);
-    Route::post('/books/{id}/comment', [BookController::class, 'createComment']);
-    Route::patch('/books/{id}/comment', [BookController::class, 'editComment']);
-    Route::delete('/books/{id}/comment', function ($id) {
-        BookComment::findOrFail($id)->delete();
-
-        return 'delete success!!';
-    });
-    Route::post('/comment/fluctuationLikes', [BookController::class, 'fluctuationLikes']);
+    Route::delete('/books/{id}', [BookController::class, 'deleteBook']);
+    Route::get('/books/{id}/comment', [BookCommentController::class, 'getComment']);
+    Route::post('/books/{id}/comment', [BookCommentController::class, 'createComment']);
+    Route::patch('/books/{id}/comment', [BookCommentController::class, 'editComment']);
+    Route::delete('/books/{id}/comment', [BookCommentController::class, 'deleteComment']);
+    Route::post('/comment/updateLikes', [BookCommentController::class, 'updateLikes']);
 });
