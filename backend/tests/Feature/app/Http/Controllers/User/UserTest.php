@@ -10,14 +10,6 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $cmd = 'php artisan passport:install --env=testing';
-        exec($cmd);
-    }
-
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
@@ -28,6 +20,9 @@ class UserTest extends TestCase
 
     public function test_アカウント作成することができる(): void
     {
+        $cmd = 'php artisan passport:install --env=testing';
+        exec($cmd);
+
         $email = fake()->safeEmail();
         $response = $this->post('/api/signup', [
                                 'name' => fake()->name(),
@@ -80,6 +75,9 @@ class UserTest extends TestCase
 
     public function test_ログインすることができる()
     {
+        $cmd = 'php artisan passport:install --env=testing';
+        exec($cmd);
+
         $user = $this->createUser();
         $response = $this->post('/api/login', [
                             'email' => $user->email,
