@@ -73,7 +73,7 @@ class BookController extends Controller
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public function updateBook(Request $request, $id)
+    public function updateBook(Request $request, int $id)
     {
         $book_datail = Book::findOrFail($id);
         $book_datail->update([
@@ -93,7 +93,7 @@ class BookController extends Controller
           ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public function deleteBook($id)
+    public function deleteBook(int $id)
     {
         Book::findOrFail($id)->delete();
 

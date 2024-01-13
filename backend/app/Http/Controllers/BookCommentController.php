@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class BookCommentController extends Controller
 {
-    public function createComment(Request $request, $id)
+    public function createComment(Request $request, int $id)
     {
         $books_review_comment = BookComment::create([
                                     'user_id' => Auth::id(),
@@ -27,7 +27,7 @@ class BookCommentController extends Controller
                 ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public function editComment(Request $request, $id)
+    public function editComment(Request $request, int $id)
     {
         $book_review_comment = BookComment::findOrFail($id);
 
@@ -53,7 +53,7 @@ class BookCommentController extends Controller
         ], 200);
     }
 
-    public function getComment(Request $request, $id)
+    public function getComment(Request $request, int $id)
     {
         $number = $request->query('comment_offset');
 
@@ -84,7 +84,7 @@ class BookCommentController extends Controller
         return response()->json($review_comment_array, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public function deleteComment($id)
+    public function deleteComment(int $id)
     {
         BookComment::findOrFail($id)->delete();
 

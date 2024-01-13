@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Feature\App\Http\Controllers\User;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -37,7 +39,7 @@ class UserTest extends TestCase
     /**
      * @dataProvider failSignUpValidProvider
      */
-    public function test_無効な入力を会員登録時にバリデーションではじく($name, $email, $password)
+    public function test_無効な入力を会員登録時にバリデーションではじく(string $name, string $email, string $password)
     {
         $invalid = $this->post('/api/signup', [
             'name' => $name,
@@ -91,7 +93,7 @@ class UserTest extends TestCase
     /**
      * @dataProvider failLoginValidProvider
      */
-    public function test_無効な入力をログインの際にバリデーションではじく($email, $password)
+    public function test_無効な入力をログインの際にバリデーションではじく(string $email, string $password)
     {
         $invalid = $this->post('/api/login', [
             'email' => $email,

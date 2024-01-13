@@ -21,7 +21,7 @@ class UserController extends Controller
     /**
      * パスワードグラントを使いトークンを取得するメソッド
      */
-    public function passwordGrant($email, $password)
+    public function passwordGrant(string $email, string $password)
     {
         $passport_client = Client::where('name', 'Laravel Password Grant Client')->first();
         $data = [
