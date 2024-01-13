@@ -18,8 +18,8 @@ export const Home = () => {
   const [cookies] = useCookies();
   const search = useLocation().search;
   const query = new URLSearchParams(search);
-  const title_keyword = query.get('title_keyword');
-  const get_books_url = useUrl('book_operation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const titleKeyword = query.get('title_keyword');
+  const getBooksUrl = useUrl('bookOperation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const currentPage = useSelector((state) => state.pagenation.currentPage); //初期値は「０」
   const dispatch = useDispatch();
 
@@ -30,10 +30,10 @@ export const Home = () => {
   //useEffect(「ここにasync入れたらダメ。」())
   useEffect(() => {
     axios
-      .get(get_books_url, {
+      .get(getBooksUrl, {
         headers,
         params: {
-          title_keyword: title_keyword
+          title_keyword: titleKeyword
         }
       })
       .then((response) => {
@@ -46,10 +46,10 @@ export const Home = () => {
 
   const handlePagenation = (offset, e) => {
     axios
-      .get(get_books_url, {
+      .get(getBooksUrl, {
         params: {
           offset: offset, // ここにクエリパラメータを指定する。
-          title_keyword: title_keyword
+          title_keyword: titleKeyword
         }
       })
       .then((response) => {
@@ -68,7 +68,7 @@ export const Home = () => {
       <p className="error-message">{errorMessage}</p>
       <div className="extend_float_page">
         <form className="search">
-          <input className="search_input" type="text" name="title_keyword" defaultValue={title_keyword} placeholder="書籍のタイトルを入力" />
+          <input className="search_input" type="text" name="title_keyword" defaultValue={titleKeyword} placeholder="書籍のタイトルを入力" />
           <button type="submit" className="search_button">
             <IconContext.Provider value={{ size: '15px' }}>
               <AiOutlineSearch />

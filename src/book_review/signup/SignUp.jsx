@@ -25,8 +25,8 @@ export const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [ImgFile, setImgFile] = useState(); //「ImgFile」にはリサイズした画像が入る
   const [imgUrl, setImgUrl] = useState(''); //画面に表示させる画像のurlをセット
-  const sign_up_url = useUrl('signup'); //カスタムフック。このコンポーネントで使うapiのurlが返る
-  const icon_upload_url = useUrl('icon_upload');
+  const signUpUrl = useUrl('signUp'); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const iconUploadUrl = useUrl('iconUpload');
   const [, setCookie] = useCookies();
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handleNameChange = (e) => setName(e.target.value);
@@ -40,14 +40,14 @@ export const SignUp = () => {
     };
 
     try {
-      const res = await axios.post(sign_up_url, data);
+      const res = await axios.post(signUpUrl, data);
       const token = res.data.token;
-      setCookie('token', token);
+      setCookie('token', token, { maxAge: 3600 });
 
       const formdata = new FormData();
       formdata.append('icon', ImgFile, ImgFile.name); // フィールド名を「icon」に指定しないと400エラーが起きる。（swaggerの仕様ではフィールド名を「icon」にしていたため）
 
-      await axios.post(icon_upload_url, formdata, {
+      await axios.post(iconUploadUrl, formdata, {
         headers: {
           authorization: `Bearer ${token}`,
           'content-Type': 'multipart/form-data'

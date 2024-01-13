@@ -12,7 +12,7 @@ export const Header = () => {
   const dispatch = useDispatch();
   const [cookies, , removeCookie] = useCookies();
   const [user, setUsers] = useState('');
-  const get_user_url = useUrl('user_operation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const getUserUrl = useUrl('userOperation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
 
   const handleSignOut = () => {
     dispatch(signOut());
@@ -27,7 +27,7 @@ export const Header = () => {
     //ログインしていたらユーザー情報を取得する
     if (auth) {
       axios
-        .get(get_user_url, { headers })
+        .get(getUserUrl, { headers })
         .then((res) => {
           setUsers(res.data);
         })

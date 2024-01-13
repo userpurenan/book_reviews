@@ -21,15 +21,15 @@ export const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState();
-  const login_url = useUrl('login'); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const loginUrl = useUrl('login'); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const [, setCookie] = useCookies();
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const onSignIn = () => {
     axios
-      .post(login_url, { email: email, password: password })
+      .post(loginUrl, { email: email, password: password })
       .then((res) => {
-        setCookie('token', res.data.access_token);
+        setCookie('token', res.data.access_token, { maxAge: 3600 });
         dispatch(signIn());
         navigate('/');
       })

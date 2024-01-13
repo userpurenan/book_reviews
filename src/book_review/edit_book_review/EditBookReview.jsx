@@ -18,9 +18,9 @@ export const EditBookReview = () => {
   const [bookDetail, setBookDetail] = useState('');
   const [bookReview, setBookReview] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const edit_book_url = useUrl('book_detail_operation', BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
-  const delete_book_url = useUrl('book_detail_operation', BookId);
-  const get_book_detail_url = useUrl('book_detail_operation', BookId);
+  const editBookUrl = useUrl('bookDetailOperation', BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const deleteBookUrl = useUrl('bookDetailOperation', BookId);
+  const getBookDetailUrl = useUrl('bookDetailOperation', BookId);
   const [bookData, setBookData] = useState([]);
 
   const headers = {
@@ -36,7 +36,7 @@ export const EditBookReview = () => {
     };
 
     axios
-      .put(edit_book_url, data, { headers })
+      .put(editBookUrl, data, { headers })
       .then(() => {
         navigate('/');
       })
@@ -47,7 +47,7 @@ export const EditBookReview = () => {
 
   const deleteBook = () => {
     axios
-      .delete(delete_book_url, { headers })
+      .delete(deleteBookUrl, { headers })
       .then(() => {
         navigate('/');
       })
@@ -60,7 +60,7 @@ export const EditBookReview = () => {
     if (auth === false) return navigate('/login');
 
     axios
-      .get(get_book_detail_url, { headers })
+      .get(getBookDetailUrl, { headers })
       .then((res) => {
         if (!res.data.is_mine) return navigate('/'); //自分の書いた書籍レビューじゃなかったらホーム画面に遷移する
         setBookData(res.data);

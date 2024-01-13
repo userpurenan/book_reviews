@@ -20,9 +20,9 @@ export const EditProfile = () => {
   const [ImgFile, setImgFile] = useState(); //「ImgFile」にはリサイズした画像が入る
   const [imgUrl, setImgUrl] = useState(); //画面に表示させる画像のurlをセット
   const [user, setUsers] = useState('');
-  const edit_user_neme_url = useUrl('user_operation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
-  const get_user_url = useUrl('user_operation');
-  const icon_upload_url = useUrl('icon_upload');
+  const editUserNameUrl = useUrl('userOperation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const getUserUrl = useUrl('userOperation');
+  const iconUploadUrl = useUrl('iconUpload');
   const [cookies] = useCookies();
   const auth = useSelector((state) => state.auth.isSignIn);
 
@@ -40,9 +40,9 @@ export const EditProfile = () => {
     };
 
     axios
-      .patch(edit_user_neme_url, { name: name }, { headers })
+      .patch(editUserNameUrl, { name: name }, { headers })
       .then(async () => {
-        await axios.post(icon_upload_url, formdata, {
+        await axios.post(iconUploadUrl, formdata, {
           headers,
           'Content-Type': 'multipart/form-data'
         });
@@ -82,7 +82,7 @@ export const EditProfile = () => {
     if (auth === false) return navigate('/login'); //「navegate」はレンダリング時に呼び出したらだめらしい。（「useEfect」内で呼び出そうとのエラーが出た）
 
     axios
-      .get(get_user_url, {
+      .get(getUserUrl, {
         //アクセス時、ユーザーの情報を取得する
         headers: {
           authorization: `Bearer ${cookies.token}`

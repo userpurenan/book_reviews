@@ -17,7 +17,7 @@ export const CreateBookReview = () => {
   const [bookDetail, setBookDetail] = useState('');
   const [bookReview, setBookReview] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const create_book_url = useUrl('book_operation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const createBookUrl = useUrl('bookOperation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const [bookData] = useState([]);
 
   const createBook = () => {
@@ -29,7 +29,7 @@ export const CreateBookReview = () => {
     };
 
     axios
-      .post(create_book_url, data, {
+      .post(createBookUrl, data, {
         headers: {
           authorization: `Bearer ${cookies.token}`
         }

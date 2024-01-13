@@ -18,9 +18,9 @@ export const ReviewCommentInput = (props) => {
   const [UpdateComment, setUpdateComment] = useState(false);
   const [commentPage, setCommentPage] = useState(0);
   const [isEditComment, setIsEditComment] = useState(false);
-  const get_comment_url = useUrl('comment_operation', props.BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
-  const create_comment_url = useUrl('comment_operation', props.BookId);
-  const good_operation_url = useUrl('good_operation');
+  const getCommentUrl = useUrl('commentOperation', props.BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const createCommentUrl = useUrl('commentOperation', props.BookId);
+  const UpdateLikesUrl = useUrl('updateLikes');
   const [commentLikes, setCommentLikes] = useState(() => {
     // localStorageからデータを取得し、存在しない場合はデフォルトで空のオブジェクトを返す
     const storedData = localStorage.getItem('commentLikes');
@@ -39,7 +39,7 @@ export const ReviewCommentInput = (props) => {
 
   useEffect(() => {
     axios
-      .get(get_comment_url, {
+      .get(getCommentUrl, {
         headers,
         params: {
           comment_offset: commentPage
@@ -56,7 +56,7 @@ export const ReviewCommentInput = (props) => {
   const sendComment = (event) => {
     const comment = event.comment;
     axios
-      .post(create_comment_url, { comment: comment }, { headers })
+      .post(createCommentUrl, { comment: comment }, { headers })
       .then(() => {
         //初期値「false」のUpdateCommentの否定をstateに入れてあげることでapiを再度呼び出す
         setUpdateComment(!UpdateComment);
@@ -66,11 +66,11 @@ export const ReviewCommentInput = (props) => {
       });
   };
 
-  const editComment = (data, book_comment_id) => {
+  const editComment = (data, bookCommentId) => {
     const comment = data.edit_comment_input;
-    const edit_comment_url = useUrl('comment_operation', book_comment_id);
+    const editCommentUrl = useUrl('commentOperation', bookCommentId);
     axios
-      .patch(edit_comment_url, { comment: comment }, { headers })
+      .patch(editCommentUrl, { comment: comment }, { headers })
       .then(() => {
         setUpdateComment(!UpdateComment);
         setIsEditComment(false);
@@ -80,10 +80,10 @@ export const ReviewCommentInput = (props) => {
       });
   };
 
-  const deleteComment = (book_comment_id) => {
-    const delete_comment_url = useUrl('comment_operation', book_comment_id);
+  const deleteComment = (bookCommentId) => {
+    const deleteCommentUrl = useUrl('commentOperation', bookCommentId);
     axios
-      .delete(delete_comment_url, { headers })
+      .delete(deleteCommentUrl, { headers })
       .then(() => {
         setUpdateComment(!UpdateComment);
       })
@@ -92,16 +92,16 @@ export const ReviewCommentInput = (props) => {
       });
   };
 
-  const fluctuationLikes = (likes_count_change, comment_id) => {
+  const updateLikes = (likesCountChange, commentId) => {
     // 以前の状態を基に新しいオブジェクトを作成
     const newCommentLikes = { ...commentLikes };
 
     // 特定のコメントのいいね状態を切り替える
-    newCommentLikes[comment_id] = !newCommentLikes[comment_id];
+    newCommentLikes[commentId] = !newCommentLikes[commentId];
 
     // 状態を更新
     setCommentLikes(newCommentLikes);
-    axios.post(good_operation_url, { likes: likes_count_change, comment_id: comment_id }, { headers }).then(() => {
+    axios.post(UpdateLikesUrl, { likes: likesCountChange, comment_id: commentId }, { headers }).then(() => {
       setUpdateComment(!UpdateComment);
     });
   };
@@ -164,9 +164,9 @@ export const ReviewCommentInput = (props) => {
                 <div className="likes">
                   <IconContext.Provider value={{ color: '#ff69b4', size: '20px' }}>
                     {commentLikes[BookCommentList.id] ? (
-                      <FaHeart className="likes-icon" onClick={() => fluctuationLikes(-1, BookCommentList.id)} />
+                      <FaHeart className="likes-icon" onClick={() => updateLikes(-1, BookCommentList.id)} />
                     ) : (
-                      <BsHeart className="likes-icon" onClick={() => fluctuationLikes(1, BookCommentList.id)} />
+                      <BsHeart className="likes-icon" onClick={() => updateLikes(1, BookCommentList.id)} />
                     )}
                   </IconContext.Provider>
                   <span className="likes-count">{BookCommentList.comment_likes}</span>
@@ -176,42 +176,54 @@ export const ReviewCommentInput = (props) => {
           </li>
         ))}
       </ul>
-      <div className="comment-pagenation">
-        {commentPage !== 0 ? (
-          <button
-            id="before"
-            onClick={() => {
-              setCommentPage(commentPage - 10);
-            }}
-            className="comment-pagenation__button"
-          >
-            前のページへ
-          </button>
-        ) : (
-          <button className="comment-pagenation__button" disabled>
-            前のページへ
-          </button>
-        )}
-        {BookComment.length === 10 ? (
-          <button
-            id="next"
-            onClick={() => {
-              setCommentPage(commentPage + 10);
-            }}
-            className="comment-pagenation__button"
-          >
-            次のページへ
-          </button>
-        ) : (
-          <button className="comment-pagenation__button" disabled>
-            次のページへ
-          </button>
-        )}
-      </div>
+      <CommentPagenation commentPage={commentPage} setCommentPage={setCommentPage} BookCommentLength={BookComment.length} />
+    </div>
+  );
+};
+
+export const CommentPagenation = (props) => {
+  return (
+    <div className="comment-pagenation">
+      {props.commentPage !== 0 ? (
+        <button
+          id="before"
+          onClick={() => {
+            props.setCommentPage(props.commentPage - 10);
+          }}
+          className="comment-pagenation__button"
+        >
+          前のページへ
+        </button>
+      ) : (
+        <button className="comment-pagenation__button" disabled>
+          前のページへ
+        </button>
+      )}
+      {props.BookCommentLength === 10 ? (
+        <button
+          id="next"
+          onClick={() => {
+            props.setCommentPage(props.commentPage + 10);
+          }}
+          className="comment-pagenation__button"
+        >
+          次のページへ
+        </button>
+      ) : (
+        <button className="comment-pagenation__button" disabled>
+          次のページへ
+        </button>
+      )}
     </div>
   );
 };
 
 ReviewCommentInput.propTypes = {
   BookId: PropTypes.string
+};
+
+CommentPagenation.propTypes = {
+  commentPage: PropTypes.number,
+  setCommentPage: PropTypes.func.isRequired,
+  BookCommentLength: PropTypes.number
 };

@@ -14,7 +14,7 @@ export const BookReviewDetail = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [bookData, setBookData] = useState('');
-  const get_book_detail_url = useUrl('book_detail_operation', BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
+  const getBookDetailUrl = useUrl('bookDetailOperation', BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const [errorMessage, setErrorMessage] = useState('');
 
   const headers = {
@@ -27,7 +27,7 @@ export const BookReviewDetail = () => {
     if (!cookies.token) navigate('/login');
 
     axios
-      .get(get_book_detail_url, { headers })
+      .get(getBookDetailUrl, { headers })
       .then((response) => {
         const bookData = response.data;
         setBookData(bookData); //書籍の情報を一個にまとめた

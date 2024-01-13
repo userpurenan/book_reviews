@@ -3,27 +3,27 @@ export const useUrl = (props, book_id = null) => {
   var url = null;
 
   switch (props) {
-    case 'get_public_books':
+    case 'getPublicBooks':
       url = `${endpoint}/public/books`;
       break;
 
-    case 'book_operation':
+    case 'bookOperation':
       url = `${endpoint}/books`;
       break;
 
-    case 'book_detail_operation':
+    case 'bookDetailOperation':
       url = `${endpoint}/books/${book_id}`;
       break;
 
-    case 'comment_operation':
+    case 'commentOperation':
       url = `${endpoint}/books/${book_id}/comment`;
       break;
 
-    case 'good_operation':
-      url = `${endpoint}/comment/fluctuationLikes`;
+    case 'updateLikes':
+      url = `${endpoint}/comment/updateLikes`;
       break;
 
-    case 'user_operation':
+    case 'userOperation':
       url = `${endpoint}/user`;
       break;
 
@@ -35,7 +35,7 @@ export const useUrl = (props, book_id = null) => {
       url = `${endpoint}/signup`;
       break;
 
-    case 'icon_upload':
+    case 'iconUpload':
       url = `${endpoint}/upload`;
       break;
   }
