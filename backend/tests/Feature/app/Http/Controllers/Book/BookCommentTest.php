@@ -90,8 +90,11 @@ class BookCommentTest extends TestCase
         $this->createUser();
         $token = $this->createToken($this->email, $this->password);
 
-        $book = Book::factory()->create();
-        $book_review_comment = BookComment::factory()->create();
+        Book::factory()->create();
+
+        //いいねの数は０より下回らないように設定しており、初期値が０のままだと減少しているのかわからなくなるので、このテストではいいねの数の初期値を１にする
+        $book_review_comment = BookComment::factory()->create(['comment_likes' => 1,]);
+        $update_comment_like_result = $book_review_comment->comment_likes + $fluctuation;
 
         $response = $this->post('/api/comment/updateLikes', [
             'comment_id' => $book_review_comment->id,
@@ -101,9 +104,9 @@ class BookCommentTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        $response->assertExactJson(['comment_likes' => $fluctuation ]);
+        $response->assertExactJson(['comment_likes' => $update_comment_like_result ]);
         $this->assertDatabaseHas('book_review_comment', [
-            'comment_likes' => $fluctuation,
+            'comment_likes' => $update_comment_like_result,
         ]);
     }
 
@@ -113,6 +116,28 @@ class BookCommentTest extends TestCase
             'いいねの数が増える' => [1],
             'いいねの数が減る' => [-1],
         ];
+    }
+
+    public function test_いいねが0を下回らない(): void
+    {
+        $this->createUser();
+        $token = $this->createToken($this->email, $this->password);
+
+        Book::factory()->create();
+        $book_review_comment = BookComment::factory()->create();
+
+        $response = $this->post('/api/comment/updateLikes', [
+            'comment_id' => $book_review_comment->id,
+            'likes' => -1
+        ], [
+            'Authorization' => 'Bearer ' . $token,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertExactJson(['comment_likes' => 0 ]);
+        $this->assertDatabaseHas('book_review_comment', [
+            'comment_likes' => 0,
+        ]);
     }
 
     public function test_コメントを編集することができる(): void
