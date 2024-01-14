@@ -45,7 +45,7 @@ class BookCommentController extends Controller
     {
         $likes_count_change = $request->input('likes');
         $comment = BookComment::findOrFail($request->input('comment_id'));
-        if($comment->comment_likes <= 0 && $likes_count_change === -1) { //いいねが０を下回らないようにする
+        if($comment->comment_likes === 0 && $likes_count_change === -1) { //いいねが０を下回らないようにする
             return response()->json([
                 'comment_likes' => 0
             ], 200);

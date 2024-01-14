@@ -54,7 +54,7 @@ class BookController extends Controller
         ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 
-    public function getBookDatail($id)
+    public function getBookDatail(int $id)
     {
         $book_datail = Book::findOrFail($id);
         $is_mine = false;

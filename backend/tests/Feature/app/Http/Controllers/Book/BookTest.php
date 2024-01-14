@@ -26,22 +26,18 @@ class BookTest extends TestCase
         exec($cmd);
     }
 
-    public function createBook(): void
+    public function test_書籍を10件ずつ取得できる(): void
     {
         $this->createUser();
         Book::factory()->count(11)->create();
-    }
-
-    public function test_書籍を10件ずつ取得できる(): void
-    {
-        $this->createBook();
         $books = $this->get('/api/books')->json();
         $this->assertCount(10, $books);
     }
 
     public function test_検索処理を実行する事ができる(): void
     {
-        $this->createBook();
+        $this->createUser();
+        Book::factory()->count(11)->create();
         Book::factory()->create([ 'title' => 'NARUTO']);
         $books = $this->get('/api/books?title_keyword=NARUTO');
         $books->assertJsonMissing(["title" => 'ワンピース']);
