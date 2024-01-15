@@ -9,14 +9,26 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Laravel\Passport\Client;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Artisan;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    protected $password;
+    protected string $password;
 
-    protected $email;
+    protected string $email;
+
+    protected bool $is_passport_install = false;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        if($this->is_passport_install === false) {
+            Artisan::call('passport:install --env=testing');
+        }
+        $this->is_passport_install = true;
+    }
 
     /**
      * ユーザーを作成するメソッド。
@@ -35,7 +47,7 @@ abstract class TestCase extends BaseTestCase
         return $user;
     }
 
-    public function createToken($user_email, $user_password)
+    public function createToken(string $user_email, string $user_password)
     {
         $passport_client = Client::where('name', 'Laravel Password Grant Client')->first();
         $data = [

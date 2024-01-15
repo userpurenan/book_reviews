@@ -10,22 +10,6 @@ class AuthUserTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $cmd = 'php artisan passport:install --env=testing';
-        exec($cmd);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        $cmd = 'php artisan migrate:refresh --env=testing';
-        exec($cmd);
-    }
-
     public function test_ユーザー情報が取得できる(): void
     {
         $user = $this->createUser();

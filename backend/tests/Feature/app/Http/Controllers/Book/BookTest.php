@@ -10,22 +10,6 @@ class BookTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $cmd = 'php artisan passport:install --env=testing';
-        exec($cmd);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        $cmd = 'php artisan migrate:refresh --env=testing';
-        exec($cmd);
-    }
-
     public function test_書籍を10件ずつ取得できる(): void
     {
         $this->createUser();

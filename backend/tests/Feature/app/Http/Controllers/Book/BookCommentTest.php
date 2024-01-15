@@ -13,22 +13,6 @@ class BookCommentTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $cmd = 'php artisan passport:install --env=testing';
-        exec($cmd);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        $cmd = 'php artisan migrate:refresh --env=testing';
-        exec($cmd);
-    }
-
     public function test_レビューに対するコメントを取得することができる(): void
     {
         $this->createUser();
