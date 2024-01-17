@@ -11,20 +11,23 @@ class BookComment extends Model
 {
     use HasFactory;
 
-    protected $table = 'book_review_comment';
+    protected $table = 'book_review_comments';
 
     protected $fillable = [
         'user_id',
         'book_id',
         'comment',
-        'comment_likes'
+        'comment_likes',
+        'is_reviewer_comment'
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function book(){
+    public function book()
+    {
         return $this->belongsTo(Book::class, 'book_id');
     }
 
