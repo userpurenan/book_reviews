@@ -3,16 +3,38 @@
 namespace Tests\Feature\App\Http\Controllers\Book;
 
 use App\Models\Book;
+use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class BookControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    private string $password;
+
+    private string $email;
+
+    private $user;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->email = fake()->safeEmail();
+        $this->password = Str::random(10);
+
+        $this->user = User::create([
+                          'name' => fake()->name(),
+                          'email' => $this->email,
+                          'password' => Hash::make($this->password)
+                      ]);
+
+    }
+
     public function test_書籍を10件ずつ取得できる(): void
     {
-        $this->createUser();
         Book::factory()->count(11)->create();
         $books = $this->get('/api/books')->json();
         $this->assertCount(10, $books);
@@ -20,7 +42,6 @@ class BookControllerTest extends TestCase
 
     public function test_検索処理を実行する事ができる(): void
     {
-        $this->createUser();
         Book::factory()->count(11)->create();
         Book::factory()->create([ 'title' => 'NARUTO']);
         $books = $this->get('/api/books?title_keyword=NARUTO');
@@ -30,7 +51,6 @@ class BookControllerTest extends TestCase
 
     public function test_新規の書籍レビューを作ることができる(): void
     {
-        $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
         $title = fake()->realtext(10);
         $url = fake()->url();
@@ -39,28 +59,27 @@ class BookControllerTest extends TestCase
 
         $this->post('/api/books', [
             'title' => $title,
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'url' => $url,
             'detail' => $detail,
             'review' => $review,
-            'reviewer' => $user->name,
+            'reviewer' => $this->user->name,
         ], [
             'Authorization' => 'Bearer ' . $token,
         ]);
 
         $this->assertDatabaseHas('books', [
             'title' => $title,
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'url' => $url,
             'detail' => $detail,
             'review' => $review,
-            'reviewer' => $user->name,
+            'reviewer' => $this->user->name,
         ]);
     }
 
     public function test_書籍の更新が実行できる(): void
     {
-        $this->createUser();
         $token = $this->createToken($this->email, $this->password);
         $title = fake()->realtext(10);
         $url = fake()->url();
@@ -93,7 +112,6 @@ class BookControllerTest extends TestCase
 
     public function test_書籍を削除する事ができる(): void
     {
-        $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
 
         $book = Book::factory()->create();
@@ -104,11 +122,11 @@ class BookControllerTest extends TestCase
 
         $this->assertDatabaseMissing('books', [
             'title' => $book->title,
-            'user_id' => $user->id,
+            'user_id' => $this->user->id,
             'url' => $book->url,
             'detail' => $book->detail,
             'review' => $book->review,
-            'reviewer' => $user->name,
+            'reviewer' => $this->user->name,
         ]);
     }
 }

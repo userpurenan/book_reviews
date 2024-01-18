@@ -2,34 +2,54 @@
 
 namespace Tests\Feature\App\Http\Controllers\User;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class AuthUserControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    private string $password;
+
+    private string $email;
+
+    private $user;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->email = fake()->safeEmail();
+        $this->password = Str::random(10);
+
+        $this->user = User::create([
+                          'name' => fake()->name(),
+                          'email' => $this->email,
+                          'password' => Hash::make($this->password)
+                      ]);
+
+    }
+
     public function test_ユーザー情報が取得できる(): void
     {
-        $user = $this->createUser();
         $token = $this->createToken($this->email, $this->password);
-
         $response = $this->get('/api/user', [
             'Authorization' => "Bearer " . $token,
         ]);
 
         $response->assertStatus(200);
-        $response->assertJson(['name' => $user->name,
-                               'image_url' => $user->imege_url
+        $response->assertJson(['name' => $this->user->name,
+                               'image_url' => $this->user->imege_url
                               ]);
     }
 
     public function test_アイコン画像のURLを保存できる()
     {
-        $image_file = UploadedFile::fake()->image('icon.jpg');
-        $this->createUser();
         $token = $this->createToken($this->email, $this->password);
+        $image_file = UploadedFile::fake()->image('icon.jpg');
 
         $response = $this->post('/api/upload', [
             'icon' => $image_file,
@@ -46,9 +66,8 @@ class AuthUserControllerTest extends TestCase
 
     public function test_ユーザーの名前の変更ができる()
     {
-        $user = $this->createUser();
-        $token = $this->createToken($this->email, $this->password);
         $update_name = fake()->name();
+        $token = $this->createToken($this->email, $this->password);
 
         //ユーザー名の変更
         $this->patch('/api/user', [
@@ -58,7 +77,7 @@ class AuthUserControllerTest extends TestCase
         ]);
 
         $this->assertDatabaseMissing('users', [
-            'name' => $user->name,
+            'name' => $this->user->name,
         ]);
         $this->assertDatabaseHas('users', [
             'name' => $update_name
@@ -69,8 +88,6 @@ class AuthUserControllerTest extends TestCase
     {
         $file1 = UploadedFile::fake()->image('icon.jpg');
         $file2 = UploadedFile::fake()->image('icon2.jpg');
-
-        $this->createUser();
         $token = $this->createToken($this->email, $this->password);
 
         //画像のURL保存

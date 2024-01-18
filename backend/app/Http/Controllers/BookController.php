@@ -13,23 +13,13 @@ class BookController extends Controller
 {
     public function getBooks(BookRequest $request)
     {
-        $number = $request->query('offset');
-        $books = Book::where("title", "LIKE", "%{$request->query('title_keyword')}%")
-                       ->offset($number)->limit(10)->orderBy('id', 'desc')->get();
+        $number = $request->query('offset', $default = 0);
 
-        $book_data = [];
-        foreach ($books as $book) {
-            $book_data[] = [
-                'id' => $book->id,
-                'title' => $book->title,
-                'url' => $book->url,
-                'detail' => $book->detail,
-                'review' => $book->review,
-                'reviewer' => $book->reviewer
-            ];
-        }
+        //書籍を10件取得している。
+        $books = Book::select('id', 'title')->where("title", "LIKE", "%{$request->query('title_keyword', $default = '')}%")
+                        ->offset($number)->limit(10)->orderBy('id', 'desc')->get();
 
-        return response()->json($book_data, 200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json($books, 200, [], JSON_UNESCAPED_UNICODE);
     }
 
     public function createBook(Request $request)
@@ -58,7 +48,6 @@ class BookController extends Controller
     {
         $book_datail = Book::findOrFail($id);
         $is_mine = false;
-
         if($book_datail->user_id === Auth::id()) {
             $is_mine = true;
         }

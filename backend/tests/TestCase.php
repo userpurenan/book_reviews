@@ -15,10 +15,6 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    protected string $password;
-
-    protected string $email;
-
     protected bool $is_passport_install = false;
 
     public function setUp(): void
@@ -28,23 +24,6 @@ abstract class TestCase extends BaseTestCase
             Artisan::call('passport:install --env=testing');
         }
         $this->is_passport_install = true;
-    }
-
-    /**
-     * ユーザーを作成するメソッド。
-     */
-    public function createUser()
-    {
-        $this->email = fake()->safeEmail();
-        $this->password = Str::random(10);
-
-        $user = User::create([
-                          'name' => fake()->name(),
-                          'email' => $this->email,
-                          'password' => Hash::make($this->password)
-                      ]);
-
-        return $user;
     }
 
     public function createToken(string $user_email, string $user_password)

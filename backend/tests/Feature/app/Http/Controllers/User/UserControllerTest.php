@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\App\Http\Controllers\User;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
@@ -80,10 +82,18 @@ class UserControllerTest extends TestCase
         $cmd = 'php artisan passport:install --env=testing';
         exec($cmd);
 
-        $user = $this->createUser();
+        $email = fake()->safeEmail();
+        $password = Str::random(10);
+
+        $user = User::create([
+                          'name' => fake()->name(),
+                          'email' => $email,
+                          'password' => Hash::make($password)
+                      ]);
+
         $response = $this->post('/api/login', [
                             'email' => $user->email,
-                            'password' => $this->password
+                            'password' => $password
                         ]);
 
         $response->assertStatus(200);
