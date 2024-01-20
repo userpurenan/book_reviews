@@ -19,7 +19,7 @@ class BookController extends Controller
         $books = Book::select('id', 'title')->where("title", "LIKE", "%{$request->query('title_keyword', $default = '')}%")
                         ->offset($number)->limit(10)->orderBy('id', 'desc')->get();
 
-        return response()->json($books, 200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json($books, 200, []);
     }
 
     public function createBook(Request $request)
@@ -41,7 +41,7 @@ class BookController extends Controller
             'detail' => $book->detail,
             'review' => $book->review,
             'reviewer' => $user_name,
-        ], 200, [], JSON_UNESCAPED_UNICODE);
+        ], 200, []);
     }
 
     public function getBookDatail(int $id)
@@ -59,7 +59,7 @@ class BookController extends Controller
             'review' => $book_datail->review,
             'reviewer' => $book_datail->user->name,
             'is_mine' => $is_mine,
-        ], 200, [], JSON_UNESCAPED_UNICODE);
+        ], 200, []);
     }
 
     public function updateBook(Request $request, int $id)
@@ -79,7 +79,7 @@ class BookController extends Controller
               'detail' => $book_datail->detail,
               'review' => $book_datail->review,
               'reviewer' => $book_datail->reviewer
-          ], 200, [], JSON_UNESCAPED_UNICODE);
+          ], 200, []);
     }
 
     public function deleteBook(int $id)

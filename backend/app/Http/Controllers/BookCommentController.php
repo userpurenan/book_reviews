@@ -11,17 +11,17 @@ use Illuminate\Support\Facades\Auth;
 
 class BookCommentController extends Controller
 {
-    public function createComment(Request $request, int $id)
+    public function createComment(Request $request, int $book_id)
     {
         $user_id = Auth::id();
-        $book = Book::findOrFail($id);
+        $book = Book::findOrFail($book_id);
 
         //is_reviewer_commentはtrueかfalseをセットしているが、MySQLの使用上tinyint(1)として扱われるのでデータベースには１か０がセットされる
         $books_review_comment = BookComment::create([
                                     'user_id' => $user_id,
-                                    'book_id' => $id,
+                                    'book_id' => $book_id,
                                     'comment' => $request->input('comment'),
-                                    'is_reviewer_comment' => $book->user->id === $user_id ? 1 : 0,
+                                    'is_reviewer_comment' => $book->user_id === $user_id ? 1 : 0,
                                     'comment_likes' => 0
                                 ]);
 
@@ -30,12 +30,12 @@ class BookCommentController extends Controller
                     'user_image_url' => $books_review_comment->user->image_url,
                     'comment' => $books_review_comment->comment,
                     'comment_likes' => $books_review_comment->comment_likes
-                ], 200, [], JSON_UNESCAPED_UNICODE);
+                ], 200, []);
     }
 
-    public function editComment(Request $request, int $id)
+    public function editComment(Request $request, int $book_id)
     {
-        $book_review_comment = BookComment::findOrFail($id);
+        $book_review_comment = BookComment::findOrFail($book_id);
 
         $book_review_comment->update([ 'comment' => $request->input('comment') ]);
 
@@ -44,7 +44,7 @@ class BookCommentController extends Controller
             'user_image_url' => $book_review_comment->user->image_url,
             'comment' => $book_review_comment->comment,
             'comment_likes' => $book_review_comment->comment_likes
-        ], 200, [], JSON_UNESCAPED_UNICODE);
+        ], 200, []);
     }
 
     public function updateLikes(Request $request)
@@ -64,11 +64,11 @@ class BookCommentController extends Controller
         ], 200);
     }
 
-    public function getComment(Request $request, int $id)
+    public function getComment(Request $request, int $book_id)
     {
         $number = $request->query('comment_offset', $default = 0);
 
-        $books_review_comment = BookComment::where('book_id', $id)->offset($number)->limit(10)->orderBy('id', 'desc')->get();
+        $books_review_comment = BookComment::where('book_id', $book_id)->offset($number)->limit(10)->orderBy('id', 'desc')->get();
 
         $review_comment_array = [];
         foreach ($books_review_comment as $review_comment) {
@@ -83,17 +83,17 @@ class BookCommentController extends Controller
                 'user_image_url' => $review_comment->user->image_url,
                 'comment' => $review_comment->comment,
                 'comment_likes' => $review_comment->comment_likes,
-                'is_reviewer' => $review_comment->is_reviewer_comment, //MySQLのboolean型からデータを引っ張ってきているのでレスポンスが１または０になる
+                'is_reviewer' => $review_comment->is_reviewer_comment, //MySQLのboolean型からデータを引っ張ってきているのでレスポンスが１(true)または０(false)になる
                 'is_your_comment' => $is_your_comment
             ];
         }
 
-        return response()->json($review_comment_array, 200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json($review_comment_array, 200, []);
     }
 
-    public function deleteComment(int $id)
+    public function deleteComment(int $book_id)
     {
-        BookComment::findOrFail($id)->delete();
+        BookComment::findOrFail($book_id)->delete();
 
         return 'delete success!!';
     }
