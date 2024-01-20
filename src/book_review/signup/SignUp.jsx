@@ -39,25 +39,29 @@ export const SignUp = () => {
       password: password
     };
 
-    try {
-      const res = await axios.post(signUpUrl, data);
-      const token = res.data.token;
-      setCookie('token', token, { maxAge: 3600 });
+    const formdata = new FormData();
+    formdata.append('icon', ImgFile, ImgFile.name); // フィールド名を「icon」に指定しないと400エラーが起きる。（swaggerの仕様ではフィールド名を「icon」にしていたため）
 
-      const formdata = new FormData();
-      formdata.append('icon', ImgFile, ImgFile.name); // フィールド名を「icon」に指定しないと400エラーが起きる。（swaggerの仕様ではフィールド名を「icon」にしていたため）
-
-      await axios.post(iconUploadUrl, formdata, {
-        headers: {
-          authorization: `Bearer ${token}`,
-          'content-Type': 'multipart/form-data'
-        }
+    axios
+      .post(signUpUrl, data)
+      .then((response) => {
+        const token = response.data.token;
+        setCookie('token', token, { maxAge: 3600 });
+        axios
+          .post(iconUploadUrl, formdata, {
+            headers: {
+              authorization: `Bearer ${token}`,
+              'content-Type': 'multipart/form-data'
+            }
+          })
+          .then(() => {
+            dispatch(signIn());
+            navigate('/');
+          });
+      })
+      .catch((error) => {
+        setErrorMessage(`サインアップに失敗しました。 ${error}`);
       });
-      dispatch(signIn());
-      navigate('/');
-    } catch (err) {
-      setErrorMessage(`サインアップに失敗しました。 ${err}`);
-    }
   };
 
   //画像が1MBより大きかったらリサイズする関数

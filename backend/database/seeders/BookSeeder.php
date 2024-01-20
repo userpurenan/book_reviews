@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Book;
+use App\Models\BookComment;
 use App\Models\User;
-use Database\Factories\UserFactory;
 
 class BookSeeder extends Seeder
 {
@@ -17,5 +16,6 @@ class BookSeeder extends Seeder
     {
         User::factory()->count(10)->create();
         Book::factory()->count(30)->create();
+        BookComment::factory()->count(100)->create();
     }
 }

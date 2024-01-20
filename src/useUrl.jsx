@@ -31,7 +31,7 @@ export const useUrl = (props, book_id = null) => {
       url = `${endpoint}/login`;
       break;
 
-    case 'signup':
+    case 'signUp':
       url = `${endpoint}/signup`;
       break;
 
