@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Compressor from 'compressorjs';
 import { signIn } from '../../authSlice';
+import defaultIcon from '../../defaultIcon.png';
 import { useUrl } from '../../useUrl';
 import { Header } from '../header/Header';
 import './signUp.scss';
@@ -24,10 +25,10 @@ export const SignUp = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [ImgFile, setImgFile] = useState(); //「ImgFile」にはリサイズした画像が入る
-  const [imgUrl, setImgUrl] = useState(''); //画面に表示させる画像のurlをセット
+  const [iconImage, setIconImage] = useState(defaultIcon); //画面に表示させる画像のurlをセット
   const signUpUrl = useUrl('signUp'); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const iconUploadUrl = useUrl('iconUpload');
-  const [, setCookie] = useCookies();
+  const [cookie, setCookie] = useCookies();
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handleNameChange = (e) => setName(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
@@ -39,36 +40,44 @@ export const SignUp = () => {
       password: password
     };
 
-    const formdata = new FormData();
-    formdata.append('icon', ImgFile, ImgFile.name); // フィールド名を「icon」に指定しないと400エラーが起きる。（swaggerの仕様ではフィールド名を「icon」にしていたため）
+    const isImageFile = () => {
+      if (ImgFile) {
+        const formdata = new FormData();
+        formdata.append('icon', ImgFile, ImgFile.name); // フィールド名を「icon」に指定しないと400エラーが起きる。（swaggerの仕様ではフィールド名を「icon」にしていたため）
 
-    axios
-      .post(signUpUrl, data)
-      .then((response) => {
-        const token = response.data.token;
-        setCookie('token', token, { maxAge: 3600 });
         axios
           .post(iconUploadUrl, formdata, {
             headers: {
-              authorization: `Bearer ${token}`,
+              authorization: `Bearer ${cookie.token}`,
               'content-Type': 'multipart/form-data'
             }
           })
-          .then(() => {
-            dispatch(signIn());
-            navigate('/');
+          .catch((error) => {
+            setErrorMessage(`画像アップロードに失敗しました。 ${error}`);
           });
+      }
+    };
+
+    await axios
+      .post(signUpUrl, data)
+      .then((response) => {
+        const token = response.headers.authorization;
+        setCookie('token', token, { maxAge: 3600 });
       })
       .catch((error) => {
         setErrorMessage(`サインアップに失敗しました。 ${error}`);
       });
+
+    await isImageFile();
+    dispatch(signIn());
+    navigate('/');
   };
 
   //画像が1MBより大きかったらリサイズする関数
   const handleIconUrlChange = (e) => {
     const file = e.target.files[0];
     const url = URL.createObjectURL(file);
-    setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
+    setIconImage(url); // imgタグをusestateにセット「usestateにurlをセットする」
 
     // 1MB以上の場合
     if (file.size > 1024 * 1024) {
@@ -115,17 +124,18 @@ export const SignUp = () => {
           <br />
           <input
             type="password"
-            {...register('password', { required: true, minLength: { value: 5 } })}
+            {...register('password', { required: true, minLength: { value: 5 }, maxLength: { value: 15 } })}
             onChange={handlePasswordChange}
             className="password-input"
           />
           <p>{errors.password?.type === 'required' && <b className="error-message">※パスワードを入力してください。</b>}</p>
           <p>{errors.password?.type === 'minLength' && <b className="error-message">※パスワードは５文字以上で設定してください</b>}</p>
+          <p>{errors.password?.type === 'maxLength' && <b className="error-message">※パスワードは１５文字以下で設定してください</b>}</p>
           <label>アイコン画像アップロード</label>
           <br />
           <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />
           <div>
-            <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" className="icon_image" />
+            <img src={iconImage} id="icon" alt="ユーザーのアイコン画像" className="icon_image" />
           </div>
           <br />
           <button type="submit" className="signup-button">

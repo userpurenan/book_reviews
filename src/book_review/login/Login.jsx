@@ -25,11 +25,12 @@ export const Login = () => {
   const [, setCookie] = useCookies();
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
-  const onSignIn = () => {
+  const onLogIn = () => {
     axios
       .post(loginUrl, { email: email, password: password })
-      .then((res) => {
-        setCookie('token', res.data.access_token, { maxAge: 3600 });
+      .then((response) => {
+        const token = response.headers.authorization;
+        setCookie('token', token, { maxAge: 3600 });
         dispatch(signIn());
         navigate('/');
       })
@@ -48,7 +49,7 @@ export const Login = () => {
       <main className="Login">
         <h2>ログイン</h2>
         <p className="error-message">{errorMessage}</p>
-        <form onSubmit={handleSubmit(onSignIn)} className="Login-form">
+        <form onSubmit={handleSubmit(onLogIn)} className="Login-form">
           <label className="email-label">メールアドレス</label>
           <br />
           <input

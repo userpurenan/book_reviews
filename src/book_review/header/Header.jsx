@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { signOut } from '../../authSlice';
+import defaultIcon from '../../defaultIcon.png';
 import { useUrl } from '../../useUrl';
 import './header.scss';
 
@@ -11,7 +12,8 @@ export const Header = () => {
   const auth = useSelector((state) => state.auth.isSignIn);
   const dispatch = useDispatch();
   const [cookies, , removeCookie] = useCookies();
-  const [user, setUsers] = useState('');
+  const [userName, setUserName] = useState('');
+  const [icon, setIcon] = useState(defaultIcon);
   const getUserUrl = useUrl('userOperation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
 
   const handleSignOut = () => {
@@ -28,8 +30,11 @@ export const Header = () => {
     if (auth) {
       axios
         .get(getUserUrl, { headers })
-        .then((res) => {
-          setUsers(res.data);
+        .then((response) => {
+          setUserName(response.data.name);
+          if (response.data.image_url !== null) {
+            setIcon(response.data.image_url);
+          }
         })
         .catch((error) => {
           alert(`ヘッダーのユーザー情報の取得に失敗しました。${error}`);
@@ -47,7 +52,7 @@ export const Header = () => {
           <Link to={'/new'} className="Navigate-button">
             書籍レビュー投稿画面へ
           </Link>
-          <Link to={'/edit/profile'} className="Navigate-button" state={user.name}>
+          <Link to={'/edit/profile'} className="Navigate-button" state={userName}>
             ユーザー名変更
           </Link>
           <Link to={'/login'} onClick={handleSignOut} className="Navigate-button">
@@ -55,8 +60,8 @@ export const Header = () => {
           </Link>
           <br />
           <p className="userName">
-            ユーザー名：{user.name}
-            <img src={user.image_url} alt="ユーザーのアイコン画像" className="userIcon" />
+            ユーザー名：{userName}
+            <img src={icon} alt="ユーザーのアイコン画像" className="userIcon" />
           </p>
         </div>
       ) : (
