@@ -7,15 +7,10 @@ namespace App\Http\Controllers;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\SignUpRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Laravel\Passport\Client;
 
 class UserController extends Controller
 {
