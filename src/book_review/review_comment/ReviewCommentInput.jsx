@@ -7,6 +7,7 @@ import { FaHeart } from 'react-icons/fa';
 import { FaCheckCircle } from 'react-icons/fa';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import defaultIcon from '../../defaultIcon.png';
 import { useUrl } from '../../useUrl';
 import './ReviewCommentInput.scss';
 
@@ -120,7 +121,11 @@ export const ReviewCommentInput = (props) => {
       <ul>
         {BookComment.map((BookCommentList, key) => (
           <li key={key} value={BookCommentList.id} className="comment_list">
-            <img src={BookCommentList.user_image_url} alt="ユーザーのアイコン" className="comment_userIcon" />
+            <img
+              src={BookCommentList.user_image_url !== null ? BookCommentList.user_image_url : defaultIcon}
+              alt="ユーザーのアイコン"
+              className="comment_userIcon"
+            />
             {BookCommentList.user_name}
             {BookCommentList.is_reviewer ? (
               <IconContext.Provider value={{ color: '#000000', size: '17px' }}>
