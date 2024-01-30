@@ -13,8 +13,16 @@ import './ReviewCommentInput.scss';
 
 export const ReviewCommentInput = (props) => {
   //useFormのregisterとかに名前つけれるらしい
-  const { register: sendCommentRegister, handleSubmit: sendCommentSubmit, formState: sendCommentFormState } = useForm();
-  const { register: editCommentRegister, handleSubmit: editCommentSubmit, formState: editCommentFormState } = useForm();
+  const {
+    register: sendCommentRegister,
+    handleSubmit: sendCommentSubmit,
+    formState: sendCommentFormState
+  } = useForm();
+  const {
+    register: editCommentRegister,
+    handleSubmit: editCommentSubmit,
+    formState: editCommentFormState
+  } = useForm();
   const [BookComment, setBookComment] = useState([]);
   const [UpdateComment, setUpdateComment] = useState(false);
   const [commentPage, setCommentPage] = useState(0);
@@ -102,16 +110,26 @@ export const ReviewCommentInput = (props) => {
 
     // 状態を更新
     setCommentLikes(newCommentLikes);
-    axios.post(UpdateLikesUrl, { likes: likesCountChange, comment_id: commentId }, { headers }).then(() => {
-      setUpdateComment(!UpdateComment);
-    });
+    axios
+      .post(UpdateLikesUrl, { likes: likesCountChange, comment_id: commentId }, { headers })
+      .then(() => {
+        setUpdateComment(!UpdateComment);
+      });
   };
 
   return (
     <div>
       <form onSubmit={sendCommentSubmit(sendComment)}>
-        <p>{sendCommentFormState.errors.comment?.type === 'required' && <b className="comment-error-message">※コメントを入力してください。</b>}</p>
-        <textarea className="input_comment" {...sendCommentRegister('comment', { required: true })} placeholder="コメントを入力" />
+        <p>
+          {sendCommentFormState.errors.comment?.type === 'required' && (
+            <b className="comment-error-message">※コメントを入力してください。</b>
+          )}
+        </p>
+        <textarea
+          className="input_comment"
+          {...sendCommentRegister('comment', { required: true })}
+          placeholder="コメントを入力"
+        />
         <br />
         <button type="submit" className="comment_button">
           コメント
@@ -122,7 +140,11 @@ export const ReviewCommentInput = (props) => {
         {BookComment.map((BookCommentList, key) => (
           <li key={key} value={BookCommentList.id} className="comment_list">
             <img
-              src={BookCommentList.user_image_url !== null ? BookCommentList.user_image_url : defaultIcon}
+              src={
+                BookCommentList.user_image_url !== null
+                  ? BookCommentList.user_image_url
+                  : defaultIcon
+              }
               alt="ユーザーのアイコン"
               className="comment_userIcon"
             />
@@ -136,10 +158,16 @@ export const ReviewCommentInput = (props) => {
             )}
             {BookCommentList.is_your_comment ? (
               <span className="comment_operation_container">
-                <span className="comment_operation" onClick={() => setIsEditComment(BookCommentList.id)}>
+                <span
+                  className="comment_operation"
+                  onClick={() => setIsEditComment(BookCommentList.id)}
+                >
                   編集
                 </span>
-                <span className="comment_operation" onClick={() => deleteComment(BookCommentList.id)}>
+                <span
+                  className="comment_operation"
+                  onClick={() => deleteComment(BookCommentList.id)}
+                >
                   削除
                 </span>
               </span>
@@ -154,7 +182,13 @@ export const ReviewCommentInput = (props) => {
                     <b className="comment-error-message">※コメントを入力してください。</b>
                   )}
                 </p>
-                <textarea className="edit_comment" {...editCommentRegister('edit_comment_input', { required: true })} placeholder="コメントを入力" />
+                <textarea
+                  className="edit_comment"
+                  {...editCommentRegister('edit_comment_input', {
+                    required: true
+                  })}
+                  placeholder="コメントを入力"
+                />
                 <br />
                 <button className="cancel_button" onClick={() => setIsEditComment(false)}>
                   キャンセル
@@ -169,9 +203,15 @@ export const ReviewCommentInput = (props) => {
                 <div className="likes">
                   <IconContext.Provider value={{ color: '#ff69b4', size: '20px' }}>
                     {commentLikes[BookCommentList.id] ? (
-                      <FaHeart className="likes-icon" onClick={() => updateLikes(-1, BookCommentList.id)} />
+                      <FaHeart
+                        className="likes-icon"
+                        onClick={() => updateLikes(-1, BookCommentList.id)}
+                      />
                     ) : (
-                      <BsHeart className="likes-icon" onClick={() => updateLikes(1, BookCommentList.id)} />
+                      <BsHeart
+                        className="likes-icon"
+                        onClick={() => updateLikes(1, BookCommentList.id)}
+                      />
                     )}
                   </IconContext.Provider>
                   <span className="likes-count">{BookCommentList.comment_likes}</span>
@@ -181,7 +221,11 @@ export const ReviewCommentInput = (props) => {
           </li>
         ))}
       </ul>
-      <CommentPagenation commentPage={commentPage} setCommentPage={setCommentPage} BookCommentLength={BookComment.length} />
+      <CommentPagenation
+        commentPage={commentPage}
+        setCommentPage={setCommentPage}
+        BookCommentLength={BookComment.length}
+      />
     </div>
   );
 };

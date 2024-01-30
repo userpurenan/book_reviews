@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useUrl } from '../../useUrl';
@@ -11,7 +10,6 @@ import './EditBookReview.scss';
 export const EditBookReview = () => {
   const { BookId } = useParams(); //クエリパラメータを取得するには [] ではなく {} で囲わなければならない（ややこしい...）
   const navigate = useNavigate();
-  const auth = useSelector((state) => state.auth.isSignIn);
   const [cookies] = useCookies();
   const [bookTitle, setBookTitle] = useState('');
   const [bookUrl, setBookUrl] = useState('');
@@ -40,8 +38,8 @@ export const EditBookReview = () => {
       .then(() => {
         navigate('/');
       })
-      .catch((err) => {
-        setErrorMessage(`更新に失敗しました ${err}`);
+      .catch((error) => {
+        setErrorMessage(`更新に失敗しました ${error}`);
       });
   };
 
@@ -51,22 +49,20 @@ export const EditBookReview = () => {
       .then(() => {
         navigate('/');
       })
-      .catch((err) => {
-        setErrorMessage(`削除に失敗しました ${err}`);
+      .catch((error) => {
+        setErrorMessage(`削除に失敗しました ${error}`);
       });
   };
 
   useEffect(() => {
-    if (auth === false) return navigate('/login');
-
     axios
       .get(getBookDetailUrl, { headers })
-      .then((res) => {
-        if (!res.data.is_mine) return navigate('/'); //自分の書いた書籍レビューじゃなかったらホーム画面に遷移する
-        setBookData(res.data);
+      .then((response) => {
+        if (!response.data.is_mine) return navigate('/'); //自分の書いた書籍レビューじゃなかったらホーム画面に遷移する
+        setBookData(response.data);
       })
-      .catch((err) => {
-        setErrorMessage(`ユーザー情報取得に失敗しました ${err}`);
+      .catch((error) => {
+        setErrorMessage(`ユーザー情報取得に失敗しました ${error}`);
       });
   }, []);
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Compressor from 'compressorjs';
@@ -24,7 +23,6 @@ export const EditProfile = () => {
   const getUserUrl = useUrl('userOperation');
   const iconUploadUrl = useUrl('iconUpload');
   const [cookies] = useCookies();
-  const auth = useSelector((state) => state.auth.isSignIn);
 
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
@@ -79,8 +77,6 @@ export const EditProfile = () => {
   };
 
   useEffect(() => {
-    if (auth === false) return navigate('/login'); //「navegate」はレンダリング時に呼び出したらだめらしい。（「useEfect」内で呼び出そうとのエラーが出た）
-
     axios
       .get(getUserUrl, {
         //アクセス時、ユーザーの情報を取得する
@@ -112,12 +108,23 @@ export const EditProfile = () => {
               {...register('name', { required: true })}
               onChange={handleNameChange}
               className="update__form--name"
-              defaultValue={user} /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
+              defaultValue={
+                user
+              } /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
             />
-            <p>{errors.name?.type === 'required' && <b className="error-message">※アカウント名を入力してください。</b>}</p>
+            <p>
+              {errors.name?.type === 'required' && (
+                <b className="error-message">※アカウント名を入力してください。</b>
+              )}
+            </p>
             <label>アイコン画像アップロード</label>
             <br />
-            <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />
+            <input
+              type="file"
+              onChange={handleIconUrlChange}
+              accept=".jpg, .png"
+              className="icon-uploads"
+            />
             <div>
               <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" className="icon_image" />
             </div>

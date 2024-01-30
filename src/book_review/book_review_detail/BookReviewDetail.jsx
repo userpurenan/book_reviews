@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useUrl } from '../../useUrl';
 import Loading from '../Loding';
@@ -11,7 +11,6 @@ import './BookReviewDetail.scss';
 export const BookReviewDetail = () => {
   const { BookId } = useParams(); //クエリパラメータを取得するには[]ではなく{}で囲わなければならない
   const [cookies] = useCookies();
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [bookData, setBookData] = useState('');
   const getBookDetailUrl = useUrl('bookDetailOperation', BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
@@ -23,8 +22,6 @@ export const BookReviewDetail = () => {
 
   useEffect(() => {
     setIsLoading(true);
-
-    if (!cookies.token) navigate('/login');
 
     axios
       .get(getBookDetailUrl, { headers })

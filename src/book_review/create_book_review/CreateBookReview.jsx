@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useUrl } from '../../useUrl';
@@ -10,7 +9,6 @@ import './CreateBookReview.scss';
 
 export const CreateBookReview = () => {
   const navigate = useNavigate();
-  const auth = useSelector((state) => state.auth.isSignIn);
   const [cookies] = useCookies();
   const [bookTitle, setBookTitle] = useState('');
   const [bookUrl, setBookUrl] = useState('');
@@ -37,14 +35,10 @@ export const CreateBookReview = () => {
       .then(() => {
         navigate('/');
       })
-      .catch((err) => {
-        setErrorMessage(`エラー発生 ${err}`);
+      .catch((error) => {
+        setErrorMessage(`エラー発生 ${error}`);
       });
   };
-
-  useEffect(() => {
-    if (auth === false) return navigate('/login');
-  }, []);
 
   return (
     <div className="page">
