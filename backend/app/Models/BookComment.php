@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +22,11 @@ class BookComment extends Model
         'comment_likes',
         'is_reviewer_comment'
     ];
+
+    public function scopeGetBookComment($query, int $book_id, int $number)
+    {
+        return $query->with('user')->where('book_id', $book_id)->offset($number)->limit(10);
+    }
 
     public function user()
     {

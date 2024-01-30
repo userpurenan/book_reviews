@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Models\User;
@@ -23,6 +25,11 @@ class Book extends Model
     ];
 
     protected $guarded = ['created_at', 'updated_at'];
+
+    public function scopeBookSearch($query, string $keyword, int $number)
+    {
+        return $query->select('id', 'title')->where("title", "LIKE", "%$keyword%")->offset($number)->limit(10);
+    }
 
     public function user()
     {

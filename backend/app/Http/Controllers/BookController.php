@@ -15,9 +15,9 @@ class BookController extends Controller
     {
         $number = $request->query('offset', $default = 0);
 
-        //書籍を10件取得している。
-        $books = Book::select('id', 'title')->where("title", "LIKE", "%{$request->query('title_keyword', $default = '')}%")
-                        ->offset($number)->limit(10)->orderBy('id', 'desc')->get();
+        // 書籍を10件取得している。
+        // BookSearchメソッドはモデルに定義しているスコープ。キーワードに合致する書籍を取得してくる。
+        $books = Book::BookSearch($request->query('title_keyword', $default = ''), $number)->orderBy('id', 'desc')->get();
 
         return response()->json($books, 200, []);
     }
