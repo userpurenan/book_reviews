@@ -44,7 +44,12 @@ export const Home = () => {
       });
   }, []);
 
-  const handlePagenation = (offset, e) => {
+  const handlePagenation = (offset, event) => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
     axios
       .get(getBooksUrl, {
         params: {
@@ -54,7 +59,7 @@ export const Home = () => {
       })
       .then((response) => {
         setBooks(response.data);
-        e.target.id === 'next' ? dispatch(nextPagenation()) : dispatch(beforePagenation());
+        event.target.id === 'next' ? dispatch(nextPagenation()) : dispatch(beforePagenation());
       })
       .catch((error) => {
         setErrorMessage(`次のページの取得に失敗しました${error}`);
@@ -68,7 +73,13 @@ export const Home = () => {
       <p className="error-message">{errorMessage}</p>
       <div className="extend_float_page">
         <form className="search">
-          <input className="search_input" type="text" name="title_keyword" defaultValue={titleKeyword} placeholder="書籍のタイトルを入力" />
+          <input
+            className="search_input"
+            type="text"
+            name="title_keyword"
+            defaultValue={titleKeyword}
+            placeholder="書籍のタイトルを入力"
+          />
           <button type="submit" className="search_button">
             <IconContext.Provider value={{ size: '15px' }}>
               <AiOutlineSearch />
@@ -96,8 +107,8 @@ const Pagination = ({ currentPage, Pagenation, Books }) => {
       {currentPage !== 0 ? (
         <button
           id="before"
-          onClick={(e) => {
-            Pagenation((currentPage - 1) * 10, e);
+          onClick={(event) => {
+            Pagenation(currentPage - 10, event);
           }}
           className="pagenation__button"
         >
@@ -108,12 +119,19 @@ const Pagination = ({ currentPage, Pagenation, Books }) => {
           前のページへ
         </button>
       )}
-      <input type="text" className="pagenation__currentPage" value={currentPage + 1} readOnly />
+
+      {/* 以下のvalueの計算式について補足。1を足さないと、currentpageが０の時に表示される現在のページが０になってしまい、数字が一つずれてしまう。 */}
+      <input
+        type="text"
+        className="pagenation__currentPage"
+        value={currentPage / 10 + 1}
+        readOnly
+      />
       {Books.length === 10 ? (
         <button
           id="next"
-          onClick={(e) => {
-            Pagenation((currentPage + 1) * 10, e);
+          onClick={(event) => {
+            Pagenation(currentPage + 10, event);
           }}
           className="pagenation__button"
         >

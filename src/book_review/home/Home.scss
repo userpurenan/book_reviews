@@ -4,9 +4,12 @@
   text-align: center;
 }
 
-.page {
+body {
   background-color: rgb(223, 235, 235);
-  height: 100vh;
+  margin: 0; /* ブラウザのデフォルトのマージンを取り除く */
+}
+
+.page {
   overflow: auto;
 }
 
