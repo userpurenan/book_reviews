@@ -14,6 +14,7 @@ export const CreateBookReview = () => {
   const [bookUrl, setBookUrl] = useState('');
   const [bookDetail, setBookDetail] = useState('');
   const [bookReview, setBookReview] = useState('');
+  const [isSpoiler, setIsSpoiler] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const createBookUrl = useUrl('bookOperation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const [bookData] = useState([]);
@@ -23,7 +24,8 @@ export const CreateBookReview = () => {
       title: bookTitle,
       url: bookUrl,
       detail: bookDetail,
-      review: bookReview
+      review: bookReview,
+      isSpoiler: isSpoiler
     };
 
     axios
@@ -47,10 +49,12 @@ export const CreateBookReview = () => {
       <h2 className="error-massage">{errorMessage}</h2>
       <BookReviewInput
         bookData={bookData}
+        isSpoiler={isSpoiler}
         setBookTitle={setBookTitle}
         setBookUrl={setBookUrl}
         setBookDetail={setBookDetail}
         setBookReview={setBookReview}
+        setIsSpoiler={setIsSpoiler}
         BookOperations={createBook}
       />
     </div>

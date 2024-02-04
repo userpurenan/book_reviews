@@ -29,7 +29,11 @@ export const BookReviewInput = (props) => {
           className="input_title"
           defaultValue={props.bookData.title}
         />
-        <p>{errors.title?.type === 'required' && <b className="error-message">※タイトルを入力してください。</b>}</p>
+        <p>
+          {errors.title?.type === 'required' && (
+            <b className="error-message">※タイトルを入力してください。</b>
+          )}
+        </p>
         <label className="url">URL</label>
         <br />
         <input
@@ -39,10 +43,18 @@ export const BookReviewInput = (props) => {
           className="input_url"
           defaultValue={props.bookData.url}
         />
-        <p>{errors.url?.type === 'required' && <b className="error-message">※書籍URLを入力してください。</b>}</p>
+        <p>
+          {errors.url?.type === 'required' && (
+            <b className="error-message">※書籍URLを入力してください。</b>
+          )}
+        </p>
         <label className="detail_info">書籍の詳細情報</label>
         <br />
-        <textarea onChange={handleDetailChange} className="input_detail" defaultValue={props.bookData.detail} />
+        <textarea
+          onChange={handleDetailChange}
+          className="input_detail"
+          defaultValue={props.bookData.detail}
+        />
         <br />
         <label className="review">書籍のレビュー</label>
         <br />
@@ -52,7 +64,20 @@ export const BookReviewInput = (props) => {
           className="input_review"
           defaultValue={props.bookData.review}
         />
-        <p>{errors.review?.type === 'required' && <b className="error-message">※書籍レビューを入力してください。</b>}</p>
+        <p>
+          {errors.review?.type === 'required' && (
+            <b className="error-message">※書籍レビューを入力してください。</b>
+          )}
+        </p>
+        <div className="checkbox">
+          <input
+            type="checkbox"
+            checked={props.isSpoiler}
+            onChange={() => props.setIsSpoiler(!props.isSpoiler)}
+          />
+          <label>ネタバレあり</label>
+        </div>
+        <br />
         {props.BookOperations.name === 'createBook' ? (
           <button type="submit" className="createBook__button">
             作成
@@ -73,10 +98,12 @@ export const BookReviewInput = (props) => {
 };
 
 BookReviewInput.propTypes = {
+  isSpoiler: PropTypes.bool,
   setBookTitle: PropTypes.func.isRequired,
   setBookUrl: PropTypes.func.isRequired,
   setBookDetail: PropTypes.func.isRequired,
   setBookReview: PropTypes.func.isRequired,
+  setIsSpoiler: PropTypes.func.isRequired,
   BookOperations: PropTypes.object.isRequired,
   deleteBook: PropTypes.func.isRequired,
   bookData: PropTypes.shape({

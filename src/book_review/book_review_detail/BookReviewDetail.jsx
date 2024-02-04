@@ -27,6 +27,11 @@ export const BookReviewDetail = () => {
       .get(getBookDetailUrl, { headers })
       .then((response) => {
         const bookData = response.data;
+        if (bookData.is_spoiler === 1) {
+          window.alert(
+            'このレビューはネタバレを含みます。望まない方は一つ前の画面へ戻ってください'
+          );
+        }
         setBookData(bookData); //書籍の情報を一個にまとめた
       })
       .catch((err) => {
