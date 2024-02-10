@@ -19,6 +19,16 @@ body {
 
 .extend_float_page {
   @extend .float_page;
+  @media screen and (min-width: 375px) and (max-width: 800px) {
+    margin-left: 50px;
+    margin-right: 40px;
+  }
+
+  @media screen and (min-width: 800px) and (max-width: 1200px) {
+    margin-left: 200px;
+    margin-right: 100px;
+  }
+
   border-radius: 3%;
   margin-left: 400px;
   margin-right: 200px;
@@ -26,6 +36,13 @@ body {
 
 .search {
   padding: 10px 0 15px 30%;
+  @media screen and (min-width: 375px) and (max-width: 1200px) {
+    padding: 10px 0 15px 20%;
+    .search_input {
+      height: 40px;
+      width: 60%;
+    }
+  }
 
   &_input {
     height: 40px;
@@ -43,6 +60,23 @@ body {
 
 .Book__list {
   list-style-type: none; /* リストスタイルを無効にする */
+  @media screen and (min-width: 375px) and (max-width: 1200px) {
+    margin-left: 10%;
+    .Book__list--link {
+      border: solid;
+      width: 80%;
+      height: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 30px;
+      border-radius: 5px;
+      display: block;
+      color: black;
+      text-decoration: none;
+    }
+  }
+
   margin-left: 20%;
   &--link {
     border: solid;
@@ -61,6 +95,53 @@ body {
 
 .pagenation {
   margin-left: 35%;
+  @media screen and (min-width: 375px) and (max-width: 450px) {
+    margin-left: 10%;
+
+    .pagenation__button {
+      height: 50px;
+      width: 100px;
+    }
+
+    .pagenation__currentPage {
+      height: 45px;
+      width: 30px;
+      pointer-events: none;
+      text-align: right;
+    }
+  }
+
+  @media screen and (min-width: 450px) and (max-width: 800px) {
+    margin-left: 25%;
+
+    .pagenation__button {
+      height: 50px;
+      width: 100px;
+    }
+
+    .pagenation__currentPage {
+      height: 45px;
+      width: 30px;
+      pointer-events: none;
+      text-align: right;
+    }
+  }
+
+  @media screen and (min-width: 800px) and (max-width: 1200px) {
+    margin-left: 30%;
+
+    .pagenation__button {
+      height: 50px;
+      width: 100px;
+    }
+
+    .pagenation__currentPage {
+      height: 45px;
+      width: 30px;
+      pointer-events: none;
+      text-align: right;
+    }
+  }
 
   &__button {
     height: 50px;

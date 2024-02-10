@@ -111,31 +111,70 @@ export const SignUp = () => {
         <form onSubmit={handleSubmit(onSignUp)} className="signup-form">
           <label htmlFor="email">メールアドレス</label>
           <br />
-          <input type="email" {...register('email', { required: true })} onChange={handleEmailChange} className="email-input" />
+          <input
+            type="email"
+            {...register('email', { required: true })}
+            onChange={handleEmailChange}
+            className="email-input"
+          />
           {/* 何か所かにある以下のような記述はバリデーションエラーが発生したときに表示されるエラー文 */}
-          <p>{errors.email?.type === 'required' && <b className="error-message">※メールアドレスを入力してください</b>}</p>
+          <p>
+            {errors.email?.type === 'required' && (
+              <b className="error-message">※メールアドレスを入力してください</b>
+            )}
+          </p>
           <br />
           <label>ユーザ名</label>
           <br />
-          <input type="text" {...register('name', { required: true })} onChange={handleNameChange} className="name-input" />
-          <p>{errors.name?.type === 'required' && <b className="error-message">※アカウント名を入力してください。</b>}</p>
+          <input
+            type="text"
+            {...register('name', { required: true })}
+            onChange={handleNameChange}
+            className="name-input"
+          />
+          <p>
+            {errors.name?.type === 'required' && (
+              <b className="error-message">※アカウント名を入力してください。</b>
+            )}
+          </p>
           <br />
           <label htmlFor="password">パスワード</label>
           <br />
           <input
             type="password"
-            {...register('password', { required: true, minLength: { value: 5 }, maxLength: { value: 15 } })}
+            {...register('password', {
+              required: true,
+              minLength: { value: 5 },
+              maxLength: { value: 15 }
+            })}
             onChange={handlePasswordChange}
             className="password-input"
           />
-          <p>{errors.password?.type === 'required' && <b className="error-message">※パスワードを入力してください。</b>}</p>
-          <p>{errors.password?.type === 'minLength' && <b className="error-message">※パスワードは５文字以上で設定してください</b>}</p>
-          <p>{errors.password?.type === 'maxLength' && <b className="error-message">※パスワードは１５文字以下で設定してください</b>}</p>
+          <p>
+            {errors.password?.type === 'required' && (
+              <b className="error-message">※パスワードを入力してください。</b>
+            )}
+          </p>
+          <p>
+            {errors.password?.type === 'minLength' && (
+              <b className="error-message">※パスワードは５文字以上で設定してください</b>
+            )}
+          </p>
+          <p>
+            {errors.password?.type === 'maxLength' && (
+              <b className="error-message">※パスワードは１５文字以下で設定してください</b>
+            )}
+          </p>
           <label>アイコン画像アップロード</label>
           <br />
-          <input type="file" onChange={handleIconUrlChange} accept=".jpg, .png" className="icon-uploads" />
+          <input
+            type="file"
+            onChange={handleIconUrlChange}
+            accept=".jpg, .png"
+            className="icon-uploads"
+          />
           <div>
-            <img src={iconImage} id="icon" alt="ユーザーのアイコン画像" className="icon_image" />
+            <img src={iconImage} alt="ユーザーのアイコン画像" className="icon_image" />
           </div>
           <br />
           <button type="submit" className="signup-button">

@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Compressor from 'compressorjs';
+import defaultIcon from '../../defaultIcon.png';
 import { useUrl } from '../../useUrl';
 import { Header } from '../header/Header';
 import './EditProfile.scss';
@@ -16,8 +17,8 @@ export const EditProfile = () => {
     formState: { errors }
   } = useForm(); // バリデーションのフォームを定義。
   const [name, setName] = useState('');
-  const [ImgFile, setImgFile] = useState(); //「ImgFile」にはリサイズした画像が入る
-  const [imgUrl, setImgUrl] = useState(); //画面に表示させる画像のurlをセット
+  const [imageFile, setImageFile] = useState(); //「ImgFile」にはリサイズした画像が入る
+  const [IconUrl, setIconUrl] = useState(defaultIcon); //画面に表示させる画像のurlをセット
   const [user, setUsers] = useState('');
   const editUserNameUrl = useUrl('userOperation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const getUserUrl = useUrl('userOperation');
@@ -31,7 +32,7 @@ export const EditProfile = () => {
   //関数は小文字始まり
   const updateName = () => {
     const formdata = new FormData();
-    formdata.append('icon', ImgFile, ImgFile.name);
+    formdata.append('icon', imageFile, imageFile.name);
 
     const headers = {
       authorization: `Bearer ${cookies.token}`
@@ -55,7 +56,7 @@ export const EditProfile = () => {
   const handleIconUrlChange = (e) => {
     const file = e.target.files[0];
     const url = URL.createObjectURL(file);
-    setImgUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
+    setIconUrl(url); // imgタグをusestateにセット「usestateにurlをセットする」
 
     // 1MB以上の場合
     if (file.size > 1024 * 1024) {
@@ -65,14 +66,14 @@ export const EditProfile = () => {
         maxHeight: 10,
         maxWidth: 10,
         success(result) {
-          setImgFile(result);
+          setImageFile(result);
         },
         error(err) {
           setErrorMessage(`画像の圧縮エラー:${err.message}`);
         }
       });
     } else {
-      setImgFile(file);
+      setImageFile(file);
     }
   };
 
@@ -86,7 +87,9 @@ export const EditProfile = () => {
       })
       .then((response) => {
         setUsers(response.data.name);
-        setImgUrl(response.data.image_url);
+        if (response.data.image_url !== null) {
+          setIconUrl(response.data.image_url);
+        }
       })
       .catch((error) => {
         setErrorMessage(`ユーザー情報の取得に失敗しました。${error}`);
@@ -98,42 +101,40 @@ export const EditProfile = () => {
       <Header />
       <h1 className="user_edit_h1">ユーザー情報編集</h1>
       <main className="update">
-        <div className="edit_user_float_page">
-          <p className="error-message">{errorMessage}</p>
-          <form onSubmit={handleSubmit(updateName)} className="update__form">
-            <label>ユーザー名</label>
-            <br />
-            <input
-              type="text"
-              {...register('name', { required: true })}
-              onChange={handleNameChange}
-              className="update__form--name"
-              defaultValue={
-                user
-              } /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
-            />
-            <p>
-              {errors.name?.type === 'required' && (
-                <b className="error-message">※アカウント名を入力してください。</b>
-              )}
-            </p>
-            <label>アイコン画像アップロード</label>
-            <br />
-            <input
-              type="file"
-              onChange={handleIconUrlChange}
-              accept=".jpg, .png"
-              className="icon-uploads"
-            />
-            <div>
-              <img src={imgUrl} id="icon" alt="ユーザーのアイコン画像" className="icon_image" />
-            </div>
-            <br />
-            <button type="submit" className="update__form--button">
-              更新
-            </button>
-          </form>
-        </div>
+        <p className="error-message">{errorMessage}</p>
+        <form onSubmit={handleSubmit(updateName)} className="update__form">
+          <label>ユーザー名</label>
+          <br />
+          <input
+            type="text"
+            {...register('name', { required: true })}
+            onChange={handleNameChange}
+            className="update__form--name"
+            defaultValue={
+              user
+            } /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
+          />
+          <p>
+            {errors.name?.type === 'required' && (
+              <b className="error-message">※アカウント名を入力してください。</b>
+            )}
+          </p>
+          <label>アイコン画像アップロード</label>
+          <br />
+          <input
+            type="file"
+            onChange={handleIconUrlChange}
+            accept=".jpg, .png"
+            className="icon-uploads"
+          />
+          <div>
+            <img src={IconUrl} id="icon" alt="ユーザーのアイコン画像" className="icon_image" />
+          </div>
+          <br />
+          <button type="submit" className="update__form--button">
+            更新
+          </button>
+        </form>
       </main>
     </div>
   );

@@ -2,6 +2,9 @@
 
 .Login {
   width: 500px;
+  @media screen and (max-width: 550px) {
+    width: 300px;
+  }
   margin: 0 auto;
 }
 
@@ -29,7 +32,7 @@
   height: 40px;
   border-radius: 5px;
   margin-left: 40%;
-  cursor : pointer;
+  cursor: pointer;
 }
 
 .error-message {

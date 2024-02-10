@@ -2,6 +2,10 @@
 
 .signup {
   width: 500px;
+  @media screen and (max-width: 550px) {
+    width: 300px;
+  }
+
   margin: 0 auto;
 
   &-form {
