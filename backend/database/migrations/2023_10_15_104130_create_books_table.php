@@ -19,6 +19,7 @@ return new class () extends Migration {
             $table->text('detail');
             $table->text('review');
             $table->string('reviewer');
+            $table->boolean('spoiler')->default(false);
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

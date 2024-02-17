@@ -68,7 +68,8 @@ class BookCommentController extends Controller
     {
         $number = $request->query('comment_offset', $default = 0);
 
-        $books_review_comment = BookComment::where('book_id', $book_id)->offset($number)->limit(10)->orderBy('id', 'desc')->get();
+        // GetBookCommentはモデルに定義されているスコープ。レビューに対するコメントを10件ずつ取得してくる。
+        $books_review_comment = BookComment::GetBookComment($book_id, $number)->orderBy('id', 'desc')->get();
 
         $review_comment_array = [];
         foreach ($books_review_comment as $review_comment) {
