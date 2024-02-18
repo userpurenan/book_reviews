@@ -27,7 +27,7 @@ class AuthUserController extends Controller
         return response()->json([
                     'name' => $user->name,
                     'image_url' => $user->image_url,
-                ], 200, [], JSON_UNESCAPED_UNICODE);
+                ], 200);
     }
 
     public function editUser(Request $request)
