@@ -1,5 +1,5 @@
 <h2>アプリのデモはこちら</h2>
-https://book-review-frontend-ny77k43wy-nan0475-vercelusers-projects.vercel.app
+https://book-review-frontend-c9r4t2phn-nan0475-vercelusers-projects.vercel.app/<br />
 
 <h2>どういったアプリか？</h2>
 　<li>自分の読んだ書籍がどういった書籍なのか？と、その書籍のレビューをほかのユーザーと共有できるアプリです。</li>
