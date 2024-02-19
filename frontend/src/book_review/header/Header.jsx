@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { slide as Menu } from 'react-burger-menu'
 import axios from 'axios';
 import { signOut } from '../../authSlice';
 import defaultIcon from '../../defaultIcon.png';
@@ -48,7 +49,11 @@ export const Header = () => {
         <h1>書籍レビュー</h1>
       </Link>
       {auth ? (
-        <div className="userContainer">
+        <Menu right>
+          <p className="userName">
+            <img src={icon} alt="ユーザーのアイコン画像" className="userIcon" />
+            {userName}
+          </p>
           <Link to={'/new'} className="Navigate-button">
             書籍レビュー投稿画面へ
           </Link>
@@ -59,11 +64,7 @@ export const Header = () => {
             ログアウト
           </Link>
           <br />
-          <p className="userName">
-            ユーザー名：{userName}
-            <img src={icon} alt="ユーザーのアイコン画像" className="userIcon" />
-          </p>
-        </div>
+        </Menu>
       ) : (
         <Link to={'/login'} className="Navigate-Login">
           ログイン

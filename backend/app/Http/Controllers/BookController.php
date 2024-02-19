@@ -90,7 +90,5 @@ class BookController extends Controller
     public function deleteBook(int $id)
     {
         Book::findOrFail($id)->delete();
-
-        return 'delete success!!';
     }
 }

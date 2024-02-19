@@ -37,6 +37,6 @@ class UserController extends Controller
 
         $token = $user->createToken('Token')->accessToken;
 
-        return response()->json([], 200, ['authorization' => $token, 'Access-Control-Expose-Headers' => 'authorization']);
+        return response()->json([ 'name' => $user->name ], 200, ['authorization' => $token, 'Access-Control-Expose-Headers' => 'authorization']);
     }
 }
