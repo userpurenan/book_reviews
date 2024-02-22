@@ -49,7 +49,10 @@ export const Login = () => {
       <main className="Login">
         <h2>ログイン</h2>
         <p className="error-message">{errorMessage}</p>
-        <form onSubmit={handleSubmit(onLogIn)} className="Login-form">
+        <form
+          onSubmit={handleSubmit(onLogIn)}
+          className="Login-form"
+        >
           <label className="email-label">メールアドレス</label>
           <br />
           <input
@@ -60,7 +63,11 @@ export const Login = () => {
             onChange={handleEmailChange}
           />
           {/* 何か所かにある以下のような記述はバリデーションエラーが発生したときに表示されるエラー文 */}
-          <p>{errors.email?.type === 'required' && <b className="error-message">※メールアドレスを入力してください</b>}</p>
+          <p>
+            {errors.email?.type === 'required' && (
+              <b className="error-message">※メールアドレスを入力してください</b>
+            )}
+          </p>
           <br />
           <label className="password-label">パスワード</label>
           <br />
@@ -71,8 +78,16 @@ export const Login = () => {
             className="password-input"
             onChange={handlePasswordChange}
           />
-          <p>{errors.password?.type === 'required' && <b className="error-message">※パスワードを入力してください。</b>}</p>
-          <p>{errors.password?.type === 'minLength' && <b className="error-message">※パスワードは５文字以上です</b>}</p>
+          <p>
+            {errors.password?.type === 'required' && (
+              <b className="error-message">※パスワードを入力してください。</b>
+            )}
+          </p>
+          <p>
+            {errors.password?.type === 'minLength' && (
+              <b className="error-message">※パスワードは５文字以上です</b>
+            )}
+          </p>
           <br />
           <button type="submit" name="login" className="Login-button">
             ログイン

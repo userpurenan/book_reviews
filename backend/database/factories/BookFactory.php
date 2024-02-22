@@ -27,7 +27,8 @@ class BookFactory extends Factory
             'url' => fake()->url(),
             'detail' => fake()->realText(15),
             'review' => fake()->realText(35),
-            'reviewer' => User::findOrFail($randomUserId)->name
+            'reviewer' => User::findOrFail($randomUserId)->name,
+            'spoiler' => rand(0, 1)
         ];
     }
 }

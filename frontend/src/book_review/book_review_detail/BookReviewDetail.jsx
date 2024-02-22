@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useUrl } from '../../useUrl';
-import Loading from '../Loding';
+import Loading from '../Loading';
 import { Header } from '../header/Header';
 import { ReviewCommentInput } from '../review_comment/ReviewCommentInput';
 import './BookReviewDetail.scss';
@@ -52,13 +52,15 @@ export const BookReviewDetail = () => {
         <Loading />
       ) : (
         <div className="bookDetail">
-          <p className="bookDetail__title">タイトル: {bookData.title}</p>
-          <p className="bookDetail__url">
-            URL: <a href={bookData.url}>{bookData.url}</a>
-          </p>
-          <p className="bookDetail__reviewer">レビュワー: {bookData.reviewer}</p>
-          <p className="bookDetail__detail">書籍の詳細情報: {bookData.detail}</p>
-          <p className="bookDetail__review">レビュー: {bookData.review}</p>
+          <p className="bookDetail__title">{bookData.title}</p>
+          <h2 className="bookDetail__url">URL:</h2>
+          <div className="bookDetail__url"><a href={bookData.url}>{bookData.url}</a></div>
+          <h2 className="bookDetail__reviewer">レビュワー:</h2>
+          <div className="bookDetail__reviewer">{bookData.reviewer}</div>
+          <h2 className="bookDetail__detail">書籍の詳細情報:</h2>
+          <div className="bookDetail__detail">{bookData.detail}</div>
+          <h2 className="bookDetail__review">レビュー:</h2>
+          <div className="bookDetail__review">{bookData.review}</div><br />
           {bookData.is_mine ? (
             <Link to={`/edit/${BookId}`} className="bookDetail__link-edit-book">
               書籍編集画面へ

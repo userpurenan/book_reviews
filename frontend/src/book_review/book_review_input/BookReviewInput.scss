@@ -47,5 +47,10 @@
 }
 
 .checkbox {
-  margin-left: 15%;
+  margin-left: 20%;
+}
+
+.input-error-message {
+  @extend .error-message;
+  margin-left: 20%;
 }

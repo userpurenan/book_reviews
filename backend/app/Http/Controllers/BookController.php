@@ -69,11 +69,11 @@ class BookController extends Controller
     {
         $book_datail = Book::findOrFail($id);
         $book_datail->update([
-			  'title' => $request->input('title'),
-		          'url' => $request->input('url'),
-			  'detail' => $request->input('detail'),
-			  'review' => $request->input('review'),
-			  'spoiler' => $request->input('isSpoiler') ? 1 : 0
+                          'title' => $request->input('title')  ?? $book_datail->title,
+                          'url' => $request->input('url') ?? $book_datail->url,
+                          'detail' => $request->input('detail') ?? $book_datail->detail,
+                          'review' => $request->input('review') ?? $book_datail->review,
+                          'spoiler' => $request->input('isSpoiler') ? 1 : 0
                     ]);
 
         return response()->json([
@@ -90,7 +90,5 @@ class BookController extends Controller
     public function deleteBook(int $id)
     {
         Book::findOrFail($id)->delete();
-
-        return 'delete success!!';
     }
 }

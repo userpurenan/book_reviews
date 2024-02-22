@@ -17,7 +17,7 @@
 .Navigate-button {
   color: #ffffff;
   text-decoration: none;
-  margin-left: 30px;
+  margin-right: 40px;
   &:hover {
     opacity: 0.5;
     cursor: pointer;
@@ -38,7 +38,7 @@
 }
 
 .userName {
-  color: black;
+  color: white;
   font-weight: bold;
 }
 
@@ -48,6 +48,86 @@
   width: 40px;
   height: 40px;
   margin-left: 10px;
+  margin-right: 10px;
   object-fit: cover;
   border-radius: 50%;
+}
+
+/* バーガーメニューのボタン */
+.bm-burger-button { 
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  right: 20px;/* 右にしたい場合はright,左にしたい場合はleft */
+  top: 30px;
+}
+
+/* バーガーメニューのボタンの線 */
+.bm-burger-bars {
+  background: #373a47;
+
+  /* バーガーメニューのボタンの線（ホバー時）*/
+  &-hover{
+    opacity: 0.3;
+  }
+}
+
+/* 閉じるボタンのX */
+.bm-cross {
+  background: #bdc3c7;
+
+  /* 閉じるボタン(Xの周辺） */
+  &-button {
+    margin-right: 15px;
+    height: 24px;
+    width: 24px;
+  }
+}
+
+/* バーガーメニューのwrapper */
+.bm-menu {
+  background: #373a47;
+  font-size: 1.15em;
+
+  /*バーガーメニューのwrapper*/
+  &-wrap {
+    position: fixed;
+    height: 100%;
+  }
+}
+
+/* bubble or elasticの際に必要 */
+.bm-morph-shape {
+  fill: #373a47;
+}
+
+/* アイテム */
+.bm-item {
+  display: inline-block;
+  height: 50px;
+
+  /* アイテムリストのwrapper */
+  &-list {
+    color: #b8b7ad;
+  }
+  
+}
+
+.bm-item-list a{ /* メニューの個々のアイテムの設定 */
+  display:inline-block;
+  border-bottom:1px solid #747272;
+  line-height: 50px;
+  padding-left: 15px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.bm-item-list a:hover{ /* 個々のアイテムのホバー */
+  background-color: #8a9195;
+  color: aliceblue;
+}
+
+/* Styling of overlay */
+.bm-overlay {
+  background: rgba(0, 0, 0, 0.3);
 }

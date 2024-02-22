@@ -95,7 +95,5 @@ class BookCommentController extends Controller
     public function deleteComment(int $book_id)
     {
         BookComment::findOrFail($book_id)->delete();
-
-        return 'delete success!!';
     }
 }
