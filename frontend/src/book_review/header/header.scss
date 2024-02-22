@@ -54,11 +54,11 @@
 }
 
 /* バーガーメニューのボタン */
-.bm-burger-button {
+.bm-burger-button { 
   position: absolute;
   width: 28px;
   height: 28px;
-  right: 20px; /* 右にしたい場合はright,左にしたい場合はleft */
+  right: 20px;/* 右にしたい場合はright,左にしたい場合はleft */
   top: 30px;
 }
 
@@ -67,7 +67,7 @@
   background: #373a47;
 
   /* バーガーメニューのボタンの線（ホバー時）*/
-  &-hover {
+  &-hover{
     opacity: 0.3;
   }
 }
@@ -110,20 +110,19 @@
   &-list {
     color: #b8b7ad;
   }
+  
 }
 
-.bm-item-list a {
-  /* メニューの個々のアイテムの設定 */
-  display: inline-block;
-  border-bottom: 1px solid #747272;
+.bm-item-list a{ /* メニューの個々のアイテムの設定 */
+  display:inline-block;
+  border-bottom:1px solid #747272;
   line-height: 50px;
   padding-left: 15px;
   text-decoration: none;
   color: #fff;
 }
 
-.bm-item-list a:hover {
-  /* 個々のアイテムのホバー */
+.bm-item-list a:hover{ /* 個々のアイテムのホバー */
   background-color: #8a9195;
   color: aliceblue;
 }

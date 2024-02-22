@@ -8,6 +8,12 @@
   font-size: 20px;
 }
 
+.user_comment {
+  white-space: normal;
+  width: 90%;
+  word-wrap: break-word;
+}
+
 .comment_button {
   width: 80px;
   height: 40px;
@@ -50,9 +56,9 @@
 .comment_list {
   list-style-type: none;
   border: solid;
-  width: 80%;
+  width: 0%;
   height: 100%;
-  margin-left: 40px;
+  margin-left: 30px;
   font-size: 20px;
   border-radius: 5px;
   display: block;
@@ -86,7 +92,7 @@
 .edit_comment {
   @extend .input_comment;
   width: 90%;
-  margin-left: 20px;
+  margin-left: 10px;
 }
 
 .edit_button {
@@ -98,7 +104,7 @@
 .cancel_button {
   width: 90px;
   height: 30px;
-  margin-left: 73%;
+  margin-left: 10px;
 }
 
 .comment-error-message {
