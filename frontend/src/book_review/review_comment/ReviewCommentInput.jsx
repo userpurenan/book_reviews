@@ -30,21 +30,11 @@ export const ReviewCommentInput = (props) => {
   const getCommentUrl = useUrl('commentOperation', props.BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const createCommentUrl = useUrl('commentOperation', props.BookId);
   const UpdateLikesUrl = useUrl('updateLikes');
-  const [commentLikes, setCommentLikes] = useState(() => {
-    // localStorageからデータを取得し、存在しない場合はデフォルトで空のオブジェクトを返す
-    const storedData = localStorage.getItem('commentLikes');
-    return storedData ? JSON.parse(storedData) : {};
-  });
   const [cookies] = useCookies();
 
   const headers = {
     authorization: `Bearer ${cookies.token}`
   };
-
-  useEffect(() => {
-    // コメントのいいね状態が変更されたらlocalStorageに保存する
-    localStorage.setItem('commentLikes', JSON.stringify(commentLikes));
-  }, [commentLikes]);
 
   useEffect(() => {
     axios
@@ -102,14 +92,6 @@ export const ReviewCommentInput = (props) => {
   };
 
   const updateLikes = (likesCountChange, commentId) => {
-    // 以前の状態を基に新しいオブジェクトを作成
-    const newCommentLikes = { ...commentLikes };
-
-    // 特定のコメントのいいね状態を切り替える
-    newCommentLikes[commentId] = !newCommentLikes[commentId];
-
-    // 状態を更新
-    setCommentLikes(newCommentLikes);
     axios
       .post(UpdateLikesUrl, { likes: likesCountChange, comment_id: commentId }, { headers })
       .then(() => {
@@ -202,7 +184,7 @@ export const ReviewCommentInput = (props) => {
                 <p className="user_comment">{BookCommentList.comment}</p>
                 <div className="likes">
                   <IconContext.Provider value={{ color: '#ff69b4', size: '20px' }}>
-                    {commentLikes[BookCommentList.id] ? (
+                    {BookCommentList.is_likes_comment ? (
                       <FaHeart
                         className="likes-icon"
                         onClick={() => updateLikes(-1, BookCommentList.id)}
