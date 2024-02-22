@@ -12,15 +12,12 @@ return new class () extends Migration {
     {
         Schema::create('book_review_comments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('book_id');
+            $table->unsignedBigInteger('user_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('book_id')->constrained('books')->onDelete('cascade');
             $table->text('comment');
             $table->boolean('is_reviewer_comment')->default(false);
             $table->integer('comment_likes')->default(0);
             $table->timestamps();
-
-            $table->foreign('book_id')->references('id')->on('books')->index()->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

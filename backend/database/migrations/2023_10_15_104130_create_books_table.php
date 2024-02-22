@@ -12,16 +12,13 @@ return new class () extends Migration {
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-
+            $table->unsignedBigInteger('user_id')->constrained('users')->onDelete('cascade');
             $table->string('title');
             $table->text('url');
             $table->text('detail');
             $table->text('review');
             $table->string('reviewer');
             $table->boolean('spoiler')->default(false);
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
