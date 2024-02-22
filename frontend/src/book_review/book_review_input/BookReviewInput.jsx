@@ -49,10 +49,7 @@ export const BookReviewInput = (props) => {
   return (
     <div className="float_component">
       <h2 className="error-massage">{errorMessage}</h2>
-      {bookData.title === undefined ||
-      bookData.url === undefined ||
-      bookData.detail === undefined ||
-      bookData.review === undefined ? (
+      {Object.keys(bookData).length === 0  && props.isCreateBook === false ? (
         <Loading />
       ) : (
         <form onSubmit={handleSubmit(props.BookOperations)} className="book_operation">
