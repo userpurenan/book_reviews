@@ -34,6 +34,8 @@ class AuthUserController extends Controller
     {
         $user = User::findOrFail(Auth::id());
 
-        $user->update(['name' => $request->input('name')]);
+        $user->update(['name' => $request->input('name') ?? $user->name ]);
+
+        return response()->json([ 'name' => $user->name ], 200);
     }
 }
