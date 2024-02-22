@@ -69,11 +69,11 @@ class BookController extends Controller
     {
         $book_datail = Book::findOrFail($id);
         $book_datail->update([
-                          'title' => $request->input('title'),
-                          'url' => $request->input('url'),
-                          'detail' => $request->input('detail'),
-                          'review' => $request->input('review'),
-                          'spoiler' => $request->input('isSpoiler') ? 1 : 0
+			  'title' => $request->input('title'),
+		          'url' => $request->input('url'),
+			  'detail' => $request->input('detail'),
+			  'review' => $request->input('review'),
+			  'spoiler' => $request->input('isSpoiler') ? 1 : 0
                     ]);
 
         return response()->json([
