@@ -17,7 +17,6 @@ export const CreateBookReview = () => {
   const [isSpoiler, setIsSpoiler] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const createBookUrl = useUrl('bookOperation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
-  const [bookData] = useState([]);
 
   const createBook = () => {
     const data = {
@@ -48,7 +47,6 @@ export const CreateBookReview = () => {
       <h1 className="create_book_h1">書籍レビュー新規投稿</h1>
       <h2 className="error-massage">{errorMessage}</h2>
       <BookReviewInput
-        bookData={bookData}
         isSpoiler={isSpoiler}
         setBookTitle={setBookTitle}
         setBookUrl={setBookUrl}
@@ -56,6 +54,7 @@ export const CreateBookReview = () => {
         setBookReview={setBookReview}
         setIsSpoiler={setIsSpoiler}
         BookOperations={createBook}
+        isCreateBook={true}
       />
     </div>
   );
