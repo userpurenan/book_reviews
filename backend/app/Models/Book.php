@@ -22,6 +22,7 @@ class Book extends Model
         'detail',
         'review',
         'reviewer',
+        'likes',
         'spoiler',
     ];
 
@@ -29,7 +30,7 @@ class Book extends Model
 
     public function scopeBookSearch($query, string $keyword, int $number)
     {
-        return $query->select('id', 'title')->where("title", "LIKE", "%$keyword%")->offset($number)->limit(10);
+        return $query->select('id', 'title', 'likes')->where("title", "LIKE", "%$keyword%");
     }
 
     public function user()

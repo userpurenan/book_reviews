@@ -37,6 +37,7 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('/user', [AuthUserController::class, 'editUser']);
     Route::get('/user', [AuthUserController::class, 'getUser']);
     Route::post('/books', [BookController::class, 'createBook']);
+    Route::post('/books/{id}/updateLikes', [BookController::class, 'updateReviewLikes']);
     Route::get('/books/{id}', [BookController::class, 'getBookDatail']);
     Route::put('/books/{id}', [BookController::class, 'updateBook']);
     Route::delete('/books/{id}', [BookController::class, 'deleteBook']);
