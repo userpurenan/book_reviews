@@ -6,7 +6,7 @@
 .title,
 .url {
   width: 70%;
-  margin-left: 20%;
+  margin-left: 15%;
   font-size: large;
   height: 30px;
   margin-bottom: 25px;
@@ -41,16 +41,16 @@
 .review {
   width: 70%;
   height: 100px;
-  margin-left: 20%;
+  margin-left: 15%;
   font-size: large;
   margin-bottom: 25px;
 }
 
 .checkbox {
-  margin-left: 20%;
+  margin-left: 15%;
 }
 
 .input-error-message {
   @extend .error-message;
-  margin-left: 20%;
+  margin-left: 15%;
 }

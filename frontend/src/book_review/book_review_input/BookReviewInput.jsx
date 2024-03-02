@@ -42,7 +42,6 @@ export const BookReviewInput = (props) => {
   }, []);
 
   const handleTitleChange = (e) => props.setBookTitle(e.target.value);
-  const handleUrlChange = (e) => props.setBookUrl(e.target.value);
   const handleDetailChange = (e) => props.setBookDetail(e.target.value);
   const handleReviewChange = (e) => props.setBookReview(e.target.value);
 
@@ -69,22 +68,6 @@ export const BookReviewInput = (props) => {
               <b className="input-error-message">※タイトルを入力してください。</b>
             )}
           </p>
-          <label className="url">
-            URL
-            <br />
-            <input
-              type="text"
-              {...register('url', { required: true })}
-              onChange={handleUrlChange}
-              defaultValue={bookData.url}
-              className="input_url"
-            />
-          </label>
-          <p>
-            {errors.url?.type === 'required' && (
-              <b className="input-error-message">※書籍URLを入力してください。</b>
-            )}
-          </p>
           <label className="detail_info">
             書籍の詳細情報
             <br />
@@ -100,7 +83,6 @@ export const BookReviewInput = (props) => {
               <b className="input-error-message">※書籍の詳細情報を入力してください。</b>
             )}
           </p>
-          <br />
           <label className="review">
             書籍のレビュー
             <br />
@@ -151,7 +133,6 @@ BookReviewInput.propTypes = {
   isSpoiler: PropTypes.bool,
   isCreateBook: PropTypes.bool,
   setBookTitle: PropTypes.func.isRequired,
-  setBookUrl: PropTypes.func.isRequired,
   setBookDetail: PropTypes.func.isRequired,
   setBookReview: PropTypes.func.isRequired,
   setIsSpoiler: PropTypes.func.isRequired,
@@ -159,7 +140,6 @@ BookReviewInput.propTypes = {
   deleteBook: PropTypes.func.isRequired,
   bookData: PropTypes.shape({
     title: PropTypes.string,
-    url: PropTypes.string,
     detail: PropTypes.string,
     review: PropTypes.string
   })
