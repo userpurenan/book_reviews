@@ -10,13 +10,10 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('book_review_comments', function (Blueprint $table) {
+        Schema::create('user_likes_review', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->constrained('users')->onDelete('cascade');
             $table->unsignedBigInteger('book_id')->constrained('books')->onDelete('cascade');
-            $table->text('comment');
-            $table->boolean('is_reviewer_comment')->default(false);
-            $table->integer('likes')->default(0);
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('book_review_comments');
+        Schema::dropIfExists('user_likes_review');
     }
 };
