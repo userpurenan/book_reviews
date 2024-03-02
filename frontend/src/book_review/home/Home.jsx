@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import { IconContext } from 'react-icons';
+import { FaHeart } from 'react-icons/fa';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { beforePagenation, nextPagenation } from '../../pagenationSlice';
+import Loading from '../Loading';
 import { useUrl } from '../../useUrl';
 import { Header } from '../header/Header';
 import './Home.scss';
@@ -71,32 +73,43 @@ export const Home = () => {
       <Header />
       <h1 className="book_home_h1">書籍レビュー一覧</h1>
       <p className="error-message">{errorMessage}</p>
-      <div className="extend_float_page">
-        <form className="search">
-          <input
-            className="search_input"
-            type="text"
-            name="title_keyword"
-            defaultValue={titleKeyword}
-            placeholder="書籍のタイトルを入力"
-          />
-          <button type="submit" className="search_button">
-            <IconContext.Provider value={{ size: '15px' }}>
-              <AiOutlineSearch />
-            </IconContext.Provider>
-          </button>
-        </form>
-        <ul>
-          {Books.map((BookList, key) => (
-            <li key={key} className="Book__list" value={BookList.id}>
-              <Link to={`/detail/${BookList.id}`} className="Book__list--link">
-                {BookList.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <Pagination currentPage={currentPage} Pagenation={handlePagenation} Books={Books} />
-      </div>
+      {Object.keys(Books).length < 10 ? (
+        <Loading />
+      ) : (
+        <div className="extend_float_page">
+          <form className="search">
+            <input
+              className="search_input"
+              type="text"
+              name="title_keyword"
+              defaultValue={titleKeyword}
+              placeholder="書籍のタイトルを入力"
+            />
+            <button type="submit" className="search_button">
+              <IconContext.Provider value={{ size: '15px' }}>
+                <AiOutlineSearch />
+              </IconContext.Provider>
+            </button>
+          </form>
+          <ul>
+            {Books.map((BookList, key) => (
+              <li key={key} className="Book__list" value={BookList.id}>
+                <Link to={`/detail/${BookList.id}`} className="Book__list--link">
+                  {BookList.title}
+                  <br />
+                  <div className='likes_home'>
+                    <IconContext.Provider value={{ color: '#ff69b4', size: '25px' }}>
+                      <FaHeart />
+                      <span className='review_likes_count_home'>{BookList.likes}</span>
+                    </IconContext.Provider>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Pagination currentPage={currentPage} Pagenation={handlePagenation} Books={Books} />
+        </div>
+      )}
     </div>
   );
 };

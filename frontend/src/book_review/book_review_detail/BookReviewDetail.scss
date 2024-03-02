@@ -11,12 +11,23 @@
 
 .bookDetail {
   @extend .float_page;
-  @media screen and (min-width: 375px) and (max-width: 1000px) {
-    width: 90%;
+  @media screen and (min-width: 375px) and (max-width: 576px) {
     margin-left: 5%;
+    width: 90%;
   }
+
+  @media screen and (min-width: 576px) and (max-width: 800px) {
+    margin-left: 80px;
+    width: 80%;
+  }
+
+  @media screen and (min-width: 800px) and (max-width: 1200px) {
+    margin-left: 25%;
+    width: 60%;
+  }
+
   width: 45%;
-  margin-left: 25%;
+  margin-left: 30%;
   margin-top: 40px;
   border-radius: 3%;
 
@@ -54,4 +65,22 @@
   font-size: 20px;
   height: 100%;
   background-color: aliceblue;
+}
+
+.review_likes {
+  position: relative;
+  top: 7px;
+  padding-left: 60px;
+  padding-bottom: 10px;
+
+  &_count {
+    position: relative;
+    bottom: 3px;
+    left: 3px;
+    font-size: 30px;
+  }
+}
+
+.likes_navigate {
+  padding-left: 60px;
 }
