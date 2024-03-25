@@ -5,19 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AuthUserController extends Controller
 {
     public function imageUploads(Request $request)
     {
-        $file_path = $request->file('icon')->store('public/img');
-        $image_path = str_replace('public', 'storage', $file_path);
-        $image_url = asset($image_path);
+        $image_url = Storage::disk('s3')->put('/', $request->file('icon'));
         $user = User::findOrFail(Auth::id());
 
-        $user->update(['image_url' => $image_url]);
+        $user->update(['image_url' => "https://laravel-app-icon.s3.ap-northeast-1.amazonaws.com/$image_url"]);
 
-        return response()->json(['image_url' => $image_url]);
+        return response()->json(['image_url' => "https://laravel-app-icon.s3.ap-northeast-1.amazonaws.com/$image_url"]);
     }
 
     public function getUser()
