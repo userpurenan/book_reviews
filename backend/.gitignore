@@ -19,3 +19,5 @@ yarn-error.log
 /.vscode
 .php-cs-fixer.cache
 .php-cs-fixer.php
+laravelKey.pem
+/config/cors.php

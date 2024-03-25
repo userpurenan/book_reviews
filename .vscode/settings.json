@@ -2,5 +2,5 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "php-cs-fixer.onsave": true,
-  "php-cs-fixer.config": ".php-cs-fixer.dist.php;"
+  "php-cs-fixer.config": "./backend/php-cs-fixer.dist.php;"
 }
