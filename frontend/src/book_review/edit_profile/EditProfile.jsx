@@ -31,12 +31,7 @@ export const EditProfile = () => {
   const handleNameChange = (e) => setName(e.target.value);
 
   //関数は小文字始まり
-  const updateName = () => {
-    const formdata = new FormData();
-    if (imageFile !== null) {
-      formdata.append('icon', imageFile, imageFile.name);
-    }
-
+  const updateName = async () => {
     const headers = {
       authorization: `Bearer ${cookies.token}`
     };
@@ -44,18 +39,29 @@ export const EditProfile = () => {
     axios
       .patch(editUserNameUrl, { name: name }, { headers })
       .then(async () => {
-        if (!formdata) {
-          await axios.post(iconUploadUrl, formdata, {
-            headers,
-            'Content-Type': 'multipart/form-data'
-          });
-        }
+        await iconImageUpdate();
         navigate('/');
       })
       .catch((err) => {
         setErrorMessage(`更新に失敗しました。${err}`);
       });
   };
+
+  const iconImageUpdate = () => {
+    if (imageFile) {
+      const formdata = new FormData();
+      formdata.append('icon', imageFile, imageFile.name); 
+      console.log(formdata);
+
+      axios
+        .post(iconUploadUrl, formdata, {
+          headers: {
+            authorization: `Bearer ${cookies.token}`,
+            'content-Type': 'multipart/form-data'
+          }
+      });
+    }
+  }
 
   //画像が1MBより大きかったらリサイズする関数
   const handleIconUrlChange = (e) => {
@@ -118,8 +124,9 @@ export const EditProfile = () => {
               {...register('name', { required: true })}
               onChange={handleNameChange}
               className="update__form--name"
-              /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
-              defaultValue={userName}
+              defaultValue={
+                userName
+              } /*「value={user.name}」だとユーザーの名前を修正できないので「defaultValue」を使う*/
             />
             <p>
               {errors.name?.type === 'required' && (

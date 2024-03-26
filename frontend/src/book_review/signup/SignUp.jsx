@@ -28,49 +28,48 @@ export const SignUp = () => {
   const [iconImage, setIconImage] = useState(defaultIcon); //画面に表示させる画像のurlをセット
   const signUpUrl = useUrl('signUp'); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const iconUploadUrl = useUrl('iconUpload');
-  const [cookie, setCookie] = useCookies();
+  const [, setCookie] = useCookies();
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handleNameChange = (e) => setName(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const onSignUp = async () => {
+  const onSignUp = () => {
     const data = {
       name: name,
       email: email,
       password: password
     };
 
-    const isImageFile = () => {
-      if (ImgFile) {
-        const formdata = new FormData();
-        formdata.append('icon', ImgFile, ImgFile.name); // フィールド名を「icon」に指定しないと400エラーが起きる。（swaggerの仕様ではフィールド名を「icon」にしていたため）
-
-        axios
-          .post(iconUploadUrl, formdata, {
-            headers: {
-              authorization: `Bearer ${cookie.token}`,
-              'content-Type': 'multipart/form-data'
-            }
-          })
-          .catch((error) => {
-            setErrorMessage(`画像アップロードに失敗しました。 ${error}`);
-          });
-      }
-    };
-
-    await axios
+    axios
       .post(signUpUrl, data)
-      .then((response) => {
+      .then(async (response) => {
         const token = response.headers.authorization;
         setCookie('token', token, { maxAge: 3600 });
+        await isImageFile(token); //クッキーにセットしたばかりのトークンは取得できないので別関数の引数にトークンをセットして使うようにした
+        dispatch(signIn());
+        navigate('/');
       })
       .catch((error) => {
         setErrorMessage(`サインアップに失敗しました。 ${error}`);
       });
+  };
 
-    await isImageFile();
-    dispatch(signIn());
-    navigate('/');
+  const isImageFile = (token) => {
+    if (ImgFile) {
+      const formdata = new FormData();
+      formdata.append('icon', ImgFile, ImgFile.name); // フィールド名を「icon」に指定しないと400エラーが起きる。（swaggerの仕様ではフィールド名を「icon」にしていたため）
+      console.log(formdata);
+      axios
+        .post(iconUploadUrl, formdata, {
+          headers: {
+            authorization: `Bearer ${token}`,
+            'content-Type': 'multipart/form-data'
+          }
+        })
+        .catch((error) => {
+          setErrorMessage(`画像アップロードに失敗しました。 ${error}`);
+        });
+    }
   };
 
   //画像が1MBより大きかったらリサイズする関数

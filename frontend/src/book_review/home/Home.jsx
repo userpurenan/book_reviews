@@ -73,7 +73,7 @@ export const Home = () => {
       <Header />
       <h1 className="book_home_h1">書籍レビュー一覧</h1>
       <p className="error-message">{errorMessage}</p>
-      {Object.keys(Books).length < 10 ? (
+      {Object.keys(Books).length === 0 ? (
         <Loading />
       ) : (
         <div className="extend_float_page">

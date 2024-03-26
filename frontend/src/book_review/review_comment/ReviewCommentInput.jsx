@@ -157,7 +157,9 @@ export const ReviewCommentInput = (props) => {
               <></>
             )}
             <br />
+            <hr />
             {isEditComment === BookCommentList.id ? (
+              /* コメントを編集する際の入力欄 */
               <form onSubmit={editCommentSubmit((data) => editComment(data, BookCommentList.id))}>
                 <p>
                   {editCommentFormState.errors.edit_comment_input?.type === 'required' && (
