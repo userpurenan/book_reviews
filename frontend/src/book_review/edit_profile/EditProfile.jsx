@@ -31,7 +31,7 @@ export const EditProfile = () => {
   const handleNameChange = (e) => setName(e.target.value);
 
   //関数は小文字始まり
-  const updateName = async () => {
+  const updateName = () => {
     const headers = {
       authorization: `Bearer ${cookies.token}`
     };
