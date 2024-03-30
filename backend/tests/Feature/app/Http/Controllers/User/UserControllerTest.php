@@ -14,19 +14,8 @@ class UserControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        $cmd = 'php artisan migrate:refresh --env=testing';
-        exec($cmd);
-    }
-
     public function test_アカウント作成することができる(): void
     {
-        $cmd = 'php artisan passport:install --env=testing';
-        exec($cmd);
-
         $email = fake()->safeEmail();
         $response = $this->post('/api/signup', [
                                 'name' => fake()->name(),
@@ -79,9 +68,6 @@ class UserControllerTest extends TestCase
 
     public function test_ログインすることができる()
     {
-        $cmd = 'php artisan passport:install --env=testing';
-        exec($cmd);
-
         $email = fake()->safeEmail();
         $password = Str::random(10);
 

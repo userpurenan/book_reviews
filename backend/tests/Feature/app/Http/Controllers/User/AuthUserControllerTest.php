@@ -19,6 +19,8 @@ class AuthUserControllerTest extends TestCase
 
     private $user;
 
+    private $token;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -31,13 +33,13 @@ class AuthUserControllerTest extends TestCase
                           'password' => Hash::make($this->password)
                       ]);
 
+        $this->token = $this->user->createToken('Token')->accessToken;
     }
 
     public function test_ユーザー情報が取得できる(): void
     {
-        $token = $this->createToken($this->email, $this->password);
         $response = $this->get('/api/user', [
-            'Authorization' => "Bearer " . $token,
+            'Authorization' => "Bearer $this->token",
         ]);
 
         $response->assertStatus(200);
@@ -48,32 +50,30 @@ class AuthUserControllerTest extends TestCase
 
     public function test_アイコン画像のURLを保存できる()
     {
-        $token = $this->createToken($this->email, $this->password);
         $image_file = UploadedFile::fake()->image('icon.jpg');
 
         $response = $this->post('/api/upload', [
             'icon' => $image_file,
         ], [
-            'Authorization' => "Bearer " . $token,
+            'Authorization' => "Bearer $this->token",
         ]);
 
         $response->assertStatus(200);
         $response->assertJson(['image_url' => $response['image_url'] ]);
         $this->assertDatabaseMissing('users', [
-            'image_url' => null
+            'image_url' => null,
         ]);
     }
 
     public function test_ユーザーの名前の変更ができる()
     {
         $update_name = fake()->name();
-        $token = $this->createToken($this->email, $this->password);
 
         //ユーザー名の変更
         $this->patch('/api/user', [
             'name' => $update_name
         ], [
-            'Authorization' => "Bearer " . $token,
+            'Authorization' => "Bearer $this->token",
         ]);
 
         $this->assertDatabaseMissing('users', [
@@ -88,20 +88,19 @@ class AuthUserControllerTest extends TestCase
     {
         $file1 = UploadedFile::fake()->image('icon.jpg');
         $file2 = UploadedFile::fake()->image('icon2.jpg');
-        $token = $this->createToken($this->email, $this->password);
 
         //画像のURL保存
         $create_user_icon_response = $this->post('/api/upload', [
             'icon' => $file1,
         ], [
-            'Authorization' => "Bearer " . $token,
+            'Authorization' => "Bearer $this->token",
         ]);
 
         //ユーザーの画像の変更
         $update_user_icon_response = $this->post('api/upload', [
             'icon' => $file2,
         ], [
-            'Authorization' => "Bearer " . $token,
+            'Authorization' => "Bearer $this->token",
         ]);
 
         $this->assertDatabaseMissing('users', [

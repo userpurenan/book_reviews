@@ -19,6 +19,8 @@ class BookControllerTest extends TestCase
 
     private $user;
 
+    private $token;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -30,7 +32,6 @@ class BookControllerTest extends TestCase
                           'email' => $this->email,
                           'password' => Hash::make($this->password)
                       ]);
-
     }
 
     public function test_書籍を10件ずつ取得できる(): void
@@ -51,7 +52,7 @@ class BookControllerTest extends TestCase
 
     public function test_新規の書籍レビューを作ることができる(): void
     {
-        $token = $this->createToken($this->email, $this->password);
+        $token = $this->user->createToken('Token')->accessToken;
         $title = fake()->realtext(10);
         $url = fake()->url();
         $detail = fake()->realText(15);
@@ -80,7 +81,7 @@ class BookControllerTest extends TestCase
 
     public function test_書籍の更新が実行できる(): void
     {
-        $token = $this->createToken($this->email, $this->password);
+        $token = $this->user->createToken('Token')->accessToken;
         $title = fake()->realtext(10);
         $url = fake()->url();
         $detail = fake()->realText(15);
@@ -112,8 +113,7 @@ class BookControllerTest extends TestCase
 
     public function test_書籍を削除する事ができる(): void
     {
-        $token = $this->createToken($this->email, $this->password);
-
+        $token = $this->user->createToken('Token')->accessToken;
         $book = Book::factory()->create();
 
         $this->delete("/api/books/{$book->id}", [], [

@@ -22,6 +22,8 @@ class BookCommentControllerTest extends TestCase
 
     private $user;
 
+    private $token;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -34,42 +36,46 @@ class BookCommentControllerTest extends TestCase
                           'password' => Hash::make($this->password)
                       ]);
 
+        $this->token = $this->user->createToken('Token')->accessToken;
     }
 
     public function test_レビューに対するコメントを取得することができる(): void
     {
-        $token = $this->createToken($this->email, $this->password);
-
         $book = Book::factory()->create();
         $book_review_comment = BookComment::factory()->create();
 
         $response = $this->get("/api/books/{$book->id}/comment", [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => "Bearer $this->token",
         ]);
 
         $response->assertStatus(200);
+
+        /**
+         * 実際のAPIがオブジェクトを一個ずつ配列に詰めて、それをjson形式に変換して返り値として返しているため、それに合わせるためにassertExactJson()の引数のデータ形式を
+         * [[]]
+         * 👆このようにする。
+         */
         $response->assertExactJson([[
             'id' => $book_review_comment->id,
             'user_name' => $book_review_comment->user->name,
             'user_image_url' => $book_review_comment->user->image_url,
-            'comment' => urldecode($book_review_comment->comment),
+            'comment' => $book_review_comment->comment,
             'comment_likes' => 0,
             'is_reviewer' => 1, //データベースからboolean型の値を取得しているのでtrueが１になる
-            'is_your_comment' => true
+            'is_your_comment' => true,
+            "is_likes_comment" => false,
         ]]);
     }
 
     public function test_レビューに対してのコメントを作成することができる(): void
     {
-        $token = $this->createToken($this->email, $this->password);
-
         $book = Book::factory()->create();
         $comment = fake()->realText(15);
 
         $response = $this->post("/api/books/{$book->id}/comment", [
             'comment' => $comment
         ], [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => "Bearer $this->token",
         ]);
 
         $response->assertStatus(200);
@@ -93,8 +99,6 @@ class BookCommentControllerTest extends TestCase
      */
     public function test_コメントのいいねの増減が可能(int $fluctuation): void
     {
-        $token = $this->createToken($this->email, $this->password);
-
         Book::factory()->create();
 
         //いいねの数は０より下回らないように設定しており、初期値が０のままだと減少しているのかわからなくなるので、このテストではいいねの数の初期値を１にする
@@ -105,7 +109,7 @@ class BookCommentControllerTest extends TestCase
             'comment_id' => $book_review_comment->id,
             'likes' => $fluctuation
         ], [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => "Bearer $this->token",
         ]);
 
         $response->assertStatus(200);
@@ -125,8 +129,6 @@ class BookCommentControllerTest extends TestCase
 
     public function test_いいねが0を下回らない(): void
     {
-        $token = $this->createToken($this->email, $this->password);
-
         Book::factory()->create();
         $book_review_comment = BookComment::factory()->create();
 
@@ -134,7 +136,7 @@ class BookCommentControllerTest extends TestCase
             'comment_id' => $book_review_comment->id,
             'likes' => -1
         ], [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => "Bearer $this->token",
         ]);
 
         $response->assertStatus(200);
@@ -146,8 +148,6 @@ class BookCommentControllerTest extends TestCase
 
     public function test_コメントを編集することができる(): void
     {
-        $token = $this->createToken($this->email, $this->password);
-
         Book::factory()->create();
         $book_review_comment = BookComment::factory()->create();
         $update_comment = fake()->realText(10);
@@ -155,7 +155,7 @@ class BookCommentControllerTest extends TestCase
         $edit_comment_response = $this->patch("/api/books/{$book_review_comment->id}/comment", [
             'comment' => $update_comment
         ], [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => "Bearer $this->token",
         ]);
 
         $edit_comment_response->assertStatus(200);
@@ -175,13 +175,11 @@ class BookCommentControllerTest extends TestCase
 
     public function test_コメントを削除することができる(): void
     {
-        $token = $this->createToken($this->email, $this->password);
-
         Book::factory()->create();
         $book_review_comment = BookComment::factory()->create();
 
         $response = $this->delete("/api/books/{$book_review_comment->id}/comment", [], [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => "Bearer $this->token",
         ]);
 
         $response->assertStatus(200);
