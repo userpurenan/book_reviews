@@ -23,9 +23,9 @@ class BookComment extends Model
         'is_reviewer_comment'
     ];
 
-    public function scopeGetBookComment($query, int $book_id, int $number)
+    public function scopeGetBookComment($query, int $book_id)
     {
-        return $query->with('user')->where('book_id', $book_id)->offset($number)->limit(10);
+        return $query->with('user')->where('book_id', $book_id);
     }
 
     public function user()
