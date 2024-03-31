@@ -37,9 +37,10 @@ class BookController extends Controller
         $review_likes_count = $review->likes + $likes_count_change;
         $review->update(['likes' => $review_likes_count ]);
 
+        $is_review_likes = null;
         if($likes_count_change === 1) {
             //いいねしたことを保持するためにデータベースにユーザーと書籍レビューのidを追加する
-            UserReviewLikes::create([
+            $is_review_likes = UserReviewLikes::create([
                 'user_id' => Auth::id(),
                 'book_id' => $review->id
             ]);
@@ -48,7 +49,8 @@ class BookController extends Controller
         }
 
         return response()->json([
-            'review_likes' => $review->likes
+            'review_likes' => $review->likes,
+            'is_review_likes' => $is_review_likes ? true : false,
         ], 200);
     }
 
