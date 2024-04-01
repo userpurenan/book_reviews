@@ -14,8 +14,9 @@ import './BookReviewDetail.scss';
 export const BookReviewDetail = () => {
   const { BookId } = useParams(); //クエリパラメータを取得するには[]ではなく{}で囲わなければならない
   const [cookies] = useCookies();
-  const [updateBooks, setUpdatebooks] = useState(false);
   const [bookData, setBookData] = useState('');
+  const [reviewLikesCount, setReviewLikesCount] = useState('');
+  const [reviewLikeState, setReviewLikeState] = useState();
   const updateReviewLikesUrl = useUrl('updateReviewLikes', BookId);
   const getBookDetailUrl = useUrl('bookDetailOperation', BookId); //カスタムフック。このコンポーネントで使うapiのurlが返る
   const [errorMessage, setErrorMessage] = useState('');
@@ -34,18 +35,23 @@ export const BookReviewDetail = () => {
             'このレビューはネタバレを含みます。望まない方は一つ前の画面へ戻ってください'
           );
         }
-        setBookData(bookData); //書籍の情報を一個にまとめた
+        setBookData(bookData); //書籍の情報を一個にまとめた。
+
+        // いいねの状態は以下で管理
+        setReviewLikesCount(bookData.review_likes);
+        setReviewLikeState(bookData.is_review_likes);
       })
       .catch((err) => {
         setErrorMessage(`エラー発生 ${err}`);
       });
-  }, [updateBooks]);
+  }, []);
 
   const updateReviewLikes = (likesCountChange, bookId) => {
     axios
       .post(updateReviewLikesUrl, { likes: likesCountChange, book_id: bookId }, { headers })
-      .then(() => {
-        setUpdatebooks(!updateBooks);
+      .then((response) => {
+        setReviewLikesCount(response.data.review_likes);
+        setReviewLikeState(response.data.is_review_likes);
       });
   };
 
@@ -83,13 +89,13 @@ export const BookReviewDetail = () => {
           </div>
           <div className='review_likes'>
             <IconContext.Provider value={{ color: '#ff69b4', size: '25px' }}>
-              {bookData.is_review_likes ? (
+              {reviewLikeState ? (
                 <FaHeart className="likes-icon" onClick={() => updateReviewLikes(-1)} />
               ) : (
                 <BsHeart className="likes-icon" onClick={() => updateReviewLikes(1)} />
               )}
             </IconContext.Provider>
-            <span className='review_likes_count'>{bookData.review_likes}</span>
+            <span className='review_likes_count'>{reviewLikesCount}</span>
           </div>
           <ReviewCommentInput BookId={BookId} />
         </div>

@@ -50,18 +50,16 @@ export const EditProfile = () => {
   const iconImageUpdate = () => {
     if (imageFile) {
       const formdata = new FormData();
-      formdata.append('icon', imageFile, imageFile.name); 
-      console.log(formdata);
+      formdata.append('icon', imageFile, imageFile.name);
 
-      axios
-        .post(iconUploadUrl, formdata, {
-          headers: {
-            authorization: `Bearer ${cookies.token}`,
-            'content-Type': 'multipart/form-data'
-          }
+      axios.post(iconUploadUrl, formdata, {
+        headers: {
+          authorization: `Bearer ${cookies.token}`,
+          'content-Type': 'multipart/form-data'
+        }
       });
     }
-  }
+  };
 
   //画像が1MBより大きかったらリサイズする関数
   const handleIconUrlChange = (e) => {
