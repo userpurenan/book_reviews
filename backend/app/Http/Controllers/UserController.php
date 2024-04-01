@@ -16,6 +16,10 @@ class UserController extends Controller
 {
     public function signUp(SignUpRequest $request)
     {
+        if(User::where('email', $request->input('email'))->first()) {
+            throw new BadRequestHttpException('そのメールアドレスは既に登録されています');
+        }
+
         $user = User::create([
                 "name" => $request->input('name'),
                 "email" => $request->input('email'),
