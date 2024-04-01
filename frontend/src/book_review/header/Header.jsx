@@ -57,13 +57,15 @@ export const Header = () => {
           <Link to={'/new'} className="Navigate-button">
             書籍レビュー投稿画面へ
           </Link>
-          <Link to={'/edit/profile'} className="Navigate-button" state={userName}>
+          <Link to={'/edit/profile'} className="Navigate-button">
             ユーザー名変更
           </Link>
           <Link to={'/login'} onClick={handleSignOut} className="Navigate-button">
             ログアウト
           </Link>
-          <br />
+          <Link to={'/delete/account'} className="Navigate-button">
+            アカウント削除
+          </Link>
         </Menu>
       ) : (
         <Link to={'/login'} className="Navigate-Login">

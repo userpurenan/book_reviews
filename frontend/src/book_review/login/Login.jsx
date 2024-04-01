@@ -33,6 +33,7 @@ export const Login = () => {
         setCookie('token', token, { maxAge: 3600 });
         dispatch(signIn());
         navigate('/');
+        window.location.reload();
       })
       .catch((err) => {
         setErrorMessage(`ログインに失敗しました。${err.response.data.message}`);

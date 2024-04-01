@@ -1,0 +1,62 @@
+@charset "utf-8";
+@use '../error_page/ErrorPage.scss'; // エラーページのレイアウトを使いまわしたいので継承する
+
+.account-delete-page {
+    @extend .error-page;
+
+    &_float {
+        @extend .error-page_float;
+    }    
+}
+
+.user-name {
+    color: black;
+    font-size: 30px;
+    padding: 40px 30% 50px 15%;
+}
+
+.user-icon {
+    position: relative;
+    top: 15px;
+    width: 60px;
+    height: 60px;
+    margin-left: 10px;
+    margin-right: 10px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.account-delete-navigate-message {
+    margin: 0 10% 10px 15%;
+    width: 68%;
+    word-wrap: break-word;
+    font-size: 20px;
+}
+
+.account-delete-input {
+    width: 68%;
+    height: 50px;
+    margin-left: 15%;
+    font-size: 20px;
+}
+
+.account-delete-button {
+    width: 70px;
+    height: 40px;
+    background-color: #242f9b;
+    color: #ffffff;
+    font-size: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.return-button  {
+    width: 70px;
+    height: 40px;
+    margin: 10px 10px 0 15%;
+    background-color: darkgray;
+    color: #ffffff;
+    font-size: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}

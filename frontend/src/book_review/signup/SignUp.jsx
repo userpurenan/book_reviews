@@ -48,9 +48,10 @@ export const SignUp = () => {
         await isImageFile(token); //クッキーにセットしたばかりのトークンは取得できないので別関数の引数にトークンをセットして使うようにした
         dispatch(signIn());
         navigate('/');
+        window.location.reload();
       })
       .catch((error) => {
-        setErrorMessage(`サインアップに失敗しました。 ${error}`);
+        setErrorMessage(`サインアップに失敗しました。 ${error.response.data.message}`);
       });
   };
 
