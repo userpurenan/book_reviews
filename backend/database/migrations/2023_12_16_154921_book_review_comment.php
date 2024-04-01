@@ -12,8 +12,8 @@ return new class () extends Migration {
     {
         Schema::create('book_review_comments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->constrained('users')->onDelete('cascade');
-            $table->unsignedBigInteger('book_id')->constrained('books')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
             $table->text('comment');
             $table->boolean('is_reviewer_comment')->default(false);
             $table->integer('comment_likes')->default(0);

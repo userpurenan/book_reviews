@@ -43,4 +43,11 @@ class AuthUserController extends Controller
 
         return response()->json([ 'name' => $user->name ], 200);
     }
+
+    public function deleteUser()
+    {
+        User::findOrFail(Auth::id())->delete();
+
+        return response()->json(['massage' => 'success!!'], 200);
+    }
 }
