@@ -7,7 +7,7 @@ namespace App\Http\Controllers;
 use App\Services\UpdateLikeStatusService;
 use App\Models\Book;
 use App\Models\BookComment;
-use App\Models\UserCommentLikes;
+use App\Services\CommentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -72,30 +72,8 @@ class BookCommentController extends Controller
         // GetBookCommentはモデルに定義されているスコープ。レビューに対するコメントを10件ずつ取得してくる。
         $books_review_comment = BookComment::GetBookComment($book_id, $number)->offset($number)->limit(10)->orderBy('id', 'desc')->get();
 
-        $review_comment_array = [];
-        foreach ($books_review_comment as $review_comment) {
-            $is_your_comment = false;
-            $is_comment_likes = false;
-            if($review_comment->user_id === Auth::id()) { //認証ユーザーが書いたコメントかを判定
-                $is_your_comment = true;
-            }
-
-            //　コメントに対するいいねの状態を保存するテーブルを参照する
-            if(UserCommentLikes::where('user_id', Auth::id())->where('comment_id', $review_comment->id)->first()) {
-                $is_comment_likes = true;
-            }
-
-            $review_comment_array[] = [
-                'id' => $review_comment->id,
-                'user_name' => $review_comment->user->name,
-                'user_image_url' => $review_comment->user->image_url,
-                'comment' => $review_comment->comment,
-                'comment_likes' => $review_comment->comment_likes,
-                'is_reviewer' => $review_comment->is_reviewer_comment, //MySQLのboolean型からデータを引っ張ってきているのでレスポンスが１(true)または０(false)になる
-                'is_your_comment' => $is_your_comment,
-                'is_likes_comment' => $is_comment_likes
-            ];
-        }
+        // 可読性向上の目的でコメントを配列に詰める処理をサービスクラスに切り出した
+        $review_comment_array = CommentService::setComment($books_review_comment);
 
         return response()->json($review_comment_array, 200, []);
     }
