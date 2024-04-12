@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookRequest;
+use App\Services\UpdateLikeStatusService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
@@ -25,31 +26,17 @@ class BookController extends Controller
 
     public function updateReviewLikes(Request $request, int $book_id)
     {
-        $likes_count_change = (int) $request->input('likes');
-        $review = Book::findOrFail($book_id);
+        $likes_count_change = (int) $request->input('likes'); //「1」か「-1」が渡される
+        $book = Book::findOrFail($book_id);
 
-        if($review->likes === 0 && $likes_count_change === -1) { //いいねが０を下回らないようにする
-            return response()->json([
-                'review_likes' => 0
-            ], 200);
-        }
+        $book_likes_count = $book->likes + $likes_count_change;
+        $book->update(['likes' => $book_likes_count ]);
 
-        $review_likes_count = $review->likes + $likes_count_change;
-        $review->update(['likes' => $review_likes_count ]);
-
-        $is_review_likes = null;
-        if($likes_count_change === 1) {
-            //いいねしたことを保持するためにデータベースにユーザーと書籍レビューのidを追加する
-            $is_review_likes = UserReviewLikes::create([
-                'user_id' => Auth::id(),
-                'book_id' => $review->id
-            ]);
-        } else {
-            UserReviewLikes::where('user_id', Auth::id())->where('book_id', $review->id)->delete();
-        }
+        // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
+        $is_review_likes = UpdateLikeStatusService::updateBookReviewLikeStatus($book, $likes_count_change);
 
         return response()->json([
-            'review_likes' => $review->likes,
+            'review_likes' => $book->likes,
             'is_review_likes' => $is_review_likes ? true : false,
         ], 200);
     }

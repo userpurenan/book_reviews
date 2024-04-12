@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Services\UpdateLikeStatusService;
 use App\Models\Book;
 use App\Models\BookComment;
 use App\Models\UserCommentLikes;
@@ -50,27 +51,14 @@ class BookCommentController extends Controller
 
     public function updateLikes(Request $request)
     {
-        $likes_count_change = (int) $request->input('likes');
+        $likes_count_change = (int) $request->input('likes'); //「1」か「-1」が渡される
         $comment = BookComment::findOrFail($request->input('comment_id'));
-
-        if($comment->comment_likes === 0 && $likes_count_change === -1) { //いいねが０を下回らないようにする
-            return response()->json([
-                'comment_likes' => 0
-            ], 200);
-        }
 
         $comment_likes_count = $comment->comment_likes + $likes_count_change;
         $comment->update(['comment_likes' => $comment_likes_count ]);
 
-        if($likes_count_change === 1) {
-            //いいねしたことを保持するためにデータベースにユーザーとコメントのidを追加する
-            UserCommentLikes::create([
-                'user_id' => Auth::id(),
-                'comment_id' => $comment->id
-            ]);
-        } else {
-            UserCommentLikes::where('user_id', Auth::id())->where('comment_id', $comment->id)->delete();
-        }
+        // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
+        UpdateLikeStatusService::updateCommentLikeStatus($comment, $likes_count_change);
 
         return response()->json([
             'comment_likes' => $comment->comment_likes
@@ -92,6 +80,7 @@ class BookCommentController extends Controller
                 $is_your_comment = true;
             }
 
+            //　コメントに対するいいねの状態を保存するテーブルを参照する
             if(UserCommentLikes::where('user_id', Auth::id())->where('comment_id', $review_comment->id)->first()) {
                 $is_comment_likes = true;
             }
