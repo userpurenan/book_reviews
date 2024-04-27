@@ -18,7 +18,7 @@ return new class () extends Migration {
             $table->text('detail');
             $table->text('review');
             $table->string('reviewer');
-            $table->unsignedBigInteger('likes');
+            $table->unsignedBigInteger('likes')->default(0);
             $table->boolean('spoiler')->default(false);
             $table->timestamps();
         });

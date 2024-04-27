@@ -16,7 +16,7 @@ return new class () extends Migration {
             $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
             $table->text('comment');
             $table->boolean('is_reviewer_comment')->default(false);
-            $table->unsignedBigInteger('comment_likes');
+            $table->unsignedBigInteger('comment_likes')->default(0);
             $table->timestamps();
         });
     }

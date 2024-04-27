@@ -10,10 +10,9 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::table('book_review_comments', function (Blueprint $table) {
-            $table->unsignedBigInteger('comment_likes')->change();
+        Schema::table('books', function (Blueprint $table) {
+            $table->unsignedBigInteger('likes')->default(0)->change();
         });
-
     }
 
     /**
@@ -21,6 +20,8 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        //
+        Schema::table('books', function (Blueprint $table) {
+            //
+        });
     }
 };
