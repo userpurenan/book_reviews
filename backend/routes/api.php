@@ -31,6 +31,7 @@ Route::get('unauthorized', function () {
 Route::post('/signup', [UserController::class, 'signUp']);
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/books', [BookController::class, 'getBooks']);
+Route::get('/books/hotReview', [BookController::class, 'getHotReview']);
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/upload', [AuthUserController::class, 'imageUploads']);

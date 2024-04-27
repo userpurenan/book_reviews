@@ -19,9 +19,16 @@ class BookController extends Controller
 
         // 書籍を10件取得している。
         // BookSearchメソッドはモデルに定義しているスコープ。キーワードに合致する書籍を取得してくる。
-        $books = Book::BookSearch($request->query('title_keyword', $default = ''), $number)->offset($number)->limit(10)->orderBy('id', 'desc')->get();
+        $books = Book::BookSearch($request->query('title_keyword', $default = ''))->offset($number)->limit(10)->orderBy('id', 'desc')->get();
 
         return response()->json($books, 200);
+    }
+
+    public function getHotReview()
+    {
+        $hot_review_top3 = Book::BookSearch()->limit(3)->orderBy('likes', 'desc')->get();
+
+        return response()->json($hot_review_top3, 200);
     }
 
     public function updateReviewLikes(Request $request, int $book_id)

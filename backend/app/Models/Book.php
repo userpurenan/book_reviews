@@ -28,7 +28,7 @@ class Book extends Model
 
     protected $guarded = ['created_at', 'updated_at'];
 
-    public function scopeBookSearch($query, string $keyword, int $number)
+    public function scopeBookSearch($query, string $keyword = '')
     {
         return $query->select('id', 'title', 'likes')->where("title", "LIKE", "%$keyword%");
     }
