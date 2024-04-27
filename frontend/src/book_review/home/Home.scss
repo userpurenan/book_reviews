@@ -40,8 +40,11 @@ body {
   }
 
   border-radius: 3%;
-  width: 50%;
-  margin-left: 27%;
+  width: 100%;
+  margin-left: 10px;
+  grid-column-start: 2;
+  grid-column-end: 6;
+  grid-row-start: 1;
 }
 
 .search {
@@ -179,4 +182,14 @@ body {
   position: relative;
   left: 5px;
   bottom: 3px;
+}
+
+.flex {
+  display: grid;
+  grid-template-columns: 400px 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.not_found {
+  text-align: center;
+  font-size: 25px;
 }

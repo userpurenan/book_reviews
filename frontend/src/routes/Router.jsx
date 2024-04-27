@@ -9,6 +9,7 @@ import { ErrorPage } from '../book_review/error_page/ErrorPage';
 import { Home } from '../book_review/home/Home';
 import { Login } from '../book_review/login/Login';
 import { SignUp } from '../book_review/signup/SignUp';
+import { AccountDelete } from '../book_review/account_delete/AccountDelete';
 
 export const Router = () => {
   const auth = useSelector((state) => state.auth.isSignIn);
@@ -24,6 +25,7 @@ export const Router = () => {
             <Route path="/new" element={<CreateBookReview />} />
             <Route path="/detail/:BookId" element={<BookReviewDetail />} />
             <Route path="/edit/:BookId" element={<EditBookReview />} />
+            <Route path="/delete/account" element={<AccountDelete />} />
           </>
         ) : (
           <Route path="*" element={<ErrorPage />} />

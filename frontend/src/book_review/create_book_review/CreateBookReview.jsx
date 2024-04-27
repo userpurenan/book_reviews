@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -10,9 +10,9 @@ import './CreateBookReview.scss';
 export const CreateBookReview = () => {
   const navigate = useNavigate();
   const [cookies] = useCookies();
-  const [bookTitle, setBookTitle] = useState('');
-  const [bookDetail, setBookDetail] = useState('');
-  const [bookReview, setBookReview] = useState('');
+  const bookTitle = useRef('');
+  const bookDetail = useRef('');
+  const bookReview = useRef('');
   const [isSpoiler, setIsSpoiler] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const createBookUrl = useUrl('bookOperation'); //カスタムフック。このコンポーネントで使うapiのurlが返る
@@ -26,10 +26,10 @@ export const CreateBookReview = () => {
     }
 
     const data = {
-      title: bookTitle,
+      title: bookTitle.current,
       url: response.data.Items[0].Item.itemUrl,
-      detail: bookDetail,
-      review: bookReview,
+      detail: bookDetail.current,
+      review: bookReview.current,
       isSpoiler: isSpoiler
     };
 
@@ -54,9 +54,9 @@ export const CreateBookReview = () => {
       <h2 className="error-massage">{errorMessage}</h2>
       <BookReviewInput
         isSpoiler={isSpoiler}
-        setBookTitle={setBookTitle}
-        setBookDetail={setBookDetail}
-        setBookReview={setBookReview}
+        bookTitle={bookTitle}
+        bookDetail={bookDetail}
+        bookReview={bookReview}
         setIsSpoiler={setIsSpoiler}
         BookOperations={createBook}
         isCreateBook={true}

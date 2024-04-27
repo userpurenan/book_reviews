@@ -1,4 +1,4 @@
-export const useUrl = (props, book_id = null) => {
+export const useUrl = (props, book_id = null, keyword = null) => {
   const endpoint = process.env.REACT_APP_API_URL;
   var url = null;
 
@@ -7,6 +7,10 @@ export const useUrl = (props, book_id = null) => {
       url = `${endpoint}/public/books`;
       break;
 
+    case 'hotReview':
+      url = `${endpoint}/books/hotReview`;
+      break;
+  
     case 'bookOperation':
       url = `${endpoint}/books`;
       break;
@@ -37,6 +41,14 @@ export const useUrl = (props, book_id = null) => {
 
     case 'iconUpload':
       url = `${endpoint}/upload`;
+      break;
+
+    case 'updateReviewLikes':
+      url = `${endpoint}/books/${book_id}/updateLikes`;
+      break;
+
+    case 'bookSerchAPI':
+      url = `https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404?format=json&keyword=${keyword}&booksGenreId=001&applicationId=1011475384486274392`;
       break;
   }
 

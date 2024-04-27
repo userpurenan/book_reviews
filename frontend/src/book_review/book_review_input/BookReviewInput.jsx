@@ -41,9 +41,9 @@ export const BookReviewInput = (props) => {
       });
   }, []);
 
-  const handleTitleChange = (e) => props.setBookTitle(e.target.value);
-  const handleDetailChange = (e) => props.setBookDetail(e.target.value);
-  const handleReviewChange = (e) => props.setBookReview(e.target.value);
+  const handleTitleChange = (event) => props.bookTitle.current = event.target.value;
+  const handleDetailChange = (event) => props.bookDetail.current = event.target.value;
+  const handleReviewChange = (event) => props.bookReview.current = event.target.value;
 
   return (
     <div className="float_component">
@@ -132,9 +132,9 @@ export const BookReviewInput = (props) => {
 BookReviewInput.propTypes = {
   isSpoiler: PropTypes.bool,
   isCreateBook: PropTypes.bool,
-  setBookTitle: PropTypes.func.isRequired,
-  setBookDetail: PropTypes.func.isRequired,
-  setBookReview: PropTypes.func.isRequired,
+  bookTitle: PropTypes.func.isRequired,
+  bookDetail: PropTypes.func.isRequired,
+  bookReview: PropTypes.func.isRequired,
   setIsSpoiler: PropTypes.func.isRequired,
   BookOperations: PropTypes.func.isRequired,
   deleteBook: PropTypes.func.isRequired,
