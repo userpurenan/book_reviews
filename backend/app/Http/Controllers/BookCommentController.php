@@ -10,6 +10,7 @@ use App\Models\BookComment;
 use App\Services\CommentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BookCommentController extends Controller
 {
@@ -51,14 +52,17 @@ class BookCommentController extends Controller
 
     public function updateLikes(Request $request)
     {
-        $likes_count_change = (int) $request->input('likes'); //「1」か「-1」が渡される
         $comment = BookComment::findOrFail($request->input('comment_id'));
 
-        $comment_likes_count = $comment->comment_likes + $likes_count_change;
-        $comment->update(['comment_likes' => $comment_likes_count ]);
+        DB::transaction(function () use ($comment, $request) {
+            $likes_count_change = (int) $request->input('likes'); //「1」か「-1」が渡される
+            $comment_likes_count = $comment->comment_likes + $likes_count_change;
 
-        // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
-        UpdateLikeStatusService::updateCommentLikeStatus($comment, $likes_count_change);
+            $comment->update(['comment_likes' => $comment_likes_count ]);
+
+            // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
+            UpdateLikeStatusService::updateCommentLikeStatus($comment, $likes_count_change);
+        });
 
         return response()->json([
             'comment_likes' => $comment->comment_likes
