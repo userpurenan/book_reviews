@@ -25,7 +25,7 @@
     - 書籍の作成画面と更新画面のUIがほとんど同じなので、1つのコンポーネントに共通化しました。
  
     - 書籍レビューを新規作成する際にその書籍の商品URLを自分で入力するようにしていたのですが、これだと悪い人が悪意を持ったWebサイトに誘導できてしまうという問題があったので、
-      [楽天ブックAPI](https://webservice.rakuten.co.jp/explorer/api/BooksBook/Search)というものを使用して、入力した書籍のタイトルにヒットして一番上にある書籍データのURLを
+      [Google Books APIs](https://developers.google.com/books/docs/v1/using?hl=ja)というものを使用して、入力した書籍のタイトルにヒットして一番上にある書籍データのURLを
       データベースに保存するようにしました
 
 - バックエンド
