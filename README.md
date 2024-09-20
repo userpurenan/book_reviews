@@ -1,7 +1,8 @@
 # 書籍レビューアプリ
 
-[アプリのデモはこちらから](https://book-review-frontend-pearl.vercel.app)
+~~[アプリのデモはこちらから](https://book-review-frontend-pearl.vercel.app)~~
 
+申し訳ございません、こちらの都合で現在はAWSのEC2を止めてしまったので動かせません。
 ## アプリの説明
 
 自分の読んだ書籍のレビューを他のユーザーと共有できるアプリです。
