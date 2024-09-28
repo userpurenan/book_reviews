@@ -51,7 +51,8 @@ class BookCommentControllerTest extends TestCase
         $response->assertStatus(200);
 
         /**
-         * 実際のAPIがオブジェクトを一個ずつ配列に詰めて、それをjson形式に変換して返り値として返しているため、それに合わせるためにassertExactJson()の引数のデータ形式を
+         * 実際のAPIがオブジェクトを一個ずつ配列に詰めて、それをjson形式に変換して返り値として返しているため、
+         * その返り値に合わせるためにassertExactJson()の引数のデータ形式を、
          * [[]]
          * 👆このようにする。
          */
@@ -139,8 +140,8 @@ class BookCommentControllerTest extends TestCase
             'Authorization' => "Bearer $this->token",
         ]);
 
-        $response->assertStatus(200);
-        $response->assertExactJson(['comment_likes' => 0 ]);
+        $response->assertStatus(500);
+        $response->assertExactJson(['error' => 'いいねは0未満にはできません' ]);
         $this->assertDatabaseHas('book_review_comments', [
             'comment_likes' => 0,
         ]);
