@@ -28,7 +28,7 @@ class CreateServiceCommand extends Command
     {
         $name = $this->argument('name');
 
-        $serviceDir = base_path('app\Services');
+        $serviceDir = base_path('app/Services');
         $serviceClass = "$serviceDir/$name.php";
 
         if (file_exists($serviceClass)) {

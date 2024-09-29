@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentService
 {
-    public static function setComment($books_review_comment)
+    public function setComment($books_review_comment)
     {
         $review_comment_array = [];
         foreach ($books_review_comment as $review_comment) {
