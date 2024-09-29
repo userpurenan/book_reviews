@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
 use App\Models\UserReviewLikes;
-use Illuminate\Support\Facades\DB;
+use App\Services\BookLikeService;
 
 class BookController extends Controller
 {
@@ -32,24 +32,13 @@ class BookController extends Controller
         return response()->json($hot_review_top3, 200);
     }
 
-    public function updateReviewLikes(Request $request, int $book_id)
+    public function updateReviewLikes(Request $request, int $book_id, BookLikeService $book_like_service)
     {
-        $book = Book::findOrFail($book_id);
-
-        $retryTimes = 3;
-        DB::transaction(function () use ($book, $request, &$is_review_likes) {
-            $likes_count_change = (int) $request->input('likes'); //「1」か「-1」が渡される
-            $book_likes_count = $book->likes + $likes_count_change;
-
-            $book->update(['likes' => $book_likes_count ]);
-
-            // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
-            $is_review_likes = UpdateLikeStatusService::updateBookReviewLikeStatus($book, $likes_count_change);
-        }, $retryTimes);
+        $result = $book_like_service->updateReviewLikes($book_id, $request->input('likes'));
 
         return response()->json([
-            'review_likes' => $book->likes,
-            'is_review_likes' => $is_review_likes ? true : false,
+            'review_likes' => $result['likes'],
+            'is_review_likes' => $result['is_review_likes'],
         ], 200);
     }
 

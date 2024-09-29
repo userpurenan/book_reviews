@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UpdateLikeStatusService
 {
-    public static function updateCommentLikeStatus($comment, int $likes_count_change)
+    public function updateCommentLikeStatus($comment, int $likes_count_change)
     {
         if($likes_count_change === 1) {
             //いいねしたことを保持するためにデータベースにユーザーとコメントのidを追加する
@@ -23,7 +23,7 @@ class UpdateLikeStatusService
         }
     }
 
-    public static function updateBookReviewLikeStatus($book, int $likes_count_change)
+    public function updateBookReviewLikeStatus($book, int $likes_count_change)
     {
         $is_review_likes = null;
         if($likes_count_change === 1) {

@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Services\UpdateLikeStatusService;
 use App\Models\Book;
 use App\Models\BookComment;
 use App\Services\CommentService;
+use App\Services\UpdateLikesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class BookCommentController extends Controller
 {
@@ -50,27 +49,12 @@ class BookCommentController extends Controller
         ], 200);
     }
 
-    public function updateLikes(Request $request, UpdateLikeStatusService $update_like_status)
+    public function updateLikes(Request $request, UpdateLikesService $update_likes)
     {
-        $comment = BookComment::findOrFail($request->input('comment_id'));
-        $likes_count_change = (int) $request->input('likes'); //「1」か「-1」が渡される
-        $new_likes_count = $comment->comment_likes + $likes_count_change;
-
-        if($new_likes_count < 0) {
-            return response()->json([
-                'error' => 'いいねは0未満にはできません'
-            ], 500);
-        }
-
-        DB::transaction(function () use ($comment, $new_likes_count, $likes_count_change, $update_like_status) {
-            $comment->update(['comment_likes' => $new_likes_count ]);
-
-            // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
-            $update_like_status->updateCommentLikeStatus($comment, $likes_count_change);
-        });
+        $new_likes = $update_likes->updateLikes($request);
 
         return response()->json([
-            'comment_likes' => $comment->comment_likes
+            'comment_likes' => $new_likes
         ], 200);
     }
 
