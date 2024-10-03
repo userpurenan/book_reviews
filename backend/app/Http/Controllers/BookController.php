@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookRequest;
-use App\Services\UpdateLikeStatusService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
 use App\Models\UserReviewLikes;
-use App\Services\BookLikeService;
+use App\Services\Book\BookLikeService;
 
 class BookController extends Controller
 {
@@ -32,14 +31,16 @@ class BookController extends Controller
         return response()->json($hot_review_top3, 200);
     }
 
-    public function updateReviewLikes(Request $request, int $book_id, BookLikeService $book_like_service)
+    public function updateReviewLikes(Request $request, int $book_id, BookLikeService $book_like)
     {
-        $result = $book_like_service->updateReviewLikes($book_id, $request->input('likes'));
+        $likes = (int) $request->input('likes');
+        $update_likes_result = $book_like->updateLikes($book_id, $likes);
 
-        return response()->json([
-            'review_likes' => $result['likes'],
-            'is_review_likes' => $result['is_review_likes'],
-        ], 200);
+        if(isset($update_likes_result['error'])) {
+            return response()->json($update_likes_result, 500);
+        }
+
+        return response()->json($update_likes_result, 200);
     }
 
     public function createBook(Request $request)
