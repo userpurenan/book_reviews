@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services;
+namespace App\Services\Book;
 
 use App\Models\UserCommentLikes;
 use App\Models\UserReviewLikes;
@@ -25,17 +25,14 @@ class UpdateLikeStatusService
 
     public function updateBookReviewLikeStatus($book, int $likes_count_change)
     {
-        $is_review_likes = null;
         if($likes_count_change === 1) {
             //いいねしたことを保持するためにデータベースにユーザーと書籍レビューのidを追加する
-            $is_review_likes = UserReviewLikes::create([
+            UserReviewLikes::create([
                 'user_id' => Auth::id(),
                 'book_id' => $book->id
             ]);
         } else {
             UserReviewLikes::where('user_id', Auth::id())->where('book_id', $book->id)->delete();
         }
-
-        return $is_review_likes;
     }
 }
