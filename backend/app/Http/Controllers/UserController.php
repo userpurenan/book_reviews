@@ -21,15 +21,16 @@ class UserController extends Controller
             throw new BadRequestHttpException('そのメールアドレスは既に登録されています');
         }
 
+        $retryTimes = 3;
         DB::transaction(function () use ($request, &$token, &$user) {
             $user = User::create([
-                    "name" => $request->input('name'),
-                    "email" => $request->input('email'),
-                    "password" => Hash::make($request->input('password')),
-                ]);
+                "name" => $request->input('name'),
+                "email" => $request->input('email'),
+                "password" => Hash::make($request->input('password')),
+            ]);
 
             $token = $user->createToken('Token')->accessToken;
-        });
+        }, $retryTimes);
 
         return response()->json([ 'name' => $user->name ], 200, ['authorization' => $token, 'Access-Control-Expose-Headers' => 'authorization']);
     }
