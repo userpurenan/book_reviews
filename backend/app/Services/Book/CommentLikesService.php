@@ -21,19 +21,18 @@ class CommentLikesService
     public function updateLikes(int $comment_id, int $likes): array
     {
         $comment = BookComment::findOrFail($comment_id);
-        $likes_count_change = $likes; //「1」か「-1」が渡される
-        $new_likes_count = $comment->comment_likes + $likes_count_change;
+        $new_likes_count = $comment->comment_likes + $likes;
 
         if($new_likes_count < 0) {
             return [ 'error' => 'いいねは0未満にはできません' ];
         }
 
         $retryTimes = 3;
-        DB::transaction(function () use ($comment, $new_likes_count, $likes_count_change) {
+        DB::transaction(function () use ($comment, $new_likes_count, $likes) {
             $comment->update(['comment_likes' => $new_likes_count ]);
 
             // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
-            $this->update_like_status->updateCommentLikeStatus($comment, $likes_count_change);
+            $this->update_like_status->updateCommentLikeStatus($comment, $likes);
         }, $retryTimes);
 
         return [ 'comment_likes' => $new_likes_count ];
