@@ -6,10 +6,11 @@ use App\Models\User;
 use App\Services\User\ImageUploadService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
 
 class AuthUserController extends Controller
 {
-    public function imageUploads(Request $request, ImageUploadService $imageUploadService)
+    public function imageUploads(Request $request, ImageUploadService $imageUploadService): JsonResponse
     {
         $image_url = $imageUploadService->upload($request->file('icon'));
 
@@ -26,7 +27,7 @@ class AuthUserController extends Controller
                 ], 200);
     }
 
-    public function editUser(Request $request)
+    public function editUser(Request $request): JsonResponse
     {
         $user = User::findOrFail(Auth::id());
 
@@ -35,10 +36,13 @@ class AuthUserController extends Controller
         return response()->json([ 'name' => $user->name ], 200);
     }
 
-    public function deleteUser()
+    public function deleteUser(): JsonResponse
     {
         User::findOrFail(Auth::id())->delete();
 
-        return response()->json(['massage' => 'success!!'], 200);
+        return response()->json([
+            'massage' => 'ユーザーの削除に成功しました',
+            'user_id' => Auth::id(),
+        ], 200);
     }
 }

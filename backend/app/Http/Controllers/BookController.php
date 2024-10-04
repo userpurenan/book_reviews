@@ -10,10 +10,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Book;
 use App\Models\UserReviewLikes;
 use App\Services\Book\BookLikeService;
+use Illuminate\Http\JsonResponse;
 
 class BookController extends Controller
 {
-    public function getBooks(BookRequest $request)
+    public function getBooks(BookRequest $request): JsonResponse
     {
         $number = $request->query('offset', $default = 0);
 
@@ -24,14 +25,14 @@ class BookController extends Controller
         return response()->json($books, 200);
     }
 
-    public function getHotReview()
+    public function getHotReview(): JsonResponse
     {
         $hot_review_top3 = Book::BookSearch()->limit(3)->orderBy('likes', 'desc')->get();
 
         return response()->json($hot_review_top3, 200);
     }
 
-    public function updateReviewLikes(Request $request, int $book_id, BookLikeService $book_like)
+    public function updateReviewLikes(Request $request, int $book_id, BookLikeService $book_like): JsonResponse
     {
         $likes = (int) $request->input('likes');
         $update_likes_result = $book_like->updateLikes($book_id, $likes);
@@ -43,7 +44,7 @@ class BookController extends Controller
         return response()->json($update_likes_result, 200);
     }
 
-    public function createBook(Request $request)
+    public function createBook(Request $request): JsonResponse
     {
         $user_id = Auth::id();
         $user_name = Auth::user()->name;
@@ -67,7 +68,7 @@ class BookController extends Controller
         ], 200);
     }
 
-    public function getBookDatail(int $id)
+    public function getBookDatail(int $id): JsonResponse
     {
         $book_datail = Book::findOrFail($id);
         $is_review_likes = UserReviewLikes::where('user_id', Auth::id())->where('book_id', $id)->first();
@@ -85,7 +86,7 @@ class BookController extends Controller
         ], 200);
     }
 
-    public function updateBook(Request $request, int $id)
+    public function updateBook(Request $request, int $id): JsonResponse
     {
         $book_datail = Book::findOrFail($id);
         $book_datail->update([
@@ -107,8 +108,12 @@ class BookController extends Controller
           ], 200);
     }
 
-    public function deleteBook(int $id)
+    public function deleteBook(int $id): JsonResponse
     {
         Book::findOrFail($id)->delete();
+
+        return response()->json([
+            'message' => 'レビューの削除に成功しました'
+        ], 200);
     }
 }
