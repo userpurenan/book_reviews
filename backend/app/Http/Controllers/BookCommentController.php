@@ -66,19 +66,20 @@ class BookCommentController extends Controller
 
     public function getComment(Request $request, CommentService $comment_service, int $book_id): JsonResponse
     {
-        $number = $request->query('comment_offset', $default = 0);
+        $number = (int) $request->query('comment_offset', $default = 0);
 
-        // GetBookCommentはモデルに定義されているスコープ。レビューに対するコメントを10件ずつ取得してくる。
-        $books_review_comment = BookComment::GetBookComment($book_id, $number)->offset($number)->limit(10)->orderBy('id', 'desc')->get();
-
-        // 可読性向上の目的でコメントを配列に詰める処理をサービスクラスに切り出した
-        $review_comment_array = $comment_service->setComment($books_review_comment);
+        // コメントを配列に詰める処理をサービスクラスに切り出した
+        $review_comment_array = $comment_service->setComment($book_id, $number);
 
         return response()->json($review_comment_array, 200);
     }
 
-    public function deleteComment(int $book_id)
+    public function deleteComment(int $book_id): JsonResponse
     {
         BookComment::findOrFail($book_id)->delete();
+
+        return response()->json([
+            'message' => 'コメントの削除に成功しました'
+        ], 200);
     }
 }

@@ -4,38 +4,41 @@ declare(strict_types=1);
 
 namespace App\Services\Book;
 
+use App\Models\BookComment;
 use App\Models\UserCommentLikes;
 use Illuminate\Support\Facades\Auth;
 
 class CommentService
 {
-    public function setComment($books_review_comment)
+    public function setComment(int $book_id, int $number): array
     {
-        $review_comment_array = [];
-        foreach ($books_review_comment as $review_comment) {
-            $is_your_comment = false;
-            $is_comment_likes = false;
-            if($review_comment->user_id === Auth::id()) { //認証ユーザーが書いたコメントかを判定
-                $is_your_comment = true;
-            }
+        $auth_id = Auth::id();
 
-            //　コメントに対するいいねの状態を保存するテーブルを参照する
-            if(UserCommentLikes::where('user_id', Auth::id())->where('comment_id', $review_comment->id)->first()) {
-                $is_comment_likes = true;
-            }
+        // GetBookCommentはモデルに定義されているスコープ。レビューに対するコメントを10件ずつ取得してくる。
+        $books_review_comment = BookComment::GetBookComment($book_id, $number)
+            ->offset($number)
+            ->limit(10)
+            ->orderBy('id', 'desc')
+            ->get();
 
-            $review_comment_array[] = [
+        // ユーザーのいいね情報を一括で取得
+        $user_likes = UserCommentLikes::where('user_id', $auth_id)
+            ->whereIn('comment_id', $books_review_comment->pluck('id'))
+            ->pluck('comment_id')
+            ->flip()
+            ->all();
+
+        return $books_review_comment->map(function ($review_comment) use ($auth_id, $user_likes) {
+            return [
                 'id' => $review_comment->id,
                 'user_name' => $review_comment->user->name,
                 'user_image_url' => $review_comment->user->image_url,
                 'comment' => $review_comment->comment,
                 'comment_likes' => $review_comment->comment_likes,
-                'is_reviewer' => $review_comment->is_reviewer_comment, //MySQLのboolean型からデータを引っ張ってきているのでレスポンスが１(true)または０(false)になる
-                'is_your_comment' => $is_your_comment,
-                'is_likes_comment' => $is_comment_likes
+                'is_reviewer' => $review_comment->is_reviewer_comment,
+                'is_your_comment' => $review_comment->user_id === $auth_id,
+                'is_likes_comment' => array_key_exists($review_comment->id, $user_likes) ? true : false,
             ];
-        }
-
-        return $review_comment_array;
+        })->all();
     }
 }
