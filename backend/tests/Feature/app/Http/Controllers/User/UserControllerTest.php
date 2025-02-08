@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\App\Http\Controllers\User;
 
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
