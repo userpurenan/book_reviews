@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\AuthUserController;
-use App\Http\Controllers\BookCommentController;
+use App\Http\Controllers\User\AuthUserController;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Book\BookCommentController;
+use App\Http\Controllers\Book\BookController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------

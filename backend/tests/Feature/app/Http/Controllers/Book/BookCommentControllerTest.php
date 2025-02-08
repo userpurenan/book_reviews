@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\App\Http\Controllers\Book;
 
-use App\Models\Book;
-use App\Models\BookComment;
-use App\Models\User;
+use App\Models\Book\Book;
+use App\Models\Book\BookComment;
+use App\Models\User\User;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -53,8 +53,7 @@ class BookCommentControllerTest extends TestCase
         /**
          * 実際のAPIがオブジェクトを一個ずつ配列に詰めて、それをjson形式に変換して返り値として返しているため、
          * その返り値に合わせるためにassertExactJson()の引数のデータ形式を、
-         * [[]]
-         * 👆このようにする。
+         * [[]]　←このように二次元配列で表す。
          */
         $response->assertExactJson([[
             'id' => $book_review_comment->id,

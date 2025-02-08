@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Book;
-use App\Models\User;
+use App\Models\Book\Book;
+use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

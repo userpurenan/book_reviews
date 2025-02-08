@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Book;
-use App\Models\BookComment;
-use App\Models\User;
+use App\Models\Book\Book;
+use App\Models\Book\BookComment;
+use App\Models\User\User;
 
 class BookSeeder extends Seeder
 {

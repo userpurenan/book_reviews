@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services\Book;
 
-use App\Models\BookComment;
-use App\Models\UserCommentLikes;
+use App\Models\Book\BookComment;
+use App\Models\User\UserCommentLikes;
 use Illuminate\Support\Facades\Auth;
 
 class CommentService

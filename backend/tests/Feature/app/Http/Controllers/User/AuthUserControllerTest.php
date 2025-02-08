@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\App\Http\Controllers\User;
 
-use App\Models\User;
+use App\Models\User\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;

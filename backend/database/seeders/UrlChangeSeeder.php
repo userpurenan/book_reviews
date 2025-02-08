@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Book;
+use App\Models\Book\Book;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 

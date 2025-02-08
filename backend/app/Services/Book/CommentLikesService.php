@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Book;
 
-use App\Models\BookComment;
+use App\Models\Book\BookComment;
 use Illuminate\Support\Facades\DB;
 use App\Services\Book\UpdateLikeStatusService;
 
