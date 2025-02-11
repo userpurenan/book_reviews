@@ -38,4 +38,9 @@ class BookComment extends Model
         return $this->belongsTo(Book::class, 'book_id');
     }
 
+    public function commentReply()
+    {
+        return $this->hasMany(CommentReply::class);
+    }
+
 }
