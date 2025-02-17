@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libmariadb-dev \
     && docker-php-ext-install pdo_mysql \
-    && apt-get install -y mysql-client \
+    && apt-get install -y default-mysql-client \
     && rm -rf /var/lib/apt/lists/* 
 
 # ワーキングディレクトリの設定
