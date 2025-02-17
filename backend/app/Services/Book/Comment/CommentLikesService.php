@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Book;
+namespace App\Services\Book\Comment;
 
 use App\Models\Book\BookComment;
 use Illuminate\Support\Facades\DB;

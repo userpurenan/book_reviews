@@ -7,8 +7,8 @@ namespace App\Http\Controllers\Book;
 use App\Http\Controllers\Controller;
 use App\Models\Book\Book;
 use App\Models\Book\BookComment;
-use App\Services\Book\CommentService;
-use App\Services\Book\CommentLikesService;
+use App\Services\Book\Comment\CommentService;
+use App\Services\Book\Comment\CommentLikesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
@@ -37,9 +37,9 @@ class BookCommentController extends Controller
                 ], 200);
     }
 
-    public function editComment(Request $request, int $book_id): JsonResponse
+    public function editComment(Request $request, int $book_id, int $comment_id): JsonResponse
     {
-        $book_review_comment = BookComment::findOrFail($book_id);
+        $book_review_comment = BookComment::findOrFail($comment_id);
 
         $book_review_comment->update([ 'comment' => $request->input('comment') ]);
 
@@ -75,9 +75,9 @@ class BookCommentController extends Controller
         return response()->json($review_comment_array, 200);
     }
 
-    public function deleteComment(int $book_id): JsonResponse
+    public function deleteComment(int $book_id, int $comment_id): JsonResponse
     {
-        BookComment::findOrFail($book_id)->delete();
+        BookComment::findOrFail($comment_id)->delete();
 
         return response()->json([
             'message' => 'コメントの削除に成功しました'
