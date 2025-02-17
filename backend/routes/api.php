@@ -4,6 +4,7 @@ use App\Http\Controllers\User\AuthUserController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Book\BookCommentController;
 use App\Http\Controllers\Book\BookController;
+use App\Http\Controllers\Book\CommentReplyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,9 +44,15 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/books/{id}', [BookController::class, 'getBookDatail']);
     Route::put('/books/{id}', [BookController::class, 'updateBook']);
     Route::delete('/books/{id}', [BookController::class, 'deleteBook']);
-    Route::get('/books/{id}/comment', [BookCommentController::class, 'getComment']);
-    Route::post('/books/{id}/comment', [BookCommentController::class, 'createComment']);
-    Route::patch('/books/{id}/comment', [BookCommentController::class, 'editComment']);
-    Route::delete('/books/{id}/comment', [BookCommentController::class, 'deleteComment']);
+    Route::get('/books/{book_id}/comment/{comment_id}', [BookCommentController::class, 'getComment']);
+    Route::post('/books/{book_id}/comment/{comment_id}', [BookCommentController::class, 'createComment']);
+    Route::patch('/books/{book_id}/comment/{comment_id}', [BookCommentController::class, 'editComment']);
+    Route::delete('/books/{book_id}/comment/{comment_id}', [BookCommentController::class, 'deleteComment']);
     Route::post('/comment/updateLikes', [BookCommentController::class, 'updateLikes']);
+    Route::get('/comment/{comment_id}/reply', [CommentReplyController::class, 'fetchReply']);
+    Route::post('/comment/{comment_id}/reply', [CommentReplyController::class, 'createReply']);
+    Route::put('/comment/{comment_id}/reply/{reply_id}', [CommentReplyController::class, 'updateReply']);
+    Route::delete('/comment/{comment_id}/reply/{reply_id}', [CommentReplyController::class, 'deleteReply']);
+    Route::post('/comment/{comment_id}/reply/{reply_id}/updateLikes', [CommentReplyController::class, 'updateLikes']);
+
 });
