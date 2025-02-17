@@ -6,10 +6,24 @@ namespace App\Services\Book;
 
 use App\Models\User\UserCommentLikes;
 use App\Models\User\UserReviewLikes;
+use App\Models\User\UserReplyLikes;
 use Illuminate\Support\Facades\Auth;
 
 class UpdateLikeStatusService
 {
+    public function updateBookReviewLikeStatus($book, int $likes_count_change)
+    {
+        if($likes_count_change === 1) {
+            //いいねしたことを保持するためにデータベースにユーザーと書籍レビューのidを追加する
+            UserReviewLikes::create([
+                'user_id' => Auth::id(),
+                'book_id' => $book->id
+            ]);
+        } else {
+            UserReviewLikes::where('user_id', Auth::id())->where('book_id', $book->id)->delete();
+        }
+    }
+
     public function updateCommentLikeStatus($comment, int $likes_count_change)
     {
         if($likes_count_change === 1) {
@@ -23,16 +37,16 @@ class UpdateLikeStatusService
         }
     }
 
-    public function updateBookReviewLikeStatus($book, int $likes_count_change)
+    public function updateReplyLikeStatus($reply, int $likes_count_change)
     {
         if($likes_count_change === 1) {
-            //いいねしたことを保持するためにデータベースにユーザーと書籍レビューのidを追加する
-            UserReviewLikes::create([
+            //いいねしたことを保持するためにデータベースにユーザーとリプライのidを追加する
+            UserReplyLikes::create([
                 'user_id' => Auth::id(),
-                'book_id' => $book->id
+                'reply_id' => $reply->id
             ]);
         } else {
-            UserReviewLikes::where('user_id', Auth::id())->where('book_id', $book->id)->delete();
+            UserReplyLikes::where('user_id', Auth::id())->where('reply_id', $reply->id)->delete();
         }
     }
 }
