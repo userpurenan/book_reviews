@@ -22,14 +22,9 @@ class CommentReply extends Model
         'is_reviewer_reply'
     ];
 
-    public function scopeGetBookComment($query, int $comment_id)
-    {
-        return $query->with('comment')->where('comment_id', $comment_id);
-    }
-
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function comment()
