@@ -12,6 +12,8 @@ class UserReplyLikes extends Model
 
     protected $table = 'reply_likes';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'user_id',
         'reply_id'
