@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Book\Reply;
 
-use App\Models\Book\CommentReply;
+use App\Models\Book\Reply;
 use Illuminate\Support\Facades\DB;
 use App\Services\Book\UpdateLikeStatusService;
 
@@ -20,7 +20,7 @@ class ReplyLikesService
     // これだとコントローラーの処理が重複してしまうので、リクエストの処理はコントローラーで行うようにする
     public function updateLikes(int $reply_id, int $likes): array
     {
-        $reply = CommentReply::findOrFail($reply_id);
+        $reply = Reply::findOrFail($reply_id);
         $new_likes_count = $reply->reply_likes + $likes;
 
         if($new_likes_count < 0) {

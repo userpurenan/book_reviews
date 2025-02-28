@@ -2,7 +2,7 @@
 
 namespace App\Models\User;
 
-use App\Models\Book\CommentReply;
+use App\Models\Book\Reply;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,6 +26,6 @@ class UserReplyLikes extends Model
 
     public function reply()
     {
-        return $this->belongsTo(CommentReply::class);
+        return $this->belongsTo(Reply::class);
     }
 }

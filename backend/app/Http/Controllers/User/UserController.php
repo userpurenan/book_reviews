@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
 
 use App\Http\Requests\SignUpRequest;
 use App\Http\Requests\LoginRequest;
@@ -22,16 +21,13 @@ class UserController extends Controller
             throw new BadRequestHttpException('そのメールアドレスは既に登録されています');
         }
 
-        $retryTimes = 3;
-        DB::transaction(function () use ($request, &$token, &$user) {
-            $user = User::create([
-                "name" => $request->input('name'),
-                "email" => $request->input('email'),
-                "password" => Hash::make($request->input('password')),
-            ]);
+        $user = User::create([
+            "name" => $request->input('name'),
+            "email" => $request->input('email'),
+            "password" => Hash::make($request->input('password')),
+        ]);
 
-            $token = $user->createToken('Token')->accessToken;
-        }, $retryTimes);
+        $token = $user->createToken('Token')->accessToken;
 
         return response()->json([ 'name' => $user->name ], 200, ['authorization' => $token, 'Access-Control-Expose-Headers' => 'authorization']);
     }

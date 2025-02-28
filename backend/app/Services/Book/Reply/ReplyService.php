@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Book\Reply;
 
-use App\Models\Book\CommentReply;
+use App\Models\Book\Reply;
 use App\Models\User\UserReplyLikes;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,7 +15,7 @@ class ReplyService
         $auth_id = Auth::id();
 
         // GetBookCommentはモデルに定義されているスコープ。レビューに対するコメントを10件ずつ取得してくる。
-        $comment_reply = CommentReply::with('user')->where('comment_id', $comment_id)->get();
+        $comment_reply = Reply::with('user')->where('comment_id', $comment_id)->get();
 
         // ユーザーのいいね情報を一括で取得
         $user_likes = UserReplyLikes::where('user_id', $auth_id)

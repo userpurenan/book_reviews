@@ -40,7 +40,7 @@ class BookComment extends Model
 
     public function commentReply()
     {
-        return $this->hasMany(CommentReply::class);
+        return $this->hasMany(Reply::class);
     }
 
 }
