@@ -8,7 +8,7 @@ use App\Models\User\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CommentReply extends Model
+class Reply extends Model
 {
     use HasFactory;
 

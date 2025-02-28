@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Book\BookComment;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Book\CommentReply;
+use App\Models\Book\Reply;
 use App\Services\Book\Reply\ReplyService;
 use App\Services\Book\Reply\ReplyLikesService;
 
 use Illuminate\Http\JsonResponse;
 
-class CommentReplyController extends Controller
+class ReplyController extends Controller
 {
     public function fetchReply(int $comment_id, ReplyService $reply_service): JsonResponse
     {
@@ -27,7 +27,7 @@ class CommentReplyController extends Controller
         $comment = BookComment::findOrFail($comment_id);
 
         //is_reviewer_replyはtrueかfalseをセットしているが、MySQLの使用上tinyint(1)として扱われるのでデータベースには１か０がセットされる
-        $books_review_reply = CommentReply::create([
+        $books_review_reply = Reply::create([
                                     'user_id' => $user_id,
                                     'comment_id' => $comment_id,
                                     'reply' => $request->input('reply'),
@@ -45,7 +45,7 @@ class CommentReplyController extends Controller
 
     public function updateReply(Request $request, int $comment_id, int $reply_id): JsonResponse
     {
-        $book_review_reply = CommentReply::findOrFail($reply_id);
+        $book_review_reply = Reply::findOrFail($reply_id);
 
         $book_review_reply->update([ 'reply' => $request->input('reply') ]);
 
@@ -59,7 +59,7 @@ class CommentReplyController extends Controller
 
     public function deleteReply(int $book_id, int $reply_id): JsonResponse
     {
-        CommentReply::findOrFail($reply_id)->delete();
+        Reply::findOrFail($reply_id)->delete();
 
         return response()->json([ 'message' => 'delete success' ], 200);
     }
