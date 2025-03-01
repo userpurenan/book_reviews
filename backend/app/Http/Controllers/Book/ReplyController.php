@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Book;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use App\Models\Book\BookComment;
 use Illuminate\Support\Facades\Auth;
@@ -47,6 +48,10 @@ class ReplyController extends Controller
     {
         $book_review_reply = Reply::findOrFail($reply_id);
 
+        if(Auth::id() !== $book_review_reply->user_id) {
+            throw new \Illuminate\Auth\Access\AuthorizationException('他のユーザーの投稿は更新できません');
+        }
+
         $book_review_reply->update([ 'reply' => $request->input('reply') ]);
 
         return response()->json([
@@ -57,18 +62,18 @@ class ReplyController extends Controller
         ], 201);
     }
 
-    public function deleteReply(int $book_id, int $reply_id): JsonResponse
+    public function deleteReply(int $book_id, int $reply_id): Response
     {
         Reply::findOrFail($reply_id)->delete();
 
-        return response()->json([ 'message' => 'delete success' ], 200);
+        return response()->noContent();
     }
 
-    public function updateLikes(Request $request, int $comment_id, int $reply_id, ReplyLikesService $comment_like): JsonResponse
+    public function updateLikes(Request $request, int $comment_id, int $reply_id, ReplyLikesService $reply_like): JsonResponse
     {
         $likes = (int) $request->input('likes');
 
-        $update_likes_result = $comment_like->updateLikes($reply_id, $likes);
+        $update_likes_result = $reply_like->updateLikes($reply_id, $likes);
 
         if(isset($update_likes_result['error'])) {
             return response()->json($update_likes_result, 500);

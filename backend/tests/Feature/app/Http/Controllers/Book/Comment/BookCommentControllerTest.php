@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\App\Http\Controllers\Book;
+namespace Tests\Feature\App\Http\Controllers\Book\Comment;
 
 use App\Models\Book\Book;
 use App\Models\Book\BookComment;
@@ -148,11 +148,11 @@ class BookCommentControllerTest extends TestCase
 
     public function test_コメントを編集することができる(): void
     {
-        Book::factory()->create();
+        $book = Book::factory()->create();
         $book_review_comment = BookComment::factory()->create();
         $update_comment = fake()->realText(10);
 
-        $edit_comment_response = $this->patch("/api/books/{$book_review_comment->id}/comment", [
+        $edit_comment_response = $this->patch("/api/books/{$book->id}/comment/{$book_review_comment->id}", [
             'comment' => $update_comment
         ], [
             'Authorization' => "Bearer $this->token",
@@ -175,10 +175,10 @@ class BookCommentControllerTest extends TestCase
 
     public function test_コメントを削除することができる(): void
     {
-        Book::factory()->create();
+        $book = Book::factory()->create();
         $book_review_comment = BookComment::factory()->create();
 
-        $response = $this->delete("/api/books/{$book_review_comment->id}/comment", [], [
+        $response = $this->delete("/api/books/{$book->id}/comment/{$book_review_comment->id}", [], [
             'Authorization' => "Bearer $this->token",
         ]);
 
