@@ -44,8 +44,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/books/{id}', [BookController::class, 'getBookDatail']);
     Route::put('/books/{id}', [BookController::class, 'updateBook']);
     Route::delete('/books/{id}', [BookController::class, 'deleteBook']);
-    Route::get('/books/{book_id}/comment/{comment_id}', [BookCommentController::class, 'getComment']);
-    Route::post('/books/{book_id}/comment/{comment_id}', [BookCommentController::class, 'createComment']);
+    Route::get('/books/{book_id}/comment', [BookCommentController::class, 'getComment']);
+    Route::post('/books/{book_id}/comment', [BookCommentController::class, 'createComment']);
     Route::patch('/books/{book_id}/comment/{comment_id}', [BookCommentController::class, 'editComment']);
     Route::delete('/books/{book_id}/comment/{comment_id}', [BookCommentController::class, 'deleteComment']);
     Route::post('/comment/updateLikes', [BookCommentController::class, 'updateLikes']);
