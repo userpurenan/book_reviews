@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\User;
+namespace App\Models\UserDomain;
 
-use App\Models\Book\Reply;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BookDomain\Reply;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserReplyLikes extends Model
 {

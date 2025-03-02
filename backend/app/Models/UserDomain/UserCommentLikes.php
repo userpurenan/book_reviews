@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\User;
+namespace App\Models\UserDomain;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BookDomain\Comment;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Book\BookComment;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserCommentLikes extends Model
 {
@@ -24,7 +24,7 @@ class UserCommentLikes extends Model
 
     public function comment()
     {
-        return $this->belongsTo(BookComment::class);
+        return $this->belongsTo(Comment::class);
     }
 
 }

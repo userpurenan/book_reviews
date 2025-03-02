@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\App\Http\Controllers\User;
 
-use App\Models\User\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+use Illuminate\Support\Str;
+use App\Models\UserDomain\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AuthUserControllerTest extends TestCase
 {

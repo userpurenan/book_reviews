@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Book\Reply;
 
-use App\Models\Book\Reply;
+use App\Models\BookDomain\Reply;
 use Illuminate\Support\Facades\DB;
 use App\Services\Book\UpdateLikeStatusService;
 

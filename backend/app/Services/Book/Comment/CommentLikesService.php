@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Book\Comment;
 
-use App\Models\Book\BookComment;
+use App\Models\BookDomain\Comment;
 use Illuminate\Support\Facades\DB;
 use App\Services\Book\UpdateLikeStatusService;
 
@@ -20,7 +20,7 @@ class CommentLikesService
     // これだとコントローラーの処理が重複してしまうので、リクエストの処理はコントローラーで行うようにする
     public function updateLikes(int $comment_id, int $likes): array
     {
-        $comment = BookComment::findOrFail($comment_id);
+        $comment = Comment::findOrFail($comment_id);
         $new_likes_count = $comment->comment_likes + $likes;
 
         if($new_likes_count < 0) {

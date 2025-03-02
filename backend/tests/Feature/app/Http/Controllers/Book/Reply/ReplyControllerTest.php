@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature\App\Http\Controllers\Book\Reply;
 
-use App\Models\Book\Book;
-use App\Models\Book\BookComment;
-use App\Models\Book\Reply;
-use App\Models\User\User;
-use Illuminate\Support\Str;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
+use Illuminate\Support\Str;
+use App\Models\BookDomain\Book;
+use App\Models\UserDomain\User;
+use App\Models\BookDomain\Reply;
+use App\Models\BookDomain\Comment;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ReplyControllerTest extends TestCase
 {
@@ -40,7 +40,7 @@ class ReplyControllerTest extends TestCase
 
         // テスト用の書籍とコメントを作成
         $this->book = Book::factory()->create();
-        $this->comment = BookComment::factory()->create([
+        $this->comment = Comment::factory()->create([
             'book_id' => $this->book->id,
             'user_id' => $this->user->id
         ]);

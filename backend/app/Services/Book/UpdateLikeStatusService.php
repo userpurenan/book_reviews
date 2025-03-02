@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services\Book;
 
-use App\Models\User\UserCommentLikes;
-use App\Models\User\UserReviewLikes;
-use App\Models\User\UserReplyLikes;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserDomain\UserReplyLikes;
+use App\Models\UserDomain\UserReviewLikes;
+use App\Models\UserDomain\UserCommentLikes;
 
 class UpdateLikeStatusService
 {

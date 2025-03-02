@@ -2,12 +2,12 @@
 
 namespace Tests\Feature\App\Http\Controllers\Book;
 
-use App\Models\Book\Book;
-use App\Models\User\User;
-use Illuminate\Support\Str;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
+use Illuminate\Support\Str;
+use App\Models\BookDomain\Book;
+use App\Models\UserDomain\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BookControllerTest extends TestCase
 {
@@ -32,6 +32,8 @@ class BookControllerTest extends TestCase
                           'email' => $this->email,
                           'password' => Hash::make($this->password)
                       ]);
+
+        $this->token = $this->user->createToken('Token')->accessToken;
     }
 
     public function test_書籍を10件ずつ取得できる(): void
@@ -52,7 +54,6 @@ class BookControllerTest extends TestCase
 
     public function test_新規の書籍レビューを作ることができる(): void
     {
-        $token = $this->user->createToken('Token')->accessToken;
         $title = fake()->realtext(10);
         $url = fake()->url();
         $detail = fake()->realText(15);
@@ -66,7 +67,7 @@ class BookControllerTest extends TestCase
             'review' => $review,
             'reviewer' => $this->user->name,
         ], [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->token,
         ]);
 
         $this->assertDatabaseHas('books', [
@@ -81,7 +82,6 @@ class BookControllerTest extends TestCase
 
     public function test_書籍の更新が実行できる(): void
     {
-        $token = $this->user->createToken('Token')->accessToken;
         $title = fake()->realtext(10);
         $url = fake()->url();
         $detail = fake()->realText(15);
@@ -96,11 +96,11 @@ class BookControllerTest extends TestCase
         ];
 
         $this->put("/api/books/{$book->id}", $update_book_data, [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->token,
         ]);
 
         $update_books = $this->get("/api/books/{$book->id}", [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->token,
         ]);
         $update_books->assertJsonMissing([
             'title' => $book->title,
@@ -113,11 +113,10 @@ class BookControllerTest extends TestCase
 
     public function test_書籍を削除する事ができる(): void
     {
-        $token = $this->user->createToken('Token')->accessToken;
         $book = Book::factory()->create();
 
         $this->delete("/api/books/{$book->id}", [], [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer ' . $this->token,
         ]);
 
         $this->assertDatabaseMissing('books', [

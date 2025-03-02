@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\App\Http\Controllers\Book\Comment;
 
-use App\Models\Book\Book;
-use App\Models\Book\BookComment;
-use App\Models\User\User;
-use Illuminate\Support\Str;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
+use Illuminate\Support\Str;
+use App\Models\BookDomain\Book;
+use App\Models\UserDomain\User;
+use App\Models\BookDomain\Comment;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class BookCommentControllerTest extends TestCase
 {
@@ -42,7 +42,7 @@ class BookCommentControllerTest extends TestCase
     public function test_レビューに対するコメントを取得することができる(): void
     {
         $book = Book::factory()->create();
-        $book_review_comment = BookComment::factory()->create();
+        $book_review_comment = Comment::factory()->create();
 
         $response = $this->get("/api/books/{$book->id}/comment", [
             'Authorization' => "Bearer $this->token",
@@ -102,7 +102,7 @@ class BookCommentControllerTest extends TestCase
         Book::factory()->create();
 
         //いいねの数は０より下回らないように設定しており、初期値が０のままだと減少しているのかわからなくなるので、このテストではいいねの数の初期値を１にする
-        $book_review_comment = BookComment::factory()->create(['comment_likes' => 1,]);
+        $book_review_comment = Comment::factory()->create(['comment_likes' => 1,]);
         $update_comment_like_result = $book_review_comment->comment_likes + $fluctuation;
 
         $response = $this->post('/api/comment/updateLikes', [
@@ -130,7 +130,7 @@ class BookCommentControllerTest extends TestCase
     public function test_いいねが0を下回らない(): void
     {
         Book::factory()->create();
-        $book_review_comment = BookComment::factory()->create();
+        $book_review_comment = Comment::factory()->create();
 
         $response = $this->post('/api/comment/updateLikes', [
             'comment_id' => $book_review_comment->id,
@@ -149,7 +149,7 @@ class BookCommentControllerTest extends TestCase
     public function test_コメントを編集することができる(): void
     {
         $book = Book::factory()->create();
-        $book_review_comment = BookComment::factory()->create();
+        $book_review_comment = Comment::factory()->create();
         $update_comment = fake()->realText(10);
 
         $edit_comment_response = $this->patch("/api/books/{$book->id}/comment/{$book_review_comment->id}", [
@@ -176,7 +176,7 @@ class BookCommentControllerTest extends TestCase
     public function test_コメントを削除することができる(): void
     {
         $book = Book::factory()->create();
-        $book_review_comment = BookComment::factory()->create();
+        $book_review_comment = Comment::factory()->create();
 
         $response = $this->delete("/api/books/{$book->id}/comment/{$book_review_comment->id}", [], [
             'Authorization' => "Bearer $this->token",

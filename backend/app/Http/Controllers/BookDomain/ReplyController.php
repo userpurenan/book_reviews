@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Book;
+declare(strict_types=1);
+
+namespace App\Http\Controllers\BookDomain;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\BookDomain\Reply;
+use Illuminate\Http\JsonResponse;
+use App\Models\BookDomain\Comment;
 use App\Http\Controllers\Controller;
-use App\Models\Book\BookComment;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Book\Reply;
+
+use Illuminate\Support\Facades\Gate;
 use App\Services\Book\Reply\ReplyService;
 use App\Services\Book\Reply\ReplyLikesService;
-
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Gate;
 
 class ReplyController extends Controller
 {
@@ -26,7 +28,7 @@ class ReplyController extends Controller
     public function createReply(Request $request, int $comment_id): JsonResponse
     {
         $user_id = Auth::id();
-        $comment = BookComment::findOrFail($comment_id);
+        $comment = Comment::findOrFail($comment_id);
 
         //is_reviewer_replyはtrueかfalseをセットしているが、MySQLの使用上tinyint(1)として扱われるのでデータベースには１か０がセットされる
         $books_review_reply = Reply::create([

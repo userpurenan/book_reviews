@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Models\Book;
+namespace App\Models\BookDomain;
 
-use App\Models\User\User;
-use App\Models\Book\BookComment;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\UserDomain\User;
+use App\Models\BookDomain\Comment;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Book extends Model
 {
@@ -40,7 +40,7 @@ class Book extends Model
 
     public function bookComment()
     {
-        return $this->hasMany(BookComment::class);
+        return $this->hasMany(Comment::class);
     }
 
 }

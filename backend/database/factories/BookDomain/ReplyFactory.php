@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\Factories\Book;
+namespace Database\Factories\BookDomain;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use app\Models\User\User;
-use App\Models\Book\BookComment;
+use App\Models\UserDomain\User;
+use App\Models\BookDomain\Comment;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
@@ -20,8 +20,8 @@ class ReplyFactory extends Factory
     public function definition(): array
     {
         $random_user_id = User::inRandomOrder()->first()->id;
-        $random_comment_id = BookComment::inRandomOrder()->first()->id;
-        $comment = BookComment::findOrFail($random_comment_id);
+        $random_comment_id = Comment::inRandomOrder()->first()->id;
+        $comment = Comment::findOrFail($random_comment_id);
 
         return [
             'user_id' => $random_user_id,

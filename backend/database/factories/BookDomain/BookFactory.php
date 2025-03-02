@@ -1,9 +1,9 @@
 <?php
 
-namespace Database\Factories\Book;
+namespace Database\Factories\BookDomain;
 
+use App\Models\UserDomain\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\User\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Book>

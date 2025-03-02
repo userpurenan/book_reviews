@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Models\Book;
+namespace App\Models\BookDomain;
 
-use App\Models\User\User;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BookDomain\Comment;
+use App\Models\UserDomain\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Reply extends Model
 {
@@ -29,7 +30,7 @@ class Reply extends Model
 
     public function comment()
     {
-        return $this->belongsTo(BookComment::class, 'comment_id');
+        return $this->belongsTo(Comment::class, 'comment_id');
     }
 
 }

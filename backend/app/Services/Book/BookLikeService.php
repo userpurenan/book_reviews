@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Book;
 
-use App\Models\Book\Book;
+use App\Models\BookDomain\Book;
 use Illuminate\Support\Facades\DB;
 use App\Services\Book\UpdateLikeStatusService;
 

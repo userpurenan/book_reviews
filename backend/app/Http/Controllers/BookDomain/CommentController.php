@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Book;
+namespace App\Http\Controllers\BookDomain;
 
+use Illuminate\Http\Request;
+use App\Models\BookDomain\Book;
+use Illuminate\Http\JsonResponse;
+use App\Models\BookDomain\Comment;
 use App\Http\Controllers\Controller;
-use App\Models\Book\Book;
-use App\Models\Book\BookComment;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Services\Book\Comment\CommentService;
 use App\Services\Book\Comment\CommentLikesService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Gate;
 
-class BookCommentController extends Controller
+class CommentController extends Controller
 {
     public function getComment(Request $request, CommentService $comment_service, int $book_id): JsonResponse
     {
@@ -32,7 +32,7 @@ class BookCommentController extends Controller
         $book = Book::findOrFail($book_id);
 
         //is_reviewer_commentはtrueかfalseをセットしているが、MySQLの使用上tinyint(1)として扱われるのでデータベースには１か０がセットされる
-        $books_review_comment = BookComment::create([
+        $books_review_comment = Comment::create([
                                     'user_id' => $user_id,
                                     'book_id' => $book_id,
                                     'comment' => $request->input('comment'),
@@ -48,7 +48,7 @@ class BookCommentController extends Controller
                 ], 200);
     }
 
-    public function editComment(Request $request, BookComment $book_comment, int $book_id, int $comment_id): JsonResponse
+    public function editComment(Request $request, Comment $book_comment, int $book_id, int $comment_id): JsonResponse
     {
         Gate::authorize('auth_comment', $book_comment);
 
@@ -64,11 +64,11 @@ class BookCommentController extends Controller
         ], 200);
     }
 
-    public function deleteComment(BookComment $book_comment, int $book_id, int $comment_id): JsonResponse
+    public function deleteComment(Comment $book_comment, int $book_id, int $comment_id): JsonResponse
     {
         Gate::authorize('auth_comment', $book_comment);
 
-        BookComment::findOrFail($comment_id)->delete();
+        Comment::findOrFail($comment_id)->delete();
 
         return response()->json([
             'message' => 'コメントの削除に成功しました'

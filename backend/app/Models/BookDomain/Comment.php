@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Models\Book;
+namespace App\Models\BookDomain;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BookDomain\Book;
+use App\Models\UserDomain\User;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Book\Book;
-use App\Models\User\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class BookComment extends Model
+class Comment extends Model
 {
     use HasFactory;
 

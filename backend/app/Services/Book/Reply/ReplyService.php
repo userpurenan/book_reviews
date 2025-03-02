@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services\Book\Reply;
 
-use App\Models\Book\Reply;
-use App\Models\User\UserReplyLikes;
+use App\Models\BookDomain\Reply;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserDomain\UserReplyLikes;
 
 class ReplyService
 {

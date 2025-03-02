@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Models\User;
+namespace App\Models\UserDomain;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Book\Book;
-use App\Models\Book\BookComment;
-use App\Models\Book\Reply;
+use App\Models\BookDomain\Book;
+use App\Models\BookDomain\Reply;
+use App\Models\BookDomain\Comment;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -40,7 +40,7 @@ class User extends Authenticatable
 
     public function books_comment()
     {
-        return $this->hasMany(BookComment::class);
+        return $this->hasMany(Comment::class);
     }
 
     public function reply()

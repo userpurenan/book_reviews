@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Book;
+namespace App\Http\Controllers\BookDomain;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\BookRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Book\Book;
-use App\Models\User\UserReviewLikes;
-use App\Services\Book\BookLikeService;
+use App\Models\BookDomain\Book;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\BookRequest;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Services\Book\BookLikeService;
+use App\Models\UserDomain\UserReviewLikes;
 
 class BookController extends Controller
 {

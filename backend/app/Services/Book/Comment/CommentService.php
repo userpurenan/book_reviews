@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services\Book\Comment;
 
-use App\Models\Book\BookComment;
-use App\Models\User\UserCommentLikes;
+use App\Models\BookDomain\Comment;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserDomain\UserCommentLikes;
 
 class CommentService
 {
@@ -15,7 +15,7 @@ class CommentService
         $auth_id = Auth::id();
 
         // GetBookCommentはモデルに定義されているスコープ。レビューに対するコメントを10件ずつ取得してくる。
-        $books_review_comment = BookComment::GetBookComment($book_id, $number)
+        $books_review_comment = Comment::GetBookComment($book_id, $number)
             ->offset($number)
             ->limit(10)
             ->orderBy('id', 'desc')

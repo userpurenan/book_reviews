@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Models\User;
+namespace App\Models\UserDomain;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\BookDomain\Book;
+use App\Models\UserDomain\User;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Book\Book;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserReviewLikes extends Model
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace Database\Factories\Book;
+namespace Database\Factories\BookDomain;
 
-use App\Models\Book\Book;
-use App\Models\User\User;
+use App\Models\BookDomain\Book;
+use App\Models\UserDomain\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\BookComment>
  */
-class BookCommentFactory extends Factory
+class CommentFactory extends Factory
 {
     /**
      * Define the model's default state.

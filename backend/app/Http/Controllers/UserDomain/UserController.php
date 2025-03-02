@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\UserDomain;
+
+use App\Models\UserDomain\User;
+use App\Http\Requests\LoginRequest;
 
 use App\Http\Controllers\Controller;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-
-use Illuminate\Support\Facades\Hash;
 
 use App\Http\Requests\SignUpRequest;
-use App\Http\Requests\LoginRequest;
-use App\Models\User\User;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class UserController extends Controller
 {

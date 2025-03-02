@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\User;
+declare(strict_types=1);
 
-use App\Http\Controllers\Controller;
-use App\Models\User\User;
-use App\Services\User\ImageUploadService;
+namespace App\Http\Controllers\UserDomain;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\UserDomain\User;
 use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Services\User\ImageUploadService;
 
 class AuthUserController extends Controller
 {
