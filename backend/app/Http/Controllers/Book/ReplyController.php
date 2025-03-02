@@ -12,6 +12,7 @@ use App\Services\Book\Reply\ReplyService;
 use App\Services\Book\Reply\ReplyLikesService;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class ReplyController extends Controller
 {
@@ -44,27 +45,27 @@ class ReplyController extends Controller
                 ], 201);
     }
 
-    public function updateReply(Request $request, int $comment_id, int $reply_id): JsonResponse
+    public function updateReply(Request $request, Reply $reply, int $comment_id, int $reply_id): JsonResponse
     {
-        $book_review_reply = Reply::findOrFail($reply_id);
+        Gate::authorize('auth_reply', $reply);
 
-        if(Auth::id() !== $book_review_reply->user_id) {
-            throw new \Illuminate\Auth\Access\AuthorizationException('他のユーザーの投稿は更新できません');
-        }
+        $book_comment_reply = $reply->findOrFail($reply_id);
 
-        $book_review_reply->update([ 'reply' => $request->input('reply') ]);
+        $book_comment_reply->update([ 'reply' => $request->input('reply') ]);
 
         return response()->json([
-            'user_name' => $book_review_reply->user->name,
-            'user_image_url' => $book_review_reply->user->image_url,
-            'reply' => $book_review_reply->reply,
-            'reply_likes' => $book_review_reply->reply_likes
+            'user_name' => $book_comment_reply->user->name,
+            'user_image_url' => $book_comment_reply->user->image_url,
+            'reply' => $book_comment_reply->reply,
+            'reply_likes' => $book_comment_reply->reply_likes
         ], 201);
     }
 
-    public function deleteReply(int $book_id, int $reply_id): Response
+    public function deleteReply(Reply $reply, int $book_id, int $reply_id): Response
     {
-        Reply::findOrFail($reply_id)->delete();
+        Gate::authorize('auth_reply', $reply);
+
+        $reply->findOrFail($reply_id)->delete();
 
         return response()->noContent();
     }

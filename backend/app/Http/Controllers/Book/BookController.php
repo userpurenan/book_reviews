@@ -12,6 +12,7 @@ use App\Models\Book\Book;
 use App\Models\User\UserReviewLikes;
 use App\Services\Book\BookLikeService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class BookController extends Controller
 {
@@ -87,9 +88,11 @@ class BookController extends Controller
         ], 200);
     }
 
-    public function updateBook(Request $request, int $id): JsonResponse
+    public function updateBook(Request $request, Book $book, int $id): JsonResponse
     {
-        $book_datail = Book::findOrFail($id);
+        Gate::authorize('auth_book', $book);
+
+        $book_datail = $book->findOrFail($id);
         $book_datail->update([
                           'title' => $request->input('title') ?? $book_datail->title,
                           'url' => $request->input('url') ?? $book_datail->url,
@@ -109,9 +112,11 @@ class BookController extends Controller
           ], 200);
     }
 
-    public function deleteBook(int $id): JsonResponse
+    public function deleteBook(Book $book, int $id): JsonResponse
     {
-        Book::findOrFail($id)->delete();
+        Gate::authorize('auth_book', $book);
+
+        $book->findOrFail($id)->delete();
 
         return response()->json([
             'message' => 'レビューの削除に成功しました'

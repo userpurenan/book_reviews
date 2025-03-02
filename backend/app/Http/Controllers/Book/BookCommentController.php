@@ -12,9 +12,20 @@ use App\Services\Book\Comment\CommentLikesService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class BookCommentController extends Controller
 {
+    public function getComment(Request $request, CommentService $comment_service, int $book_id): JsonResponse
+    {
+        $number = (int) $request->query('comment_offset', $default = 0);
+
+        // コメントを配列に詰める処理をサービスクラスに切り出した
+        $review_comment_array = $comment_service->setComment($book_id, $number);
+
+        return response()->json($review_comment_array, 200);
+    }
+
     public function createComment(Request $request, int $book_id): JsonResponse
     {
         $user_id = Auth::id();
@@ -37,9 +48,11 @@ class BookCommentController extends Controller
                 ], 200);
     }
 
-    public function editComment(Request $request, int $book_id, int $comment_id): JsonResponse
+    public function editComment(Request $request, BookComment $book_comment, int $book_id, int $comment_id): JsonResponse
     {
-        $book_review_comment = BookComment::findOrFail($comment_id);
+        Gate::authorize('auth_comment', $book_comment);
+
+        $book_review_comment = $book_comment->findOrFail($comment_id);
 
         $book_review_comment->update([ 'comment' => $request->input('comment') ]);
 
@@ -48,6 +61,17 @@ class BookCommentController extends Controller
             'user_image_url' => $book_review_comment->user->image_url,
             'comment' => $book_review_comment->comment,
             'comment_likes' => $book_review_comment->comment_likes
+        ], 200);
+    }
+
+    public function deleteComment(BookComment $book_comment, int $book_id, int $comment_id): JsonResponse
+    {
+        Gate::authorize('auth_comment', $book_comment);
+
+        BookComment::findOrFail($comment_id)->delete();
+
+        return response()->json([
+            'message' => 'コメントの削除に成功しました'
         ], 200);
     }
 
@@ -63,24 +87,5 @@ class BookCommentController extends Controller
         }
 
         return response()->json($update_likes_result, 200);
-    }
-
-    public function getComment(Request $request, CommentService $comment_service, int $book_id): JsonResponse
-    {
-        $number = (int) $request->query('comment_offset', $default = 0);
-
-        // コメントを配列に詰める処理をサービスクラスに切り出した
-        $review_comment_array = $comment_service->setComment($book_id, $number);
-
-        return response()->json($review_comment_array, 200);
-    }
-
-    public function deleteComment(int $book_id, int $comment_id): JsonResponse
-    {
-        BookComment::findOrFail($comment_id)->delete();
-
-        return response()->json([
-            'message' => 'コメントの削除に成功しました'
-        ], 200);
     }
 }
