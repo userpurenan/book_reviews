@@ -46,7 +46,7 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/books/{id}', [BookController::class, 'deleteBook']);
     Route::get('/books/{book_id}/comment', [CommentController::class, 'getComment']);
     Route::post('/books/{book_id}/comment', [CommentController::class, 'createComment']);
-    Route::patch('/books/{book_id}/comment/{comment_id}', [CommentController::class, 'editComment']);
+    Route::patch('/books/{book_id}/comment/{comment_id}', [CommentController::class, 'updateComment']);
     Route::delete('/books/{book_id}/comment/{comment_id}', [CommentController::class, 'deleteComment']);
     Route::post('/comment/updateLikes', [CommentController::class, 'updateLikes']);
     Route::get('/comment/{comment_id}/reply', [ReplyController::class, 'fetchReply']);
@@ -54,5 +54,4 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/comment/{comment_id}/reply/{reply_id}', [ReplyController::class, 'updateReply']);
     Route::delete('/comment/{comment_id}/reply/{reply_id}', [ReplyController::class, 'deleteReply']);
     Route::post('/comment/{comment_id}/reply/{reply_id}/updateLikes', [ReplyController::class, 'updateLikes']);
-
 });

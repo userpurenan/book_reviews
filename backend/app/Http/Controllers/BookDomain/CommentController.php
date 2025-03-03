@@ -48,7 +48,7 @@ class CommentController extends Controller
                 ], 200);
     }
 
-    public function editComment(Request $request, Comment $comment, int $book_id, int $comment_id): JsonResponse
+    public function updateComment(Request $request, Comment $comment, int $book_id, int $comment_id): JsonResponse
     {
         $review_comment = $comment->findOrFail($comment_id);
 
