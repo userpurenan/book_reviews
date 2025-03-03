@@ -88,11 +88,11 @@ class BookController extends Controller
         ], 200);
     }
 
-    public function updateBook(Request $request, Book $book, int $id): JsonResponse
+    public function updateBook(Request $request, int $id, Book $book): JsonResponse
     {
-        Gate::authorize('auth_book', $book);
-
         $book_datail = $book->findOrFail($id);
+        Gate::authorize('auth_book', $book_datail);
+
         $book_datail->update([
                           'title' => $request->input('title') ?? $book_datail->title,
                           'url' => $request->input('url') ?? $book_datail->url,
@@ -114,9 +114,11 @@ class BookController extends Controller
 
     public function deleteBook(Book $book, int $id): JsonResponse
     {
-        Gate::authorize('auth_book', $book);
+        $book_datail = $book->findOrFail($id);
 
-        $book->findOrFail($id)->delete();
+        Gate::authorize('auth_book', $book_datail);
+
+        $book_datail->delete();
 
         return response()->json([
             'message' => 'レビューの削除に成功しました'

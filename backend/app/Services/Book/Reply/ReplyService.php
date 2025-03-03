@@ -14,10 +14,8 @@ class ReplyService
     {
         $auth_id = Auth::id();
 
-        // GetBookCommentはモデルに定義されているスコープ。レビューに対するコメントを10件ずつ取得してくる。
         $comment_reply = Reply::with('user')->where('comment_id', $comment_id)->get();
 
-        // ユーザーのいいね情報を一括で取得
         $user_likes = UserReplyLikes::where('user_id', $auth_id)
             ->whereIn('reply_id', $comment_reply->pluck('id'))
             ->pluck('reply_id')

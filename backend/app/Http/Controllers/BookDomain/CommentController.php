@@ -48,27 +48,29 @@ class CommentController extends Controller
                 ], 200);
     }
 
-    public function editComment(Request $request, Comment $book_comment, int $book_id, int $comment_id): JsonResponse
+    public function editComment(Request $request, Comment $comment, int $book_id, int $comment_id): JsonResponse
     {
-        Gate::authorize('auth_comment', $book_comment);
+        $review_comment = $comment->findOrFail($comment_id);
 
-        $book_review_comment = $book_comment->findOrFail($comment_id);
+        Gate::authorize('auth_comment', $review_comment);
 
-        $book_review_comment->update([ 'comment' => $request->input('comment') ]);
+        $review_comment->update([ 'comment' => $request->input('comment') ]);
 
         return response()->json([
-            'user_name' => $book_review_comment->user->name,
-            'user_image_url' => $book_review_comment->user->image_url,
-            'comment' => $book_review_comment->comment,
-            'comment_likes' => $book_review_comment->comment_likes
+            'user_name' => $review_comment->user->name,
+            'user_image_url' => $review_comment->user->image_url,
+            'comment' => $review_comment->comment,
+            'comment_likes' => $review_comment->comment_likes
         ], 200);
     }
 
-    public function deleteComment(Comment $book_comment, int $book_id, int $comment_id): JsonResponse
+    public function deleteComment(Comment $comment, int $book_id, int $comment_id): JsonResponse
     {
-        Gate::authorize('auth_comment', $book_comment);
+        $review_comment = $comment->findOrFail($comment_id);
 
-        Comment::findOrFail($comment_id)->delete();
+        Gate::authorize('auth_comment', $review_comment);
+
+        $review_comment->delete();
 
         return response()->json([
             'message' => 'コメントの削除に成功しました'
