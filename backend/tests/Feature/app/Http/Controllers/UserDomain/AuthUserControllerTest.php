@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\App\Http\Controllers\User;
+namespace Tests\Feature\App\Http\Controllers\UserDomain;
 
 use Tests\TestCase;
 use Illuminate\Support\Str;

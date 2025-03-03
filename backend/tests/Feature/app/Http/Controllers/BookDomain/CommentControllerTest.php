@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\App\Http\Controllers\Book\Comment;
+namespace Tests\Feature\App\Http\Controllers\BookDomain;
 
 use Tests\TestCase;
 use Illuminate\Support\Str;
@@ -12,7 +12,7 @@ use App\Models\BookDomain\Comment;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class BookCommentControllerTest extends TestCase
+class CommentControllerTest extends TestCase
 {
     use RefreshDatabase;
 

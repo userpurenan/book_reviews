@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\App\Http\Controllers\Book;
+namespace Tests\Feature\App\Http\Controllers\BookDomain;
 
 use Tests\TestCase;
 use Illuminate\Support\Str;
