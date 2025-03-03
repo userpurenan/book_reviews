@@ -27,14 +27,8 @@ class ReplyControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->email = fake()->safeEmail();
-        $this->password = Str::random(10);
 
-        $this->user = User::create([
-            'name' => fake()->name(),
-            'email' => $this->email,
-            'password' => Hash::make($this->password)
-        ]);
+        $this->user = User::factory()->create();
 
         $this->token = $this->user->createToken('Token')->accessToken;
 
@@ -145,5 +139,52 @@ class ReplyControllerTest extends TestCase
         ])->putJson("/api/comment/{$this->comment->id}/reply/{$content->id}", $updateData);
 
         $response->assertStatus(403);
+    }
+
+    /**
+     * @test
+     */
+    public function 他のユーザーの返信は削除できない(): void
+    {
+        $content = Reply::factory()->create();
+        $otherUser = User::factory()->create();
+        $token = $otherUser->createToken('Token')->accessToken;
+
+        $response = $this->withHeaders([
+            'Authorization' => 'Bearer ' . $token
+        ])->delete("/api/comment/{$this->comment->id}/reply/{$content->id}");
+
+        $response->assertStatus(403);
+    }
+
+    /**
+     * @dataProvider updateLikesProvider
+     * @test
+     */
+    public function 返信のいいねの増減が可能(int $update_likes): void
+    {
+        $reply = Reply::factory()->create(['reply_likes' => 1]);
+
+        $response = $this->withHeaders([
+            'Authorization' => "Bearer $this->token"
+            ])->postJson("api/comment/$reply->comment_id/reply/$reply->id/updateLikes", [
+                'likes' => $update_likes
+            ]);
+
+        $reply_likes = $reply->reply_likes + $update_likes;
+
+        $response->assertStatus(200);
+        $response->assertExactJson(['reply_likes' => $reply_likes ]);
+        $this->assertDatabaseHas('reply', [
+            'reply_likes' => $reply->reply_likes + $update_likes
+        ]);
+    }
+
+    public static function updateLikesProvider(): array
+    {
+        return[
+            'いいねの数が増える' => [1],
+            'いいねの数が減る' => [-1],
+        ];
     }
 }

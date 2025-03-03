@@ -36,14 +36,20 @@ class BookControllerTest extends TestCase
         $this->token = $this->user->createToken('Token')->accessToken;
     }
 
-    public function test_書籍を10件ずつ取得できる(): void
+    /**
+     * @test
+     */
+    public function 書籍を10件ずつ取得できる(): void
     {
         Book::factory()->count(11)->create();
         $books = $this->get('/api/books')->json();
         $this->assertCount(10, $books);
     }
 
-    public function test_検索処理を実行する事ができる(): void
+    /**
+     * @test
+     */
+    public function 検索処理を実行する事ができる(): void
     {
         Book::factory()->count(11)->create();
         Book::factory()->create([ 'title' => 'NARUTO']);
@@ -52,7 +58,10 @@ class BookControllerTest extends TestCase
         $books->assertJsonFragment(['title' => 'NARUTO']);
     }
 
-    public function test_新規の書籍レビューを作ることができる(): void
+    /**
+     * @test
+     */
+    public function 新規の書籍レビューを作ることができる(): void
     {
         $title = fake()->realtext(10);
         $url = fake()->url();
@@ -80,7 +89,10 @@ class BookControllerTest extends TestCase
         ]);
     }
 
-    public function test_書籍の更新が実行できる(): void
+    /**
+     * @test
+     */
+    public function 書籍の更新が実行できる(): void
     {
         $title = fake()->realtext(10);
         $url = fake()->url();
@@ -111,7 +123,10 @@ class BookControllerTest extends TestCase
         $update_books->assertJson($update_book_data);
     }
 
-    public function test_書籍を削除する事ができる(): void
+    /**
+     * @test
+     */
+    public function 書籍を削除する事ができる(): void
     {
         $book = Book::factory()->create();
 
@@ -127,5 +142,74 @@ class BookControllerTest extends TestCase
             'review' => $book->review,
             'reviewer' => $this->user->name,
         ]);
+    }
+
+    /**
+     * @dataProvider updateLikesProvider
+     * @test
+     */
+    public function レビューのいいねの増減が可能(int $update_likes): void
+    {
+        $book_review = Book::factory()->create(['likes' => 1]);
+
+        $response = $this->post("/api/books/{$book_review->id}/updateLikes", [
+            'likes' => $update_likes
+        ], [
+            'Authorization' => "Bearer $this->token",
+        ]);
+
+        $update_likes = $book_review->likes + $update_likes;
+        $response->assertStatus(200);
+        $response->assertExactJson(['review_likes' => $update_likes ]);
+        $this->assertDatabaseHas('books', [
+            'likes' => $update_likes
+        ]);
+    }
+
+    public static function updateLikesProvider(): array
+    {
+        return[
+            'いいねの数が増える' => [1],
+            'いいねの数が減る' => [-1],
+        ];
+    }
+
+
+    /**
+     * @test
+     */
+    public function 他のユーザーのレビューを編集できない(): void
+    {
+        $book = Book::factory()->create();
+
+        $other_user = User::factory()->create();
+
+        $token = $other_user->createToken('Token')->accessToken;
+
+        $response = $this->withHeaders([
+            'Authorization' => "Bearer $token"
+        ])->putJson("api/books/$book->id", [
+            'comment' => '更新したいコメント'
+        ]);
+
+        $response->assertStatus(403);
+    }
+
+    /**
+     * @test
+     */
+    public function 他のユーザーのレビューを削除できない(): void
+    {
+        $book = Book::factory()->create();
+
+        $other_user = User::factory()->create();
+
+        $token = $other_user->createToken('Token')->accessToken;
+
+        $response = $this->withHeaders([
+            'Authorization' => "Bearer $token"
+        ])->delete("api/books/$book->id");
+
+        $response->assertStatus(403);
     }
 }
