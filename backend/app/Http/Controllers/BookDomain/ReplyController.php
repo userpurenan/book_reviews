@@ -49,25 +49,27 @@ class ReplyController extends Controller
 
     public function updateReply(Request $request, Reply $reply, int $comment_id, int $reply_id): JsonResponse
     {
-        Gate::authorize('auth_reply', $reply);
+        $comment_reply = $reply->findOrFail($reply_id);
 
-        $book_comment_reply = $reply->findOrFail($reply_id);
+        Gate::authorize('auth_reply', $comment_reply);
 
-        $book_comment_reply->update([ 'reply' => $request->input('reply') ]);
+        $comment_reply->update([ 'reply' => $request->input('reply') ]);
 
         return response()->json([
-            'user_name' => $book_comment_reply->user->name,
-            'user_image_url' => $book_comment_reply->user->image_url,
-            'reply' => $book_comment_reply->reply,
-            'reply_likes' => $book_comment_reply->reply_likes
+            'user_name' => $comment_reply->user->name,
+            'user_image_url' => $comment_reply->user->image_url,
+            'reply' => $comment_reply->reply,
+            'reply_likes' => $comment_reply->reply_likes
         ], 201);
     }
 
     public function deleteReply(Reply $reply, int $book_id, int $reply_id): Response
     {
-        Gate::authorize('auth_reply', $reply);
+        $comment_reply = $reply->findOrFail($reply_id);
 
-        $reply->findOrFail($reply_id)->delete();
+        Gate::authorize('auth_reply', $comment_reply);
+
+        $comment_reply->delete();
 
         return response()->noContent();
     }
