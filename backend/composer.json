@@ -60,9 +60,13 @@
             "php-cs-fixer fix"
         ],
         "BookTest": [
+            "php artisan config:clear",
+            "php artisan cache:clear",
             "php artisan test --env=testing --testsuite Book"
         ],
         "UserTest": [
+            "php artisan config:clear",
+            "php artisan cache:clear",
             "php artisan test --env=testing --testsuite User"
         ]
     },

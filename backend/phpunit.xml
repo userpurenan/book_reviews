@@ -12,10 +12,10 @@
             <directory>tests/Feature</directory>
         </testsuite>
         <testsuite name="User">
-            <directory>tests/Feature/app/Http/Controllers/User</directory>
+            <directory>tests/Feature/app/Http/Controllers/UserDomain</directory>
         </testsuite>
         <testsuite name="Book">
-            <directory>tests/Feature/app/Http/Controllers/Book</directory>
+            <directory>tests/Feature/app/Http/Controllers/BookDomain</directory>
         </testsuite>
     </testsuites>
     <source>
