@@ -2,13 +2,12 @@
 
 namespace App\Providers;
 
-use App\Models\Book\Book;
-use App\Models\Book\BookComment;
-use App\Models\Book\Reply;
-use App\Models\User\User;
+use App\Models\BookDomain\Book;
+use App\Models\UserDomain\User;
+use App\Models\BookDomain\Reply;
+use App\Models\BookDomain\Comment;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
             return $user->id === $book->user_id;
         });
 
-        Gate::define('auth_comment', function (User $user, BookComment $comment) {
+        Gate::define('auth_comment', function (User $user, Comment $comment) {
             return $user->id === $comment->user_id;
         });
 
