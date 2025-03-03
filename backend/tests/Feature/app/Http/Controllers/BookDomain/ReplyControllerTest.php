@@ -49,7 +49,7 @@ class ReplyControllerTest extends TestCase
     /**
      * @test
      */
-    public function test_返信を新規作成できる(): void
+    public function 返信を新規作成できる(): void
     {
         $replyData = [
             'reply' => 'テスト返信です',
@@ -73,7 +73,7 @@ class ReplyControllerTest extends TestCase
     /**
      * @test
      */
-    public function test_特定のコメントの返信一覧を取得できる(): void
+    public function 特定のコメントの返信一覧を取得できる(): void
     {
         Reply::factory()->count(3)->create();
 
@@ -87,7 +87,7 @@ class ReplyControllerTest extends TestCase
     /**
      * @test
      */
-    public function test_返信を更新できる(): void
+    public function 返信を更新できる(): void
     {
         $content = Reply::factory()->create();
 
@@ -115,7 +115,7 @@ class ReplyControllerTest extends TestCase
     /**
      * @test
      */
-    public function test_返信を削除できる(): void
+    public function 返信を削除できる(): void
     {
         $content = Reply::factory()->create();
 
@@ -130,7 +130,7 @@ class ReplyControllerTest extends TestCase
     /**
      * @test
      */
-    public function test_他のユーザーの返信は更新できない(): void
+    public function 他のユーザーの返信は更新できない(): void
     {
         $content = Reply::factory()->create();
         $otherUser = User::factory()->create();
