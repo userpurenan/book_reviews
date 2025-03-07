@@ -10,12 +10,12 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('reply', function (Blueprint $table) {
+        Schema::create('replies', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('comment_id')->constrained('book_review_comments')->onDelete('cascade');
-            $table->text('reply');
-            $table->unsignedBigInteger('reply_likes')->default(0);
-            $table->boolean('is_reviewer_reply')->default(false);
+            $table->foreignId('comment_id')->constrained('comments')->onDelete('cascade');
+            $table->text('content');
+            $table->unsignedBigInteger('likes')->default(0);
+            $table->boolean('is_reviewer_reply')->default(false); // そのリプライが投稿主だった場合に公式マークをつけたいのでこのフラグを定義した
             $table->timestamps();
         });
     }

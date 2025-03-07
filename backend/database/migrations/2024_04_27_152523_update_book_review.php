@@ -10,8 +10,8 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::table('book_review_comments', function (Blueprint $table) {
-            $table->unsignedBigInteger('comment_likes')->default(0)->change();
+        Schema::table('comments', function (Blueprint $table) {
+            $table->unsignedBigInteger('likes')->default(0)->change();
         });
     }
 
