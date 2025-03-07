@@ -13,13 +13,13 @@ class Comment extends Model
 {
     use HasFactory;
 
-    protected $table = 'book_review_comments';
+    protected $table = 'comments';
 
     protected $fillable = [
         'user_id',
         'book_id',
-        'comment',
-        'comment_likes',
+        'content',
+        'likes',
         'is_reviewer_comment'
     ];
 

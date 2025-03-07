@@ -21,7 +21,7 @@ class ReplyLikesService
     public function updateLikes(int $reply_id, int $likes): array
     {
         $reply = Reply::findOrFail($reply_id);
-        $new_likes_count = $reply->reply_likes + $likes;
+        $new_likes_count = $reply->likes + $likes;
 
         if($new_likes_count < 0) {
             return [ 'error' => 'いいねは0未満にはできません' ];
@@ -29,12 +29,12 @@ class ReplyLikesService
 
         $retryTimes = 3;
         DB::transaction(function () use ($reply, $new_likes_count, $likes) {
-            $reply->update(['reply_likes' => $new_likes_count ]);
+            $reply->update(['likes' => $new_likes_count ]);
 
             // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
             $this->update_like_status->updateReplyLikeStatus($reply, $likes);
         }, $retryTimes);
 
-        return [ 'reply_likes' => $new_likes_count ];
+        return [ 'likes' => $new_likes_count ];
     }
 }

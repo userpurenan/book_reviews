@@ -34,16 +34,16 @@ class ReplyController extends Controller
         $books_review_reply = Reply::create([
                                     'user_id' => $user_id,
                                     'comment_id' => $comment_id,
-                                    'reply' => $request->input('reply'),
+                                    'content' => $request->input('content'),
                                     'is_reviewer_reply' => $comment->user_id === $user_id ? 1 : 0,
-                                    'reply_likes' => 0
+                                    'likes' => 0
                                 ]);
 
         return response()->json([
                     'user_name' => $books_review_reply->user->name,
                     'user_image_url' => $books_review_reply->user->image_url,
-                    'reply' => $books_review_reply->reply,
-                    'reply_likes' => $books_review_reply->reply_likes
+                    'content' => $books_review_reply->content,
+                    'likes' => $books_review_reply->likes
                 ], 201);
     }
 
@@ -53,13 +53,13 @@ class ReplyController extends Controller
 
         Gate::authorize('auth_reply', $comment_reply);
 
-        $comment_reply->update([ 'reply' => $request->input('reply') ]);
+        $comment_reply->update([ 'content' => $request->input('content') ]);
 
         return response()->json([
             'user_name' => $comment_reply->user->name,
             'user_image_url' => $comment_reply->user->image_url,
-            'reply' => $comment_reply->reply,
-            'reply_likes' => $comment_reply->reply_likes
+            'content' => $comment_reply->content,
+            'likes' => $comment_reply->likes
         ], 201);
     }
 

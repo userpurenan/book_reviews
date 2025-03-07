@@ -26,9 +26,9 @@ class ReplyFactory extends Factory
         return [
             'user_id' => $random_user_id,
             'comment_id' => $comment->id,
-            'reply' => Str::random(10),
+            'content' => Str::random(10),
             'is_reviewer_reply' => $comment->user_id === $random_user_id ? 1 : 0,
-            'reply_likes' => 0
+            'likes' => 0
         ];
     }
 }

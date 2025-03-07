@@ -13,13 +13,13 @@ class Reply extends Model
 {
     use HasFactory;
 
-    protected $table = 'reply';
+    protected $table = 'replies';
 
     protected $fillable = [
         'comment_id',
         'user_id',
-        'reply',
-        'reply_likes',
+        'content',
+        'likes',
         'is_reviewer_reply'
     ];
 

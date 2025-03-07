@@ -35,16 +35,16 @@ class CommentController extends Controller
         $books_review_comment = Comment::create([
                                     'user_id' => $user_id,
                                     'book_id' => $book_id,
-                                    'comment' => $request->input('comment'),
+                                    'content' => $request->input('content'),
                                     'is_reviewer_comment' => $book->user_id === $user_id ? 1 : 0,
-                                    'comment_likes' => 0
+                                    'likes' => 0
                                 ]);
 
         return response()->json([
                     'user_name' => $books_review_comment->user->name,
                     'user_image_url' => $books_review_comment->user->image_url,
-                    'comment' => $books_review_comment->comment,
-                    'comment_likes' => $books_review_comment->comment_likes
+                    'content' => $books_review_comment->content,
+                    'likes' => $books_review_comment->likes
                 ], 200);
     }
 
@@ -54,13 +54,13 @@ class CommentController extends Controller
 
         Gate::authorize('auth_comment', $review_comment);
 
-        $review_comment->update([ 'comment' => $request->input('comment') ]);
+        $review_comment->update([ 'content' => $request->input('content') ]);
 
         return response()->json([
             'user_name' => $review_comment->user->name,
             'user_image_url' => $review_comment->user->image_url,
-            'comment' => $review_comment->comment,
-            'comment_likes' => $review_comment->comment_likes
+            'content' => $review_comment->content,
+            'likes' => $review_comment->likes
         ], 200);
     }
 

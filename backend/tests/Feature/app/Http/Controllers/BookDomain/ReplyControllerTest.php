@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Tests\Feature\App\Http\Controllers\BookDomain;
 
 use Tests\TestCase;
-use Illuminate\Support\Str;
 use App\Models\BookDomain\Book;
 use App\Models\UserDomain\User;
 use App\Models\BookDomain\Reply;
 use App\Models\BookDomain\Comment;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ReplyControllerTest extends TestCase
@@ -46,7 +44,7 @@ class ReplyControllerTest extends TestCase
     public function 返信を新規作成できる(): void
     {
         $replyData = [
-            'reply' => 'テスト返信です',
+            'content' => 'テスト返信です',
             'comment_id' => $this->comment->id
         ];
 
@@ -59,8 +57,8 @@ class ReplyControllerTest extends TestCase
         $response->assertExactJson([
             'user_name' => $this->user->name,
             'user_image_url' => $this->user->image_url,
-            'reply' => 'テスト返信です',
-            'reply_likes' => 0
+            'content' => 'テスト返信です',
+            'likes' => 0
         ]);
     }
 
@@ -86,7 +84,7 @@ class ReplyControllerTest extends TestCase
         $content = Reply::factory()->create();
 
         $updateData = [
-            'reply' => '更新された返信内容'
+            'content' => '更新された返信内容'
         ];
 
         $response = $this->withHeaders([
@@ -95,14 +93,14 @@ class ReplyControllerTest extends TestCase
 
         $response->assertStatus(201)
             ->assertJsonFragment([
-                'reply' => '更新された返信内容'
+                'content' => '更新された返信内容'
             ]);
 
-        $this->assertDatabaseHas('reply', [
-            'reply' => '更新された返信内容',
+        $this->assertDatabaseHas('replies', [
+            'content' => '更新された返信内容',
         ]);
-        $this->assertDatabaseMissing('reply', [
-            'reply' => $content->reply,
+        $this->assertDatabaseMissing('replies', [
+            'content' => $content->reply,
         ]);
     }
 
@@ -118,7 +116,7 @@ class ReplyControllerTest extends TestCase
         ])->deleteJson("/api/comment/{$this->comment->id}/reply/{$content->id}");
 
         $response->assertStatus(204);
-        $this->assertDatabaseMissing('reply', ['id' => $content->id]);
+        $this->assertDatabaseMissing('replies', ['id' => $content->id]);
     }
 
     /**
@@ -131,7 +129,7 @@ class ReplyControllerTest extends TestCase
         $token = $otherUser->createToken('Token')->accessToken;
 
         $updateData = [
-            'reply' => '更新された返信内容'
+            'content' => '更新された返信内容'
         ];
 
         $response = $this->withHeaders([
@@ -163,7 +161,7 @@ class ReplyControllerTest extends TestCase
      */
     public function 返信のいいねの増減が可能(int $update_likes): void
     {
-        $reply = Reply::factory()->create(['reply_likes' => 1]);
+        $reply = Reply::factory()->create(['likes' => 1]);
 
         $response = $this->withHeaders([
             'Authorization' => "Bearer $this->token"
@@ -171,12 +169,12 @@ class ReplyControllerTest extends TestCase
                 'likes' => $update_likes
             ]);
 
-        $reply_likes = $reply->reply_likes + $update_likes;
+        $reply_likes = $reply->likes + $update_likes;
 
         $response->assertStatus(200);
-        $response->assertExactJson(['reply_likes' => $reply_likes ]);
-        $this->assertDatabaseHas('reply', [
-            'reply_likes' => $reply->reply_likes + $update_likes
+        $response->assertExactJson(['likes' => $reply_likes ]);
+        $this->assertDatabaseHas('replies', [
+            'likes' => $reply->likes + $update_likes
         ]);
     }
 
