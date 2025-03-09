@@ -27,7 +27,6 @@ class CommentFactory extends Factory
             'book_id' => $random_book_id,
             'content' => fake()->realText(15),
             'is_reviewer_comment' => $book->user_id === $random_user_id ? 1 : 0,
-            'likes' => 0,
         ];
     }
 }
