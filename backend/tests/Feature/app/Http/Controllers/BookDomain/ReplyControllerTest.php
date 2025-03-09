@@ -89,7 +89,7 @@ class ReplyControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->token
-        ])->putJson("/api/comment/{$this->comment->id}/reply/{$content->id}", $updateData);
+        ])->putJson("/api/reply/{$content->id}", $updateData);
 
         $response->assertStatus(201)
             ->assertJsonFragment([
@@ -113,7 +113,7 @@ class ReplyControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $this->token
-        ])->deleteJson("/api/comment/{$this->comment->id}/reply/{$content->id}");
+        ])->deleteJson("/api/reply/{$content->id}");
 
         $response->assertStatus(204);
         $this->assertDatabaseMissing('replies', ['id' => $content->id]);
@@ -134,7 +134,7 @@ class ReplyControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token
-        ])->putJson("/api/comment/{$this->comment->id}/reply/{$content->id}", $updateData);
+        ])->putJson("/api/reply/{$content->id}", $updateData);
 
         $response->assertStatus(403);
     }
@@ -150,7 +150,7 @@ class ReplyControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => 'Bearer ' . $token
-        ])->delete("/api/comment/{$this->comment->id}/reply/{$content->id}");
+        ])->delete("/api/reply/{$content->id}");
 
         $response->assertStatus(403);
     }
@@ -165,7 +165,7 @@ class ReplyControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => "Bearer $this->token"
-            ])->postJson("api/comment/$reply->comment_id/reply/$reply->id/updateLikes", [
+            ])->postJson("api/reply/$reply->id/updateLikes", [
                 'likes' => $update_likes
             ]);
 

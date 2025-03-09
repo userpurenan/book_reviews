@@ -154,7 +154,7 @@ class CommentControllerTest extends TestCase
         $book_review_comment = Comment::factory()->create();
         $update_comment = fake()->realText(10);
 
-        $edit_comment_response = $this->patch("/api/books/{$this->book->id}/comment/{$book_review_comment->id}", [
+        $edit_comment_response = $this->patch("/api/comment/{$book_review_comment->id}", [
             'content' => $update_comment
         ], [
             'Authorization' => "Bearer $this->token",
@@ -182,7 +182,7 @@ class CommentControllerTest extends TestCase
     {
         $book_review_comment = Comment::factory()->create();
 
-        $response = $this->delete("/api/books/{$this->book->id}/comment/{$book_review_comment->id}", [], [
+        $response = $this->delete("/api/comment/{$book_review_comment->id}", [], [
             'Authorization' => "Bearer $this->token",
         ]);
 
@@ -214,7 +214,7 @@ class CommentControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => "Bearer $token"
-        ])->patchJson("api/books/{$this->book->id}/comment/$comment->id", [
+        ])->patchJson("api/comment/$comment->id", [
             'content' => '更新したいコメント'
         ]);
 
@@ -240,7 +240,7 @@ class CommentControllerTest extends TestCase
 
         $response = $this->withHeaders([
             'Authorization' => "Bearer $token"
-        ])->delete("api/books/{$this->book->id}/comment/$comment->id");
+        ])->delete("api/comment/$comment->id");
 
         $response->assertStatus(403);
     }
