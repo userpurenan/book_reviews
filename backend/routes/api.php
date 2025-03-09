@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BookDomain\BookController;
+use App\Http\Controllers\BookDomain\ReviewController;
 use App\Http\Controllers\UserDomain\UserController;
 use App\Http\Controllers\BookDomain\ReplyController;
 use App\Http\Controllers\BookDomain\CommentController;
@@ -31,27 +31,27 @@ Route::get('unauthorized', function () {
 
 Route::post('/signup', [UserController::class, 'signUp']);
 Route::post('/login', [UserController::class, 'login']);
-Route::get('/books', [BookController::class, 'getBooks']);
-Route::get('/books/hotReview', [BookController::class, 'getHotReview']);
+Route::get('/books', [ReviewController::class, 'index']);
+Route::get('/books/hotReview', [ReviewController::class, 'getHotReview']);
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/upload', [AuthUserController::class, 'imageUploads']);
     Route::patch('/user', [AuthUserController::class, 'editUser']);
     Route::get('/user', [AuthUserController::class, 'getUser']);
     Route::delete('/user', [AuthUserController::class, 'deleteUser']);
-    Route::post('/books', [BookController::class, 'createBook']);
-    Route::post('/books/{id}/updateLikes', [BookController::class, 'updateReviewLikes']);
-    Route::get('/books/{id}', [BookController::class, 'getBookDatail']);
-    Route::put('/books/{id}', [BookController::class, 'updateBook']);
-    Route::delete('/books/{id}', [BookController::class, 'deleteBook']);
-    Route::get('/books/{book_id}/comment', [CommentController::class, 'getComment']);
-    Route::post('/books/{book_id}/comment', [CommentController::class, 'createComment']);
-    Route::patch('/books/{book_id}/comment/{comment_id}', [CommentController::class, 'updateComment']);
-    Route::delete('/books/{book_id}/comment/{comment_id}', [CommentController::class, 'deleteComment']);
+    Route::get('/books/{id}', [ReviewController::class, 'show']);
+    Route::post('/books', [ReviewController::class, 'store']);
+    Route::put('/books/{id}', [ReviewController::class, 'update']);
+    Route::delete('/books/{id}', [ReviewController::class, 'destroy']);
+    Route::post('/books/{id}/updateLikes', [ReviewController::class, 'updateLikes']);
+    Route::get('/books/{book_id}/comment', [CommentController::class, 'index']);
+    Route::post('/books/{book_id}/comment', [CommentController::class, 'store']);
+    Route::patch('/comment/{comment_id}', [CommentController::class, 'update']);
+    Route::delete('/comment/{comment_id}', [CommentController::class, 'destroy']);
     Route::post('/comment/updateLikes', [CommentController::class, 'updateLikes']);
-    Route::get('/comment/{comment_id}/reply', [ReplyController::class, 'fetchReply']);
-    Route::post('/comment/{comment_id}/reply', [ReplyController::class, 'createReply']);
-    Route::put('/comment/{comment_id}/reply/{reply_id}', [ReplyController::class, 'updateReply']);
-    Route::delete('/comment/{comment_id}/reply/{reply_id}', [ReplyController::class, 'deleteReply']);
-    Route::post('/comment/{comment_id}/reply/{reply_id}/updateLikes', [ReplyController::class, 'updateLikes']);
+    Route::get('/comment/{comment_id}/reply', [ReplyController::class, 'index']);
+    Route::post('/comment/{comment_id}/reply', [ReplyController::class, 'store']);
+    Route::put('/reply/{reply_id}', [ReplyController::class, 'update']);
+    Route::delete('/reply/{reply_id}', [ReplyController::class, 'destroy']);
+    Route::post('/reply/{reply_id}/updateLikes', [ReplyController::class, 'updateLikes']);
 });

@@ -18,14 +18,14 @@ use App\Services\Book\Reply\ReplyLikesService;
 
 class ReplyController extends Controller
 {
-    public function fetchReply(int $comment_id, ReplyService $reply_service): JsonResponse
+    public function index(int $comment_id, ReplyService $reply_service): JsonResponse
     {
         $review_comment_array = $reply_service->setReply($comment_id);
 
         return response()->json($review_comment_array, 200);
     }
 
-    public function createReply(Request $request, int $comment_id): JsonResponse
+    public function store(Request $request, int $comment_id): JsonResponse
     {
         $user_id = Auth::id();
         $comment = Comment::findOrFail($comment_id);
@@ -47,7 +47,7 @@ class ReplyController extends Controller
                 ], 201);
     }
 
-    public function updateReply(Request $request, Reply $reply, int $comment_id, int $reply_id): JsonResponse
+    public function update(Request $request, Reply $reply, int $reply_id): JsonResponse
     {
         $comment_reply = $reply->findOrFail($reply_id);
 
@@ -63,7 +63,7 @@ class ReplyController extends Controller
         ], 201);
     }
 
-    public function deleteReply(Reply $reply, int $book_id, int $reply_id): Response
+    public function destroy(Reply $reply, int $reply_id): Response
     {
         $comment_reply = $reply->findOrFail($reply_id);
 
@@ -74,7 +74,7 @@ class ReplyController extends Controller
         return response()->noContent();
     }
 
-    public function updateLikes(Request $request, int $comment_id, int $reply_id, ReplyLikesService $reply_like): JsonResponse
+    public function updateLikes(Request $request, int $reply_id, ReplyLikesService $reply_like): JsonResponse
     {
         $likes = (int) $request->input('likes');
 

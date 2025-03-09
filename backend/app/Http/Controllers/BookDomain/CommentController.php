@@ -16,7 +16,7 @@ use App\Services\Book\Comment\CommentLikesService;
 
 class CommentController extends Controller
 {
-    public function getComment(Request $request, CommentService $comment_service, int $book_id): JsonResponse
+    public function index(Request $request, CommentService $comment_service, int $book_id): JsonResponse
     {
         $number = (int) $request->query('comment_offset', $default = 0);
 
@@ -26,7 +26,7 @@ class CommentController extends Controller
         return response()->json($review_comment_array, 200);
     }
 
-    public function createComment(Request $request, int $book_id): JsonResponse
+    public function store(Request $request, int $book_id): JsonResponse
     {
         $user_id = Auth::id();
         $book = Book::findOrFail($book_id);
@@ -48,7 +48,7 @@ class CommentController extends Controller
                 ], 200);
     }
 
-    public function updateComment(Request $request, Comment $comment, int $book_id, int $comment_id): JsonResponse
+    public function update(Request $request, Comment $comment, int $comment_id): JsonResponse
     {
         $review_comment = $comment->findOrFail($comment_id);
 
@@ -64,7 +64,7 @@ class CommentController extends Controller
         ], 200);
     }
 
-    public function deleteComment(Comment $comment, int $book_id, int $comment_id): JsonResponse
+    public function destroy(Comment $comment, int $comment_id): JsonResponse
     {
         $review_comment = $comment->findOrFail($comment_id);
 
