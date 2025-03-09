@@ -10,13 +10,11 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('replies', function (Blueprint $table) {
+        Schema::create('comment_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('comment_id')->constrained('comments')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->text('content');
-            $table->unsignedBigInteger('likes')->default(0);
-            $table->boolean('is_reviewer_reply')->default(false); // そのリプライが投稿主だった場合に公式マークをつけたいのでこのフラグを定義した
+            $table->foreignId('comment_id')->constrained('comments')->onDelete('cascade');
+            $table->unique(['comment_id', 'user_id']);
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('reply');
+        Schema::dropIfExists('user_likes_comment');
     }
 };

@@ -10,13 +10,14 @@ return new class () extends Migration {
      */
     public function up(): void
     {
-        Schema::create('replies', function (Blueprint $table) {
+        // レビューに対するコメントを定義
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('comment_id')->constrained('comments')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
             $table->text('content');
-            $table->unsignedBigInteger('likes')->default(0);
-            $table->boolean('is_reviewer_reply')->default(false); // そのリプライが投稿主だった場合に公式マークをつけたいのでこのフラグを定義した
+            $table->boolean('is_reviewer_comment')->default(false); // そのコメントが投稿主だった場合に公式マークをつけたいのでこのフラグを定義した
+            $table->unsignedBigInteger('likes')->default(0)->change();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('reply');
+        Schema::dropIfExists('comments');
     }
 };
