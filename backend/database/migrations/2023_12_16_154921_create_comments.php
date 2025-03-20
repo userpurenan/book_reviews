@@ -17,7 +17,7 @@ return new class () extends Migration {
             $table->foreignId('book_id')->constrained('books')->onDelete('cascade');
             $table->text('content');
             $table->boolean('is_reviewer_comment')->default(false); // そのコメントが投稿主だった場合に公式マークをつけたいのでこのフラグを定義した
-            $table->unsignedBigInteger('likes')->default(0)->change();
+            $table->unsignedBigInteger('likes')->default(0);
             $table->timestamps();
         });
     }
