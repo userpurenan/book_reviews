@@ -44,7 +44,7 @@ class ReviewController extends Controller
                     'user_id' => $user_id,
                     'url' => $request->input('url'),
                     'detail' => $request->input('detail'),
-                    'review' => $request->input('content'),
+                    'review' => $request->input('review'),
                     'reviewer' => $user_name,
                     'spoiler' => $request->input('isSpoiler') ? 1 : 0
                 ]);
@@ -62,7 +62,7 @@ class ReviewController extends Controller
     public function show(int $id): JsonResponse
     {
         $book_datail = Book::findOrFail($id);
-        $is_review_likes = UserReviewLikes::where('user_id', Auth::id())->where('book_id', $id)->first();
+        $is_review_likes = $book_datail->likes()->where('user_id', Auth::id())->first();
 
         return response()->json([
             'title' => $book_datail->title,
