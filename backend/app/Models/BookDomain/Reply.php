@@ -28,6 +28,11 @@ class Reply extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'reply_likes');
+    }
+
     public function comment()
     {
         return $this->belongsTo(Comment::class, 'comment_id');

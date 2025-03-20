@@ -35,10 +35,10 @@ class User extends Authenticatable
 
     public function book()
     {
-        return $this->hasmany(Book::class);
+        return $this->hasMany(Book::class);
     }
 
-    public function books_comment()
+    public function comment()
     {
         return $this->hasMany(Comment::class);
     }
@@ -46,5 +46,19 @@ class User extends Authenticatable
     public function reply()
     {
         return $this->hasMany(Reply::class);
+    }
+
+    public function book_likes()
+    {
+        return $this->belongsToMany(Book::class, 'review_likes');
+    }
+
+    public function comment_likes(){
+        return $this->belongsToMany(Comment::class, 'comment_likes');
+    }
+
+    public function reply_likes()
+    {
+        return $this->belongsToMany(Reply::class, 'reply_likes');
     }
 }

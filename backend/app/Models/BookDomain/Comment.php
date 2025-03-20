@@ -25,7 +25,7 @@ class Comment extends Model
 
     public function scopeGetBookComment($query, int $book_id)
     {
-        return $query->with('user')->where('book_id', $book_id);
+        return $query->where('book_id', $book_id);
     }
 
     public function user()
@@ -33,14 +33,18 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'comment_likes');
+    }
+
     public function book()
     {
         return $this->belongsTo(Book::class, 'book_id');
     }
 
-    public function commentReply()
+    public function reply()
     {
         return $this->hasMany(Reply::class);
     }
-
 }
