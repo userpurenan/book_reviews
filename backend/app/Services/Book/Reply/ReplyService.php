@@ -14,21 +14,21 @@ class ReplyService
     {
         $auth_id = Auth::id();
 
-        $comment_reply = Reply::with('user')->where('comment_id', $comment_id)->get();
+        $replies = Reply::where('comment_id', $comment_id)->get();
 
-        $user_likes = UserReplyLikes::where('user_id', $auth_id)
-            ->whereIn('reply_id', $comment_reply->pluck('id'))
+        $user_likes = $replies[0]->likes()->where('user_id', $auth_id)
+            ->whereIn('reply_id', $replies->pluck('id'))
             ->pluck('reply_id')
             ->flip()
             ->all();
 
-        return $comment_reply->map(function ($reply) use ($auth_id, $user_likes) {
+        return $replies->map(function ($reply) use ($auth_id, $user_likes) {
             return [
                 'id' => $reply->id,
                 'user_name' => $reply->user->name,
                 'user_image_url' => $reply->user->image_url,
-                'reply' => $reply->content,
-                'reply_likes' => $reply->likes,
+                'content' => $reply->content,
+                'likes' => $reply->likes,
                 'is_reviewer' => $reply->is_reviewer_reply,
                 'is_your_reply' => $reply->user_id === $auth_id,
                 'is_likes_reply' => array_key_exists($reply->id, $user_likes) ? true : false,

@@ -5,20 +5,15 @@ declare(strict_types=1);
 namespace App\Services\Book;
 
 use App\Models\BookDomain\Book;
+use App\Models\UserDomain\User;
 use Illuminate\Support\Facades\DB;
-use App\Services\Book\UpdateLikeStatusService;
+use Illuminate\Support\Facades\Auth;
 
 class BookLikeService
 {
-    private UpdateLikeStatusService $update_like_status;
-
-    public function __construct(UpdateLikeStatusService $update_like_status)
-    {
-        $this->update_like_status = $update_like_status;
-    }
-
     public function updateLikes(int $book_id, int $likes)
     {
+        $user = User::findOrFail(Auth::id());
         $book = Book::findOrFail($book_id);
         $new_likes_count = $book->likes + $likes;
 
@@ -29,13 +24,19 @@ class BookLikeService
         }
 
         $retryTimes = 3;
-        DB::transaction(function () use ($book, $new_likes_count, $likes) {
+        DB::transaction(function () use ($user, $book, $new_likes_count, $likes) {
             $book->update(['likes' => $new_likes_count ]);
 
             // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
-            $this->update_like_status->updateBookReviewLikeStatus($book, $likes);
+            // $this->update_like_status->updateBookReviewLikeStatus($book, $likes);
+
+            if($likes === 1) {
+                $user->book_likes()->attach($book->id);
+            } else {
+                $user->book_likes()->detach($book->id);
+            }
         }, $retryTimes);
 
-        return [ 'review_likes' => $book->likes ];
+        return [ 'likes' => $book->likes ];
     }
 }

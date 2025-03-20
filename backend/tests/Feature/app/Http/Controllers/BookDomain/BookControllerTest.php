@@ -160,7 +160,7 @@ class BookControllerTest extends TestCase
 
         $update_likes = $book_review->likes + $update_likes;
         $response->assertStatus(200);
-        $response->assertExactJson(['review_likes' => $update_likes ]);
+        $response->assertExactJson(['likes' => $update_likes ]);
         $this->assertDatabaseHas('books', [
             'likes' => $update_likes
         ]);
@@ -189,7 +189,7 @@ class BookControllerTest extends TestCase
         $response = $this->withHeaders([
             'Authorization' => "Bearer $token"
         ])->putJson("api/books/$book->id", [
-            'comment' => '更新したいコメント'
+            'review' => '更新したいレビュー'
         ]);
 
         $response->assertStatus(403);

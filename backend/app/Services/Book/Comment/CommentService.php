@@ -15,29 +15,29 @@ class CommentService
         $auth_id = Auth::id();
 
         // GetBookCommentはモデルに定義されているスコープ。レビューに対するコメントを10件ずつ取得してくる。
-        $books_review_comment = Comment::GetBookComment($book_id, $number)
+        $comments = Comment::GetBookComment($book_id)
             ->offset($number)
             ->limit(10)
             ->orderBy('id', 'desc')
             ->get();
 
         // ユーザーのいいね情報を一括で取得
-        $user_likes = UserCommentLikes::where('user_id', $auth_id)
-            ->whereIn('comment_id', $books_review_comment->pluck('id'))
+        $user_likes = $comments[0]->likes()->where('user_id', $auth_id)
+            ->whereIn('comment_id', $comments->pluck('id'))
             ->pluck('comment_id')
             ->flip()
             ->all();
 
-        return $books_review_comment->map(function ($review_comment) use ($auth_id, $user_likes) {
+        return $comments->map(function ($comment) use ($auth_id, $user_likes) {
             return [
-                'id' => $review_comment->id,
-                'user_name' => $review_comment->user->name,
-                'user_image_url' => $review_comment->user->image_url,
-                'content' => $review_comment->content,
-                'likes' => $review_comment->likes,
-                'is_reviewer' => $review_comment->is_reviewer_comment,
-                'is_your_comment' => $review_comment->user_id === $auth_id,
-                'is_likes_comment' => array_key_exists($review_comment->id, $user_likes) ? true : false,
+                'id' => $comment->id,
+                'user_name' => $comment->user->name,
+                'user_image_url' => $comment->user->image_url,
+                'content' => $comment->content,
+                'likes' => $comment->likes,
+                'is_reviewer' => $comment->is_reviewer_comment,
+                'is_your_comment' => $comment->user_id === $auth_id,
+                'is_likes_comment' => array_key_exists($comment->id, $user_likes) ? true : false,
             ];
         })->all();
     }

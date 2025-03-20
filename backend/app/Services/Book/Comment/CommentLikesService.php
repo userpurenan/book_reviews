@@ -5,21 +5,17 @@ declare(strict_types=1);
 namespace App\Services\Book\Comment;
 
 use App\Models\BookDomain\Comment;
+use App\Models\UserDomain\User;
 use Illuminate\Support\Facades\DB;
-use App\Services\Book\UpdateLikeStatusService;
+use Illuminate\Support\Facades\Auth;
 
 class CommentLikesService
 {
-    private UpdateLikeStatusService $update_like_status;
-
-    public function __construct(UpdateLikeStatusService $update_like_status)
-    {
-        $this->update_like_status = $update_like_status;
-    }
 
     // これだとコントローラーの処理が重複してしまうので、リクエストの処理はコントローラーで行うようにする
     public function updateLikes(int $comment_id, int $likes): array
     {
+        $user = User::findOrFail(Auth::id());
         $comment = Comment::findOrFail($comment_id);
         $new_likes_count = $comment->likes + $likes;
 
@@ -28,11 +24,16 @@ class CommentLikesService
         }
 
         $retryTimes = 3;
-        DB::transaction(function () use ($comment, $new_likes_count, $likes) {
+        DB::transaction(function () use ($user, $comment, $new_likes_count, $likes) {
             $comment->update(['likes' => $new_likes_count ]);
 
             // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
-            $this->update_like_status->updateCommentLikeStatus($comment, $likes);
+            // $this->update_like_status->updateCommentLikeStatus($comment, $likes);
+            if($likes === 1) {
+                $user->comment_likes()->attach($comment->id);
+            } else {
+                $user->comment_likes()->detach($comment->id);
+            }
         }, $retryTimes);
 
         return [ 'likes' => $new_likes_count ];
