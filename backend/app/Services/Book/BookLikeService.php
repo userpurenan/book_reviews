@@ -28,8 +28,6 @@ class BookLikeService
             $book->update(['likes' => $new_likes_count ]);
 
             // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
-            // $this->update_like_status->updateBookReviewLikeStatus($book, $likes);
-
             if($likes === 1) {
                 $user->book_likes()->attach($book->id);
             } else {

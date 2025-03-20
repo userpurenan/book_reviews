@@ -28,7 +28,6 @@ class CommentLikesService
             $comment->update(['likes' => $new_likes_count ]);
 
             // 可読性向上の目的で、いいねの状態を管理するテーブル操作はサービスクラスに切り出した
-            // $this->update_like_status->updateCommentLikeStatus($comment, $likes);
             if($likes === 1) {
                 $user->comment_likes()->attach($comment->id);
             } else {
