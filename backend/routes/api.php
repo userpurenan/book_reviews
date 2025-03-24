@@ -39,19 +39,25 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('/user', [AuthUserController::class, 'editUser']);
     Route::get('/user', [AuthUserController::class, 'getUser']);
     Route::delete('/user', [AuthUserController::class, 'deleteUser']);
+
     Route::get('/books/{id}', [ReviewController::class, 'show']);
     Route::post('/books', [ReviewController::class, 'store']);
     Route::put('/books/{id}', [ReviewController::class, 'update']);
     Route::delete('/books/{id}', [ReviewController::class, 'destroy']);
-    Route::post('/books/{id}/updateLikes', [ReviewController::class, 'updateLikes']);
+    Route::post('/books/{id}/incrementLikes', [ReviewController::class, 'incrementLikes']);
+    Route::post('/books/{id}/decrementLikes', [ReviewController::class, 'decrementLikes']);
+    
     Route::get('/books/{book_id}/comment', [CommentController::class, 'index']);
     Route::post('/books/{book_id}/comment', [CommentController::class, 'store']);
     Route::patch('/comment/{comment_id}', [CommentController::class, 'update']);
     Route::delete('/comment/{comment_id}', [CommentController::class, 'destroy']);
-    Route::post('/comment/updateLikes', [CommentController::class, 'updateLikes']);
+    Route::post('/comment/{comment_id}/incrementLikes', [CommentController::class, 'incrementLikes']);
+    Route::post('/comment/{comment_id}/decrementLikes', [CommentController::class, 'decrementLikes']);
+
     Route::get('/comment/{comment_id}/reply', [ReplyController::class, 'index']);
     Route::post('/comment/{comment_id}/reply', [ReplyController::class, 'store']);
     Route::put('/reply/{reply_id}', [ReplyController::class, 'update']);
     Route::delete('/reply/{reply_id}', [ReplyController::class, 'destroy']);
-    Route::post('/reply/{reply_id}/updateLikes', [ReplyController::class, 'updateLikes']);
+    Route::post('/reply/{reply_id}/incrementLikes', [ReplyController::class, 'incrementLikes']);
+    Route::post('/reply/{reply_id}/decrementLikes', [ReplyController::class, 'decrementLikes']);
 });
