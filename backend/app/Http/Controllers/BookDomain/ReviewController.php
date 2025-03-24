@@ -121,15 +121,21 @@ class ReviewController extends Controller
         return response()->json($hot_reviews, 200);
     }
 
-    public function updateLikes(Request $request, int $book_id, BookLikeService $book_like): JsonResponse
+    public function incrementLikes(int $book_id, BookLikeService $book_like): JsonResponse
     {
-        $likes = (int) $request->input('likes');
-        $update_likes_result = $book_like->updateLikes($book_id, $likes);
+        $increment_likes_result = $book_like->incrementLikes($book_id);
 
-        if(isset($update_likes_result['error'])) {
-            return response()->json($update_likes_result, 500);
+        return response()->json($increment_likes_result, 200);
+    }
+
+    public function decrementLikes(int $book_id, BookLikeService $book_like): JsonResponse
+    {
+        $decrement_likes_result = $book_like->decrementLikes($book_id);
+
+        if (isset($decrement_likes_result['error'])) {
+            return response()->json($decrement_likes_result, 500); 
         }
 
-        return response()->json($update_likes_result, 200);
+        return response()->json($decrement_likes_result, 200);
     }
 }

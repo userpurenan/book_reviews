@@ -74,16 +74,25 @@ class ReplyController extends Controller
         return response()->noContent();
     }
 
-    public function updateLikes(Request $request, int $reply_id, ReplyLikesService $reply_like): JsonResponse
+    public function incrementLikes(int $reply_id, ReplyLikesService $reply_like): JsonResponse
     {
-        $likes = (int) $request->input('likes');
+        $increment_likes_result = $reply_like->incrementLikes($reply_id);
 
-        $update_likes_result = $reply_like->updateLikes($reply_id, $likes);
-
-        if(isset($update_likes_result['error'])) {
-            return response()->json($update_likes_result, 500);
+        if(isset($increment_likes_result['error'])) {
+            return response()->json($increment_likes_result, 500);
         }
 
-        return response()->json($update_likes_result, 200);
+        return response()->json($increment_likes_result, 200);
+    }
+
+    public function decrementLikes(int $reply_id, ReplyLikesService $reply_like): JsonResponse
+    {
+        $decrement_likes_result = $reply_like->decrementLikes($reply_id);
+
+        if(isset($decrement_likes_result['error'])) {
+            return response()->json($decrement_likes_result, 500);
+        }
+
+        return response()->json($decrement_likes_result, 200);
     }
 }

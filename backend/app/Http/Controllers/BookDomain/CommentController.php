@@ -77,17 +77,21 @@ class CommentController extends Controller
         ], 200);
     }
 
-    public function updateLikes(Request $request, CommentLikesService $comment_like): JsonResponse
+    public function incrementLikes(int $comment_id, CommentLikesService $comment_like): JsonResponse
     {
-        $comment_id = (int) $request->input('comment_id');
-        $likes = (int) $request->input('likes');
+        $increment_likes_result = $comment_like->incrementLikes($comment_id);
 
-        $update_likes_result = $comment_like->updateLikes($comment_id, $likes);
+        return response()->json($increment_likes_result, 200);
+    }
 
-        if(isset($update_likes_result['error'])) {
-            return response()->json($update_likes_result, 500);
+    public function decrementLikes(int $comment_id, CommentLikesService $comment_like): JsonResponse
+    {
+        $decrement_likes_result = $comment_like->decrementLikes($comment_id);
+
+        if(isset($decrement_likes_result['error'])) {
+            return response()->json($decrement_likes_result, 500);
         }
 
-        return response()->json($update_likes_result, 200);
+        return response()->json($decrement_likes_result, 200);
     }
 }
