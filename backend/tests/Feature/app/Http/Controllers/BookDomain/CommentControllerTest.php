@@ -9,6 +9,7 @@ use App\Models\BookDomain\Book;
 use App\Models\UserDomain\User;
 use App\Models\BookDomain\Comment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Log;
 
 class CommentControllerTest extends TestCase
 {
@@ -97,16 +98,13 @@ class CommentControllerTest extends TestCase
      * @dataProvider updateLikesProvider
      * @test
      */
-    public function コメントのいいねの増減が可能(int $fluctuation): void
+    public function コメントのいいねの増減が可能(string $like_action, int $like_change): void
     {
         //いいねの数は０より下回らないように設定しており、初期値が０のままだと減少しているのかわからなくなるので、このテストではいいねの数の初期値を１にする
-        $book_review_comment = Comment::factory()->create(['likes' => 1]);
-        $update_comment_like_result = $book_review_comment->likes + $fluctuation;
+        $comment = Comment::factory()->create(['likes' => 1]);
+        $update_comment_like_result = $comment->likes + $like_change;
 
-        $response = $this->post('/api/comment/updateLikes', [
-            'comment_id' => $book_review_comment->id,
-            'likes' => $fluctuation
-        ], [
+        $response = $this->post("/api/comment/{$comment->id}/{$like_action}", [], [
             'Authorization' => "Bearer $this->token",
         ]);
 
@@ -120,8 +118,8 @@ class CommentControllerTest extends TestCase
     public static function updateLikesProvider(): array
     {
         return[
-            'いいねの数が増える' => [1],
-            'いいねの数が減る' => [-1],
+            'いいねの数が増える' => ['incrementLikes', 1],
+            'いいねの数が減る' => ['decrementLikes', -1],
         ];
     }
 
@@ -130,12 +128,9 @@ class CommentControllerTest extends TestCase
      */
     public function いいねが0を下回らない(): void
     {
-        $book_review_comment = Comment::factory()->create();
+        $comment = Comment::factory()->create();
 
-        $response = $this->post('/api/comment/updateLikes', [
-            'comment_id' => $book_review_comment->id,
-            'likes' => -1
-        ], [
+        $response = $this->post("/api/comment/{$comment->id}/decrementLikes", [], [
             'Authorization' => "Bearer $this->token",
         ]);
 

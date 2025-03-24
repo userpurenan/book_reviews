@@ -148,29 +148,27 @@ class BookControllerTest extends TestCase
      * @dataProvider updateLikesProvider
      * @test
      */
-    public function レビューのいいねの増減が可能(int $update_likes): void
+    public function レビューのいいねの増減が可能(string $like_action, int $like_chenge): void
     {
         $book_review = Book::factory()->create(['likes' => 1]);
 
-        $response = $this->post("/api/books/{$book_review->id}/updateLikes", [
-            'likes' => $update_likes
-        ], [
+        $response = $this->post("/api/books/{$book_review->id}/{$like_action}", [], [
             'Authorization' => "Bearer $this->token",
         ]);
 
-        $update_likes = $book_review->likes + $update_likes;
+        $like_chenge = $book_review->likes + $like_chenge;
         $response->assertStatus(200);
-        $response->assertExactJson(['likes' => $update_likes ]);
+        $response->assertExactJson(['likes' => $like_chenge ]);
         $this->assertDatabaseHas('books', [
-            'likes' => $update_likes
+            'likes' => $like_chenge
         ]);
     }
 
     public static function updateLikesProvider(): array
     {
         return[
-            'いいねの数が増える' => [1],
-            'いいねの数が減る' => [-1],
+            'いいねの数が増える' => ['incrementLikes', 1],
+            'いいねの数が減る' => ['decrementLikes', -1],
         ];
     }
 

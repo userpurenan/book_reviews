@@ -159,30 +159,28 @@ class ReplyControllerTest extends TestCase
      * @dataProvider updateLikesProvider
      * @test
      */
-    public function 返信のいいねの増減が可能(int $update_likes): void
+    public function 返信のいいねの増減が可能(string $like_action, int $like_chenge): void
     {
         $reply = Reply::factory()->create(['likes' => 1]);
 
         $response = $this->withHeaders([
             'Authorization' => "Bearer $this->token"
-            ])->postJson("api/reply/$reply->id/updateLikes", [
-                'likes' => $update_likes
-            ]);
+            ])->postJson("api/reply/$reply->id/{$like_action}");
 
-        $reply_likes = $reply->likes + $update_likes;
+        $reply_likes = $reply->likes + $like_chenge;
 
         $response->assertStatus(200);
         $response->assertExactJson(['likes' => $reply_likes ]);
         $this->assertDatabaseHas('replies', [
-            'likes' => $reply->likes + $update_likes
+            'likes' => $reply->likes + $like_chenge
         ]);
     }
 
     public static function updateLikesProvider(): array
     {
         return[
-            'いいねの数が増える' => [1],
-            'いいねの数が減る' => [-1],
+            'いいねの数が増える' => ['incrementLikes', 1],
+            'いいねの数が減る' => ['decrementLikes', -1],
         ];
     }
 }
